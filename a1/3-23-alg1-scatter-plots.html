@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 4-4 🐌</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+
+        :root {
+            --theme-red: #e21b22;
+            --theme-blue: #1fbad6;
+            --water-blue: #29b6f6;
+            --border-black: #000;
+            --dark-gold: #ffcc00; 
+            --highlight-purple: #8e44ad;
+            --success-green: #27ae60;
+        }
+
+        body {
+            font-family: 'Arial Black', 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 20px 20px 40px 20px;
+            background-color: #ffffff;
+            color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-container {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 15px;
+        }
+
+        .lesson-tag {
+            background: var(--theme-red);
+            color: white;
+            padding: 8px 20px;
+            border: 4px solid black;
+            font-size: 1.2rem;
+            box-shadow: 4px 4px 0px #000;
+            font-family: 'Bangers', cursive;
+        }
+
+        .page-marker {
+            background: white;
+            border: 4px solid var(--border-black);
+            padding: 8px 20px;
+            font-size: 1rem;
+            box-shadow: 4px 4px 0px #000;
+            font-weight: bold;
+        }
+
+        header {
+            text-align: center;
+            background: white;
+            border: 5px solid var(--border-black);
+            padding: 20px;
+            box-shadow: 10px 10px 0px #000;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 1100px;
+            box-sizing: border-box;
+        }
+
+        .comic-heading { font-family: 'Bangers', cursive; letter-spacing: 2px; text-transform: uppercase; }
+
+        .example-section {
+            width: 100%;
+            max-width: 1100px;
+            background: white;
+            border: 6px solid var(--border-black);
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+            box-shadow: 12px 12px 0px #000;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            border: 3px solid black;
+        }
+        .data-table th, .data-table td {
+            border: 2px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+        .data-table th { background-color: #eee; font-size: 0.85rem; }
+
+        .definition-box {
+            width: 100%;
+            max-width: 1100px;
+            background: white;
+            border: 6px solid black;
+            margin-bottom: 30px;
+            box-shadow: 8px 8px 0px #000;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .def-header { 
+            padding: 15px; 
+            color: black; 
+            background: var(--dark-gold); 
+            border-bottom: 6px solid black; 
+            text-align: center; 
+        }
+
+        .def-body { padding: 25px; font-size: 1.1rem; }
+
+        .lang-en { font-weight: bold; display: block; }
+        .lang-zh { color: #444; display: block; font-size: 0.9em; margin-top: 5px; }
+
+        .invasion-container {
+            width: 100%;
+            height: 300px;
+            border: 4px solid black;
+            background: #f0f4f8;
+            position: relative;
+            overflow: hidden;
+        }
+        .water-layer { position: absolute; bottom: 0; width: 100%; height: 80px; background: var(--water-blue); border-top: 4px solid black; z-index: 5; opacity: 0.8; }
+        
+        .building { position: absolute; bottom: 80px; background: #546e7a; border: 3px solid black; z-index: 1; }
+        .b1 { right: 10px; height: 120px; width: 35px; }
+        .b2 { right: 55px; height: 160px; width: 40px; }
+        .b3 { right: 105px; height: 90px; width: 30px; }
+        .b4 { right: 145px; height: 140px; width: 35px; }
+        .b5 { right: 190px; height: 110px; width: 25px; }
+
+        .snail { position: absolute; font-size: 32px; z-index: 10; bottom: -50px; left: -50px; }
+        .s1 { animation: invasionPath 5s infinite linear; }
+        .s2 { animation: invasionPath 7s infinite linear 0.5s; }
+        .s3 { animation: invasionPath 4s infinite linear 2s; }
+        .s4 { animation: invasionPath 6s infinite linear 1.5s; }
+        .s5 { animation: invasionPath 8s infinite linear 3s; }
+        .s6 { animation: invasionPath 5.5s infinite linear 4s; }
+
+        @keyframes invasionPath { 
+            0% { bottom: -20px; left: -10%; transform: rotate(0deg); opacity: 0; } 
+            15% { opacity: 1; }
+            100% { bottom: 130px; left: 110%; transform: rotate(1440deg); opacity: 1; } 
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 25px;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 20px;
+        }
+
+        .correlation-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 30px;
+        }
+
+        .property-card { background: white; border: 4px solid black; box-shadow: 8px 8px 0px #000; padding: 15px; text-align: center; }
+        
+        .axis-explanation {
+            text-align: left;
+            margin-top: 15px;
+            padding: 10px;
+            border-top: 2px solid #eee;
+        }
+
+        .btn-action {
+            background: var(--dark-gold); color: black; border: 4px solid black; padding: 12px 25px;
+            font-family: 'Bangers', cursive; font-size: 1.3rem; cursor: pointer; box-shadow: 4px 4px 0px #000; margin: 10px 5px;
+        }
+
+        .btn-predict {
+            background: var(--water-blue); color: black; border: 3px solid black; padding: 8px 15px;
+            font-family: 'Bangers', cursive; font-size: 1.1rem; cursor: pointer; box-shadow: 3px 3px 0px #000; margin-top: 15px;
+        }
+
+        .step-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 6px solid var(--theme-red);
+            text-align: left;
+            display: none; 
+        }
+
+        .math-note {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #f0e6ff;
+            border-left: 4px solid var(--highlight-purple);
+        }
+
+        #equation-display { font-size: 1.5rem; font-weight: bold; margin: 10px 0; color: var(--theme-red); min-height: 1.8rem; }
+        
+        .math-text { font-family: "Times New Roman", Times, serif; font-style: italic; font-size: 1.2rem; margin: 5px 0; }
+        
+        .highlight-conclusion {
+            background-color: #e8f5e9;
+            border: 3px solid var(--success-green);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .mcq-container { 
+            background: #fffbe6; 
+            border: 4px solid black; 
+            padding: 15px; 
+            margin-bottom: 20px; 
+            text-align: left;
+            box-shadow: 4px 4px 0px #000;
+        }
+        
+        .option { display: block; margin: 8px 0; padding: 8px; border: 2px solid black; cursor: pointer; background: white; transition: 0.2s; font-size: 0.9rem;}
+        .option:hover { background: #eee; }
+        
+        .point-tag { color: var(--highlight-purple); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <div class="lesson-tag">LESSON 4-4 / 第 4-4 课</div>
+        <div class="page-marker">PAGES 247-252 / 第 247-252 页</div>
+    </div>
+
+    <header>
+        <h1 class="comic-heading" style="font-size: 3rem; margin: 0;">SCATTER PLOTS & LINES OF FIT</h1>
+    </header>
+
+    <div class="example-section" style="border-color: var(--theme-red);">
+        <div>
+            <h2 class="comic-heading" style="color: var(--theme-red); margin-top: 0;">⚠️ THE INVASION / 入侵</h2>
+            <p class="lang-en">The rapid increase in Zebra Mussel population is creating a massive issue. We need to analyze this population growth by performing data analysis.</p>
+            <p class="lang-zh">斑马贻贝数量的快速增长正引发严重问题。我们需要通过数据分析来研究这一数量增长情况。</p>
+            
+            <div style="margin-top: 15px; padding: 10px; border: 2px dashed #ccc;">
+                <p class="lang-en"><b>Data:</b> Information, often numbers, collected for analysis.</p>
+                <p class="lang-zh"><b>数据：</b> 通常为数字，收集用于分析的信息。</p>
+                <p class="lang-en"><b>Bivariate Data:</b> Data with two variables, such as year (x) and population (y).</p>
+                <p class="lang-zh"><b>双变量数据：</b> 具有两个变量的数据，例如年份 (x) 和数量 (y)。</p>
+            </div>
+        </div>
+        <div class="invasion-container">
+            <div class="building b1"></div><div class="building b2"></div><div class="building b3"></div>
+            <div class="building b4"></div><div class="building b5"></div>
+            <div class="water-layer"></div>
+            <div class="snail s1">🐌</div><div class="snail s2">🐌</div><div class="snail s3">🐌</div>
+            <div class="snail s4">🐌</div><div class="snail s5">🐌</div><div class="snail s6">🐌</div>
+        </div>
+    </div>
+
+    <div class="definition-box">
+        <div class="def-header"><h2 class="comic-heading" style="margin:0; font-size: 2rem;">1. SCATTER PLOTS / 散点图</h2></div>
+        <div class="def-body">
+            <span class="lang-en"><b>Scatter Plot:</b> A graph in the coordinate plane that displays a set of bivariate data.</span>
+            <span class="lang-zh"><b>散点图：</b> 坐标平面中显示一组双变量数据的图。</span>
+        </div>
+    </div>
+
+    <div class="correlation-row">
+        <div class="property-card">
+            <h3 class="comic-heading" style="color:var(--theme-blue)">POSITIVE CORRELATION</h3>
+            <div style="height: 180px;"><canvas id="posChart"></canvas></div>
+            <p><b>正相关</b></p>
+        </div>
+        <div class="property-card">
+            <h3 class="comic-heading" style="color:var(--theme-red)">NEGATIVE CORRELATION</h3>
+            <div style="height: 180px;"><canvas id="negChart"></canvas></div>
+            <p><b>负相关</b></p>
+        </div>
+        <div class="property-card">
+            <h3 class="comic-heading">NO CORRELATION</h3>
+            <div style="height: 180px;"><canvas id="noneChart"></canvas></div>
+            <p><b>无相关</b></p>
+        </div>
+    </div>
+
+    <hr style="width: 100%; max-width: 1100px; border: 2px solid black; margin-bottom: 40px;">
+
+    <div class="analysis-grid">
+        <div class="property-card" style="border-color: #d35400;">
+            <h2 class="comic-heading" style="color: #d35400; margin-top:0;">POPULATION ANALYSIS / 种群分析</h2>
+            
+            <form id="mcq-form">
+                <div class="mcq-container">
+                    <p class="lang-en" style="margin-bottom: 5px;"><b>Check:</b> What correlation exists in the chart below?</p>
+                    <p class="lang-zh"><b>检查：</b> 下图中存在哪种相关性？</p>
+                    <label class="option"><input type="radio" name="correlation" value="positive"> Positive / 正相关</label>
+                    <label class="option"><input type="radio" name="correlation" value="negative"> Negative / 负相关</label>
+                    <label class="option"><input type="radio" name="correlation" value="none"> None / 无相关</label>
+                    <button type="button" class="btn-predict" style="margin-top:5px; padding: 5px 10px;" onclick="checkAnswer()">CHECK / 检查</button>
+                    <p id="mcq-feedback" style="font-size: 0.85rem; margin-top: 8px; font-weight: bold;"></p>
+                </div>
+            </form>
+
+            <table class="data-table">
+                <tr>
+                    <th>Years (x) / 年份 (x)</th>
+                    <td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td>
+                </tr>
+                <tr>
+                    <th>Mussels (y) / 贻贝 (y)</th>
+                    <td>15</td><td>125</td><td>175</td><td>225</td><td>325</td><td>435</td><td>483</td>
+                </tr>
+            </table>
+            <div style="height: 380px;"><canvas id="musselChart"></canvas></div>
+            <div id="equation-display"></div>
+            <button class="btn-action" onclick="drawLine()">DRAW LINE & CALCULATE / 绘制趋势线与计算</button>
+
+            <div class="axis-explanation">
+                <p class="lang-en"><b>X-Axis:</b> Years since 2009. <b>Y-Axis:</b> Mussels (thousands).</p>
+                <p class="lang-zh"><b>X 轴：</b> 自 2009 年起的年数。<b>Y 轴：</b> 贻贝数量（以千为单位）。</p>
+            </div>
+        </div>
+
+        <div class="definition-box" id="step3-box">
+            <div class="def-header"><h2 class="comic-heading" style="margin:0; font-size: 2rem;">2. LINE OF BEST FIT / 最佳拟合线</h2></div>
+            <div class="def-body">
+                <span class="lang-en"><b>Line of Best Fit:</b> A straight line that best represents the data trend used for analysis and predictions.</span>
+                <span class="lang-zh"><b>最佳拟合线：</b> 最能代表数据趋势的直线，用于分析和预测。</span>
+                
+                <div id="slope-calculation" class="step-box">
+                    <p class="lang-en"><b>Step A: Find the slope (m):</b></p>
+                    
+                    <div class="math-note">
+                        <span class="lang-en" style="font-size: 0.95rem;"><b>Selected Points:</b> P<sub>1</sub>(1, 15) and P<sub>2</sub>(7, 483).</span>
+                        <br>
+                        <span class="lang-en" style="font-size: 0.85rem; color: #666;"><i>Note: Any two points on the line can be picked to calculate m.</i></span>
+                        <br>
+                        <span class="lang-zh" style="font-size: 0.8rem;"><i>选定点：(1, 15) 和 (7, 483)。提示：可以选择直线上的任意两个点。</i></span>
+                    </div>
+
+                    <p class="math-text">m = (y<sub>2</sub> - y<sub>1</sub>) / (x<sub>2</sub> - x<sub>1</sub>) = (483 - 15) / (7 - 1) = <b>78</b></p>
+                    <hr>
+                    <p class="lang-en"><b>Step B: Find the y-intercept (b):</b></p>
+                    <p class="math-text">15 = 78(1) + b → b = <b>-63</b></p>
+                    <p class="lang-en" style="color: var(--theme-red); margin-top: 10px; font-weight: bold;">Equation: y = 78x - 63</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="definition-box" id="prediction-box" style="border-color: var(--water-blue); display: block; border-width: 8px;">
+        <div class="def-header" style="background: var(--water-blue);"><h2 class="comic-heading" style="margin:0; font-size: 2rem;">3. PREDICTION / 预测</h2></div>
+        <div class="def-body">
+            <p class="math-text" style="font-size: 2.2rem; color: var(--theme-red); text-align: center; background: #fff5f5; padding: 10px; border: 2px solid black;">y = 78x - 63</p>
+            
+            <p class="lang-en" style="margin-top: 20px; font-size: 1.2rem;">Calculate the prediction for the year <b>2039</b> (where x = 30):</p>
+            <p class="lang-zh">预测 <b>2039</b> 年的情况（其中 x = 30）：</p>
+            
+            <button class="btn-predict" style="font-size: 1.5rem; padding: 15px 30px;" onclick="showPrediction()">CALCULATE FINAL PREDICTION / 计算最终预测</button>
+            
+            <div id="prediction-steps" style="display: none; margin-top: 25px;">
+                <div style="background: #f0faff; border: 4px solid var(--water-blue); padding: 20px; margin-bottom: 20px;">
+                    <p class="math-text" style="font-size: 1.5rem;">y = 78(30) - 63</p>
+                    <p class="math-text" style="font-size: 1.5rem;">y = 2340 - 63 = <b>2277</b></p>
+                </div>
+                
+                <div id="final-conclusion" class="highlight-conclusion" style="display:block;">
+                    <p class="lang-en" style="font-size: 1.1rem;">Remember: Y is in thousands. 2277 × 1,000 =</p>
+                    <p class="lang-en" style="color: var(--success-green); font-size: 1.8rem; margin: 10px 0;"><b>2,277,000 Zebra Mussels</b></p>
+                    <p class="lang-zh" style="font-size: 1.1rem;">结论：2,277,000 只斑马贻贝。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // FORCED RESET ON LOAD
+        window.onload = function() {
+            document.getElementById('mcq-form').reset();
+        };
+
+        const axisConfig = {
+            responsive: true, maintainAspectRatio: false,
+            scales: {
+                x: { min: 0, max: 10, ticks: {display: false}, grid: {display: true} },
+                y: { min: 0, max: 100, ticks: {display: false}, grid: {display: true} }
+            },
+            plugins: { legend: { display: false } }
+        };
+
+        const setupMini = (id, type, color) => {
+            const data = []; for(let i=1; i<=8; i++) {
+                let x = i, y = (type==='pos')?i*10+10:(type==='neg')?90-i*10+10:((i%2==0)?70:30);
+                data.push({x,y});
+            }
+            new Chart(document.getElementById(id), { type: 'scatter', data: { datasets:[{data, backgroundColor:color, pointRadius: 6}] }, options: axisConfig });
+        };
+        setupMini('posChart','pos', '#1fbad6'); setupMini('negChart','neg', '#e21b22'); setupMini('noneChart','none', '#333');
+
+        let mChart = new Chart(document.getElementById('musselChart'), {
+            type: 'scatter',
+            data: { 
+                datasets: [
+                    { label: 'Data', data: [{x:2,y:125},{x:3,y:175},{x:4,y:225},{x:5,y:325},{x:6,y:435}], backgroundColor: '#d35400', pointRadius: 10 },
+                    { label: 'Selected Points', data: [{x:1,y:15},{x:7,y:483}], backgroundColor: '#d35400', pointRadius: 10 },
+                    { label: 'Trend Line', data: [], type: 'line', borderColor: 'red', borderDash: [5,5], fill: false, pointRadius: 0 }
+                ] 
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { x: {min:0, max:8}, y: {min:0, max:700} }, plugins: {legend: {display: false}} }
+        });
+
+        function checkAnswer() {
+            const selected = document.querySelector('input[name="correlation"]:checked');
+            const feedback = document.getElementById('mcq-feedback');
+            if (!selected) {
+                feedback.innerText = "PLEASE SELECT AN OPTION! / 请选择一个选项！";
+                feedback.style.color = "orange";
+                return;
+            }
+            if (selected.value === "positive") {
+                feedback.innerText = "CORRECT! IT IS POSITIVE! / 正确！它是正相关的！";
+                feedback.style.color = "green";
+            } else {
+                feedback.innerText = "TRY AGAIN! / 再试一次！";
+                feedback.style.color = "red";
+            }
+        }
+
+        function drawLine() {
+            mChart.data.datasets[1].backgroundColor = '#8e44ad';
+            mChart.data.datasets[1].pointRadius = 12; 
+            mChart.data.datasets[2].data = [{x: 0, y: -63}, {x: 8, y: 561}];
+            mChart.update();
+            document.getElementById('equation-display').innerText = "y = 78x - 63";
+            document.getElementById('slope-calculation').style.display = 'block';
+        }
+
+        function showPrediction() {
+            document.getElementById('prediction-steps').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
