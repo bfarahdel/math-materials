@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Equation - Completing the Square</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap');
+
+        body {
+            background-color: #0f172a;
+            background-image: radial-gradient(#1e293b 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            font-family: 'Inter', sans-serif;
+            color: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .math-card {
+            width: 100%;
+            max-width: 900px;
+            background: #1e293b;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+            border: 1px solid #334155;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .content-area {
+            padding: 40px;
+        }
+
+        .step-container {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: none;
+            margin-bottom: 12px;
+        }
+
+        .step-container.active {
+            opacity: 1;
+            transform: translateY(0);
+            display: flex;
+        }
+
+        .step-container.previous {
+            opacity: 0.5;
+            display: flex;
+            transform: scale(0.98);
+        }
+
+        .math-expr {
+            font-size: 1.8rem;
+            flex: 1.2;
+            text-align: right;
+            padding-right: 30px;
+            color: #f8fafc;
+            font-weight: 500;
+        }
+
+        .explanation {
+            flex: 1;
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            padding-left: 24px;
+            border-left: 2px solid #475569;
+            display: flex;
+            align-items: center;
+        }
+
+        .step-badge {
+            font-family: 'Fira Code', monospace;
+            background: #334155;
+            color: #60a5fa;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-right: 12px;
+            font-size: 0.85rem;
+        }
+
+        .controls {
+            margin-top: 40px;
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: #334155;
+            color: #f1f5f9;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #475569;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress-bar-bg {
+            height: 4px;
+            background: #334155;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: #60a5fa;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .final-answer {
+            background: rgba(59, 130, 246, 0.15);
+            border: 2px solid #3b82f6;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .step-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .math-expr {
+                text-align: left;
+                padding-right: 0;
+                padding-bottom: 8px;
+                font-size: 1.4rem;
+            }
+            .explanation {
+                border-left: none;
+                padding-left: 0;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="math-card">
+    <div class="header relative">
+        <div class="flex items-center space-x-4">
+            <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Example 2</span>
+            <h1 class="text-xl sm:text-2xl font-bold">Completing the Square</h1>
+        </div>
+        <div class="flex items-center">
+            <span class="bg-black/20 px-3 py-1 rounded-md text-xs font-bold font-mono tracking-tight text-white/90">PAGE 192</span>
+        </div>
+        <div class="progress-bar-bg">
+            <div id="progressBar" class="progress-bar-fill"></div>
+        </div>
+    </div>
+
+    <div class="content-area">
+        <div class="mb-10">
+            <span class="text-blue-400 font-bold text-xs uppercase tracking-widest block mb-2">Problem Statement</span>
+            <div class="text-2xl sm:text-3xl font-light text-slate-100 italic">
+                Consider \( x^2 + 16x = 9 \)
+            </div>
+        </div>
+
+        <div id="steps-wrapper">
+            <!-- Step 1 -->
+            <div class="step-container" data-step="1">
+                <div class="math-expr">\( x^2 + 16x + \color{#3b82f6}{\square} = 9 \)</div>
+                <div class="explanation">
+                    <span class="step-badge">Step 1</span>
+                    <span>What value is needed to create a perfect square?</span>
+                </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step-container" data-step="2">
+                <div class="math-expr">\( (\frac{16}{2})^2 = 64 \)</div>
+                <div class="explanation">
+                    <span class="step-badge">Step 2</span>
+                    <span>Divide the middle coefficient by 2 and square it.</span>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step-container" data-step="3">
+                <div class="math-expr">\( x^2 + 16x + \mathbf{64} = 9 + \mathbf{64} \)</div>
+                <div class="explanation">
+                    <span class="step-badge">Step 3</span>
+                    <span>Add 64 to each side of the equation.</span>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step-container" data-step="4">
+                <div class="math-expr">\( x^2 + 16x + 64 = 73 \)</div>
+                <div class="explanation">
+                    <span class="step-badge">Step 4</span>
+                    <span>Simplify the right side (\( 9 + 64 = 73 \)).</span>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step-container" data-step="5">
+                <div class="math-expr">\( (x + 8)^2 = 73 \)</div>
+                <div class="explanation">
+                    <span class="step-badge">Step 5</span>
+                    <span>Factor the perfect square trinomial on the left side.</span>
+                </div>
+            </div>
+
+            <!-- Step 6 -->
+            <div class="step-container" data-step="6">
+                <div class="math-expr text-blue-400 font-bold">\( x + 8 = \pm\sqrt{73} \)</div>
+                <div class="explanation">
+                    <span class="step-badge">Step 6</span>
+                    <span>Apply the Square Root Property to begin solving for \( x \).</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="finalAnswer" class="final-answer">
+            <p class="text-slate-400 text-sm uppercase font-bold tracking-widest mb-2">Final Step</p>
+            <div class="text-3xl text-white font-bold">\( x = -8 \pm \sqrt{73} \)</div>
+        </div>
+
+        <div class="controls">
+            <button id="prevBtn" class="btn btn-secondary" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                Previous
+            </button>
+            <button id="nextBtn" class="btn btn-primary">
+                Next Step
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+            <button id="resetBtn" class="btn btn-secondary" style="display: none;">
+                Restart
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            </button>
+        </div>
+    </div>
+    
+    <div class="bg-slate-900/50 px-8 py-4 flex justify-center text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
+        Lesson 3-5: Completing the Square
+    </div>
+</div>
+
+<script>
+    let currentStep = 0;
+    const steps = document.querySelectorAll('.step-container');
+    const totalSteps = steps.length;
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const progressBar = document.getElementById('progressBar');
+    const finalAnswer = document.getElementById('finalAnswer');
+
+    function updateDisplay() {
+        steps.forEach((step, index) => {
+            step.classList.remove('active', 'previous');
+            if (index + 1 === currentStep) {
+                step.classList.add('active');
+                step.style.display = 'flex';
+            } else if (index + 1 < currentStep) {
+                step.classList.add('previous');
+                step.style.display = 'flex';
+            } else {
+                step.style.display = 'none';
+            }
+        });
+
+        const progress = (currentStep / totalSteps) * 100;
+        progressBar.style.width = `${progress}%`;
+
+        prevBtn.disabled = currentStep <= 1;
+        
+        if (currentStep === totalSteps) {
+            nextBtn.style.display = 'none';
+            resetBtn.style.display = 'flex';
+            finalAnswer.style.display = 'block';
+        } else {
+            nextBtn.style.display = 'flex';
+            resetBtn.style.display = 'none';
+            finalAnswer.style.display = 'none';
+            nextBtn.innerHTML = currentStep === 0 ? 'Start Solution' : 'Next Step <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
+        }
+
+        if (window.MathJax) {
+            MathJax.typesetPromise();
+        }
+    }
+
+    nextBtn.addEventListener('click', () => {
+        if (currentStep < totalSteps) {
+            currentStep++;
+            updateDisplay();
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (currentStep > 1) {
+            currentStep--;
+            updateDisplay();
+        }
+    });
+
+    resetBtn.addEventListener('click', () => {
+        currentStep = 1;
+        updateDisplay();
+    });
+
+    window.onload = () => {
+        currentStep = 1;
+        updateDisplay();
+    };
+</script>
+
+</body>
+</html>

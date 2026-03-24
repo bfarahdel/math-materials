@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example 1 - Square Root Property</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code&display=swap');
+
+        body {
+            background-color: #0f172a;
+            background-image: radial-gradient(#1e293b 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            font-family: 'Inter', sans-serif;
+            color: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .math-card {
+            width: 100%;
+            max-width: 900px;
+            background: #1e293b;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .content-area { padding: 40px; }
+
+        .step-container {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.5s ease;
+            display: none;
+            margin-bottom: 12px;
+        }
+
+        .step-container.active { opacity: 1; transform: translateY(0); display: flex; }
+        .step-container.previous { opacity: 0.4; display: flex; transform: scale(0.98); }
+
+        .math-expr {
+            font-size: 1.6rem;
+            flex: 1.2;
+            text-align: right;
+            padding-right: 30px;
+            color: #f8fafc;
+        }
+
+        .explanation {
+            flex: 1;
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            padding-left: 24px;
+            border-left: 2px solid #475569;
+            display: flex;
+            align-items: center;
+        }
+
+        .step-badge {
+            font-family: 'Fira Code', monospace;
+            background: #334155;
+            color: #34d399;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-right: 12px;
+            font-size: 0.8rem;
+        }
+
+        .controls { margin-top: 40px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+        .btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; gap: 8px; }
+        .btn-primary { background: #10b981; color: white; }
+        .btn-secondary { background: #334155; color: #f1f5f9; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .progress-bar-bg { height: 4px; background: #334155; width: 100%; position: absolute; bottom: 0; left: 0; }
+        .progress-bar-fill { height: 100%; background: #34d399; width: 0%; transition: width 0.4s ease; }
+
+        .final-answer {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid #10b981;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .step-container { flex-direction: column; }
+            .math-expr { text-align: left; padding: 0 0 8px 0; }
+            .explanation { border-left: none; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="math-card">
+    <div class="header relative">
+        <div class="flex items-center space-x-4">
+            <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">Example 1</span>
+            <h1 class="text-xl sm:text-2xl font-bold">Equation with Rational Roots</h1>
+        </div>
+        <div class="flex items-center">
+            <span class="bg-black/20 px-3 py-1 rounded-md text-xs font-bold font-mono text-white/90 uppercase">Page 191</span>
+        </div>
+        <div class="progress-bar-bg">
+            <div id="progressBar" class="progress-bar-fill"></div>
+        </div>
+    </div>
+
+    <div class="content-area">
+        <div class="mb-10">
+            <span class="text-emerald-400 font-bold text-xs uppercase tracking-widest block mb-2">Problem Statement</span>
+            <div class="text-2xl sm:text-3xl font-light text-slate-100 italic">
+                Solve \( x^2 + 6x + 9 = 36 \) by using the Square Root Property.
+            </div>
+        </div>
+
+        <div id="steps-wrapper">
+            <div class="step-container" data-step="1">
+                <div class="math-expr">\( (x + 3)^2 = 36 \)</div>
+                <div class="explanation"><span class="step-badge">1</span> Factor the perfect square trinomial.</div>
+            </div>
+            <div class="step-container" data-step="2">
+                <div class="math-expr">\( x + 3 = \pm\sqrt{36} \)</div>
+                <div class="explanation"><span class="step-badge">2</span> Apply the Square Root Property.</div>
+            </div>
+            <div class="step-container" data-step="3">
+                <div class="math-expr">\( x + 3 = \pm 6 \)</div>
+                <div class="explanation"><span class="step-badge">3</span> Simplify the square root.</div>
+            </div>
+            <div class="step-container" data-step="4">
+                <div class="math-expr">\( x = -3 \pm 6 \)</div>
+                <div class="explanation"><span class="step-badge">4</span> Subtract 3 from each side.</div>
+            </div>
+            <div class="step-container" data-step="5">
+                <div class="math-expr">\( x = 3 \text{ or } x = -9 \)</div>
+                <div class="explanation"><span class="step-badge">5</span> Write as two equations and simplify.</div>
+            </div>
+        </div>
+
+        <div id="finalAnswer" class="final-answer">
+            <p class="text-emerald-400 text-xs font-bold uppercase tracking-widest mb-1">Solution Set</p>
+            <div class="text-3xl text-white font-bold">\( \{-9, 3\} \)</div>
+        </div>
+
+        <div class="controls">
+            <button id="prevBtn" class="btn btn-secondary" disabled>Back</button>
+            <button id="nextBtn" class="btn btn-primary">Start Solution</button>
+            <button id="resetBtn" class="btn btn-secondary" style="display: none;">Restart</button>
+        </div>
+    </div>
+    
+    <div class="bg-slate-900/50 px-8 py-4 flex justify-center text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
+        Lesson 3-5: Completing the Square
+    </div>
+</div>
+
+<script>
+    let currentStep = 0;
+    const steps = document.querySelectorAll('.step-container');
+    const totalSteps = steps.length;
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const progressBar = document.getElementById('progressBar');
+    const finalAnswer = document.getElementById('finalAnswer');
+
+    function updateDisplay() {
+        steps.forEach((step, index) => {
+            step.classList.remove('active', 'previous');
+            if (index + 1 === currentStep) {
+                step.classList.add('active');
+                step.style.display = 'flex';
+            } else if (index + 1 < currentStep) {
+                step.classList.add('previous');
+                step.style.display = 'flex';
+            } else {
+                step.style.display = 'none';
+            }
+        });
+
+        progressBar.style.width = `${(currentStep / totalSteps) * 100}%`;
+        prevBtn.disabled = currentStep <= 1;
+        
+        if (currentStep === totalSteps) {
+            nextBtn.style.display = 'none';
+            resetBtn.style.display = 'flex';
+            finalAnswer.style.display = 'block';
+        } else {
+            nextBtn.style.display = 'flex';
+            resetBtn.style.display = 'none';
+            finalAnswer.style.display = 'none';
+            nextBtn.innerText = currentStep === 0 ? 'Start Solution' : 'Next Step';
+        }
+
+        if (window.MathJax) MathJax.typesetPromise();
+    }
+
+    nextBtn.addEventListener('click', () => { if (currentStep < totalSteps) { currentStep++; updateDisplay(); } });
+    prevBtn.addEventListener('click', () => { if (currentStep > 1) { currentStep--; updateDisplay(); } });
+    resetBtn.addEventListener('click', () => { currentStep = 1; updateDisplay(); });
+
+    window.onload = () => { currentStep = 1; updateDisplay(); };
+</script>
+
+</body>
+</html>
