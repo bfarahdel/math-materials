@@ -418,7 +418,31 @@
                     { label: 'Trend Line', data: [], type: 'line', borderColor: 'red', borderDash: [5,5], fill: false, pointRadius: 0 }
                 ] 
             },
-            options: { responsive: true, maintainAspectRatio: false, scales: { x: {min:0, max:8}, y: {min:0, max:700} }, plugins: {legend: {display: false}} }
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                scales: { 
+                    x: {
+                        min:0, 
+                        max:8,
+                        title: {
+                            display: true,
+                            text: 'Years since 2009 (x)',
+                            font: { size: 14, weight: 'bold' }
+                        }
+                    }, 
+                    y: {
+                        min:0, 
+                        max:700,
+                        title: {
+                            display: true,
+                            text: 'Mussels (thousands) (y)',
+                            font: { size: 14, weight: 'bold' }
+                        }
+                    } 
+                }, 
+                plugins: {legend: {display: false}} 
+            }
         });
 
         function checkAnswer() {
