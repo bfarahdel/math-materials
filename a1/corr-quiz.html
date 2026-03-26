@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Correlation Sorter</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+
+        :root {
+            --pos-blue: #1fbad6;
+            --neg-red: #e21b22;
+            --none-gray: #555;
+            --gold: #ffcc00;
+        }
+
+        body {
+            font-family: 'Arial Black', sans-serif;
+            margin: 0;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            touch-action: none; 
+        }
+
+        .container {
+            display: inline-block;
+            background: white;
+            border: 8px solid #000;
+            padding: 30px;
+            box-shadow: 15px 15px 0px #000;
+            text-align: center;
+            position: relative;
+            width: 950px;
+            height: 750px;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .comic-heading { font-family: 'Bangers', cursive; text-transform: uppercase; letter-spacing: 2px; margin: 10px; }
+        .hidden { display: none !important; }
+
+        p { font-size: 1.5rem; margin-bottom: 20px; }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 30px;
+            border-bottom: 5px solid #000;
+            margin-bottom: 25px;
+            background: #fafafa;
+        }
+
+        .example-grid {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .mini-card {
+            border: 4px solid #000;
+            padding: 5px;
+            background: #fff;
+        }
+
+        .drop-zone-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .drop-box {
+            width: 250px;
+            height: 140px;
+            border: 6px dashed #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            transition: transform 0.1s;
+        }
+
+        .drop-box.over { transform: scale(1.1); background: #f0f0f0; border-style: solid; }
+        .pos-box { border-color: var(--pos-blue); color: var(--pos-blue); }
+        .neg-box { border-color: var(--neg-red); color: var(--neg-red); }
+        .none-box { border-color: var(--none-gray); color: var(--none-gray); }
+
+        #drag-item {
+            position: absolute;
+            top: 68%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: grab;
+            background: white;
+            border: 6px solid #000;
+            z-index: 100;
+            padding: 10px;
+            box-shadow: 10px 10px 0px #000;
+            will-change: transform, left, top; 
+        }
+
+        .btn {
+            background: var(--gold);
+            border: 5px solid #000;
+            padding: 20px 50px;
+            font-family: 'Bangers', cursive;
+            font-size: 2.8rem;
+            cursor: pointer;
+            box-shadow: 8px 8px 0px #000;
+        }
+
+        #timer.warning { color: var(--neg-red); animation: blink 0.5s infinite; }
+        @keyframes blink { 50% { opacity: 0.5; } }
+        
+        .flash-success { background-color: #d4edda !important; }
+        .flash-error { background-color: #f8d7da !important; }
+    </style>
+</head>
+<body id="bg">
+
+<div class="container">
+    <div id="start-screen">
+        <h1 class="comic-heading" style="font-size: 5rem; color: var(--neg-red); margin-top: 0;">CORRELATION SORTER</h1>
+        
+        <div class="example-grid">
+            <div class="mini-card">
+                <canvas id="posEx" width="220" height="170"></canvas>
+                <div class="comic-heading" style="font-size: 1.2rem; color: var(--pos-blue);">POSITIVE</div>
+            </div>
+            <div class="mini-card">
+                <canvas id="negEx" width="220" height="170"></canvas>
+                <div class="comic-heading" style="font-size: 1.2rem; color: var(--neg-red);">NEGATIVE</div>
+            </div>
+            <div class="mini-card">
+                <canvas id="noneEx" width="220" height="170"></canvas>
+                <div class="comic-heading" style="font-size: 1.2rem; color: var(--none-gray);">NONE</div>
+            </div>
+        </div>
+
+        <p>Sort the graphs into the correct boxes before time runs out!</p>
+        <button class="btn" onclick="startGame()">START GAME</button>
+    </div>
+
+    <div id="game-screen" class="hidden">
+        <div class="stats-bar">
+            <div class="comic-heading" style="font-size: 2.2rem;">TIME: <span id="timer">30</span>s</div>
+            <div class="comic-heading" style="font-size: 2.2rem;">LIVES: <span id="lives">❤️❤️❤️</span></div>
+            <div class="comic-heading" style="font-size: 2.2rem;">SCORE: <span id="score">0</span></div>
+        </div>
+
+        <div class="drop-zone-container">
+            <div class="drop-box pos-box" data-type="pos"><div class="comic-heading" style="font-size: 1.8rem;">POSITIVE</div></div>
+            <div class="drop-box none-box" data-type="none"><div class="comic-heading" style="font-size: 1.8rem;">NONE</div></div>
+            <div class="drop-box neg-box" data-type="neg"><div class="comic-heading" style="font-size: 1.8rem;">NEGATIVE</div></div>
+        </div>
+
+        <div id="drag-item">
+            <canvas id="quizChart" width="400" height="300"></canvas>
+        </div>
+    </div>
+
+    <div id="end-screen" class="hidden">
+        <h1 class="comic-heading" style="font-size: 5rem;" id="end-reason">FINISH!</h1>
+        <h2 class="comic-heading" style="font-size: 3.5rem;">FINAL SCORE: <span id="final-score">0</span></h2>
+        <button class="btn" onclick="location.reload()">REPLAY</button>
+    </div>
+</div>
+
+<script>
+    let score = 0, lives = 3, timeLeft = 30, timerId, currentType = "", mainChart;
+    const dragItem = document.getElementById('drag-item'), boxes = document.querySelectorAll('.drop-box');
+
+    function generateData(type) {
+        let data = [];
+        for(let i=1; i<=15; i++) {
+            let noise = (Math.random()*40 - 20);
+            let y = (type === 'pos') ? i*6 + 10 + noise : (type === 'neg') ? 90 - i*6 + noise : (Math.random() * 80 + 10);
+            data.push({x: i, y: Math.max(0, Math.min(100, y))});
+        }
+        return data;
+    }
+
+    window.onload = () => {
+        const miniOptions = { responsive: false, scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: false } } };
+        new Chart(document.getElementById('posEx'), { type: 'scatter', data: { datasets: [{ data: generateData('pos'), backgroundColor: '#1fbad6', pointRadius: 4 }] }, options: miniOptions });
+        new Chart(document.getElementById('negEx'), { type: 'scatter', data: { datasets: [{ data: generateData('neg'), backgroundColor: '#e21b22', pointRadius: 4 }] }, options: miniOptions });
+        new Chart(document.getElementById('noneEx'), { type: 'scatter', data: { datasets: [{ data: generateData('none'), backgroundColor: '#555', pointRadius: 4 }] }, options: miniOptions });
+    };
+
+    function startGame() {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('game-screen').classList.remove('hidden');
+        spawnNewGraph();
+        timerId = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timer').innerText = timeLeft;
+            if(timeLeft <= 10) document.getElementById('timer').classList.add('warning');
+            if(timeLeft <= 0) endGame("TIME'S UP!");
+        }, 1000);
+    }
+
+    function spawnNewGraph() {
+        const types = ['pos', 'neg', 'none'];
+        currentType = types[Math.floor(Math.random() * 3)];
+        dragItem.style.transition = "none";
+        dragItem.style.top = "68%"; dragItem.style.left = "50%";
+        const ctx = document.getElementById('quizChart').getContext('2d');
+        if (mainChart) mainChart.destroy();
+        mainChart = new Chart(ctx, {
+            type: 'scatter',
+            data: { datasets: [{ data: generateData(currentType), backgroundColor: '#000', pointRadius: 8 }] },
+            options: { responsive: false, scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: false } } }
+        });
+    }
+
+    let isDragging = false, startX, startY, origX, origY;
+
+    function handleStart(e) {
+        isDragging = true;
+        const input = e.type.includes('touch') ? e.touches[0] : e;
+        startX = input.clientX; startY = input.clientY;
+        origX = dragItem.offsetLeft; origY = dragItem.offsetTop;
+        dragItem.style.transition = "none";
+    }
+
+    function handleMove(e) {
+        if (!isDragging) return;
+        const input = e.type.includes('touch') ? e.touches[0] : e;
+        dragItem.style.left = (origX + (input.clientX - startX)) + "px";
+        dragItem.style.top = (origY + (input.clientY - startY)) + "px";
+        boxes.forEach(box => {
+            let r = box.getBoundingClientRect();
+            if (input.clientX > r.left && input.clientX < r.right && input.clientY > r.top && input.clientY < r.bottom) box.classList.add('over');
+            else box.classList.remove('over');
+        });
+    }
+
+    function handleEnd(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        let success = false;
+        const input = e.type.includes('touch') ? e.changedTouches[0] : e;
+        boxes.forEach(box => {
+            let r = box.getBoundingClientRect();
+            if (input.clientX > r.left && input.clientX < r.right && input.clientY > r.top && input.clientY < r.bottom) {
+                if (box.dataset.type === currentType) {
+                    score++; document.getElementById('score').innerText = score;
+                    flashBg('flash-success'); success = true; spawnNewGraph();
+                } else {
+                    lives--; updateLives(); flashBg('flash-error');
+                    if (lives <= 0) endGame("OUT OF LIVES!");
+                }
+                box.classList.remove('over');
+            }
+        });
+        if (!success) {
+            dragItem.style.transition = "all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28)";
+            dragItem.style.left = "50%"; dragItem.style.top = "68%";
+        }
+    }
+
+    dragItem.addEventListener('mousedown', handleStart);
+    document.addEventListener('mousemove', handleMove);
+    document.addEventListener('mouseup', handleEnd);
+    dragItem.addEventListener('touchstart', handleStart, {passive: false});
+    document.addEventListener('touchmove', handleMove, {passive: false});
+    document.addEventListener('touchend', handleEnd, {passive: false});
+
+    function updateLives() { document.getElementById('lives').innerText = "❤️".repeat(lives) + "🖤".repeat(3-lives); }
+    function flashBg(cls) { 
+        document.getElementById('bg').classList.add(cls);
+        setTimeout(() => document.getElementById('bg').classList.remove(cls), 200);
+    }
+
+    function endGame(reason) {
+        clearInterval(timerId);
+        document.getElementById('game-screen').classList.add('hidden');
+        document.getElementById('end-screen').classList.remove('hidden');
+        document.getElementById('end-reason').innerText = reason;
+        document.getElementById('final-score').innerText = score;
+        if (score > (localStorage.getItem('suddenDeathHi') || 0)) localStorage.setItem('suddenDeathHi', score);
+    }
+</script>
+</body>
+</html>
