@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Boundary Battleship</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #fff;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .game-info {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .info-box {
+            background: rgba(0,0,0,0.3);
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .score {
+            font-size: 1.5em;
+            color: #4ecca3;
+            font-weight: bold;
+        }
+
+        .world-container {
+            position: relative;
+            background: #7ec850;
+            border: 4px solid #5a8f3c;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 50px);
+            grid-template-rows: repeat(10, 50px);
+            position: relative;
+        }
+
+        .cell {
+            border: 1px solid rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: crosshair;
+        }
+
+        .cell:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .cell.player-zone {
+            background: rgba(78, 204, 163, 0.15);
+        }
+
+        .cell.enemy-zone {
+            background: rgba(255, 100, 100, 0.15);
+        }
+
+        .boundary-line {
+            position: absolute;
+            background: linear-gradient(135deg, transparent 49%, #ff4444 49%, #ff4444 51%, transparent 51%);
+            width: 500px;
+            height: 500px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .boundary-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            background: #ff4444;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+            z-index: 11;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .character {
+            width: 40px;
+            height: 40px;
+            image-rendering: pixelated;
+            position: relative;
+            z-index: 5;
+        }
+
+        .arrow {
+            position: absolute;
+            width: 30px;
+            height: 4px;
+            background: linear-gradient(90deg, #8B4513, #D2691E);
+            border-radius: 2px;
+            z-index: 20;
+            pointer-events: none;
+            transform-origin: left center;
+        }
+
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid #D2691E;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+        }
+
+        .hit-effect {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #ff6600 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 25;
+            animation: explode 0.5s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        .miss-effect {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            z-index: 15;
+            animation: fade 0.5s ease-out forwards;
+        }
+
+        @keyframes fade {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.5); }
+        }
+
+        .coordinates-overlay {
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .coordinates-left {
+            position: absolute;
+            left: -35px;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column-reverse;
+            justify-content: space-between;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+            align-items: center;
+            height: 500px;
+        }
+
+        .controls {
+            margin-top: 35px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            background: #4ecca3;
+            color: #1a1a2e;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background: #3db892;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+
+        button.start-btn {
+            background: #ff6b6b;
+            color: #fff;
+        }
+
+        button.start-btn:hover {
+            background: #ff5252;
+        }
+
+        .character-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .character-btn {
+            padding: 8px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 3px solid transparent;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .character-btn.active {
+            border-color: #4ecca3;
+            background: rgba(78, 204, 163, 0.3);
+        }
+
+        .character-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .instructions {
+            margin-top: 20px;
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .instructions h3 {
+            color: #4ecca3;
+            margin-bottom: 10px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+
+        .cell.selected {
+            border: 3px solid #ffd700;
+            background: rgba(255, 215, 0, 0.3) !important;
+        }
+
+        .character-tooltip {
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffd700;
+            color: #000;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: bold;
+            z-index: 100;
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border: 2px solid #fff;
+        }
+
+        .creeper-death-tooltip {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff4444;
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: bold;
+            z-index: 100;
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(255,0,0,0.4);
+            border: 2px solid #fff;
+            animation: tooltipFade 1s ease-out forwards;
+        }
+
+        .creeper-death-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid #ff4444;
+        }
+
+        @keyframes tooltipFade {
+            0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            70% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        }
+
+        .creeper-dying {
+            animation: creeperDeath 0.6s ease-out forwards;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 3px solid #4ecca3;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            max-width: 400px;
+            animation: modalPop 0.3s ease-out;
+        }
+
+        @keyframes modalPop {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-content h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .modal-content h2.success {
+            color: #4ecca3;
+        }
+
+        .modal-content h2.fail {
+            color: #ff6b6b;
+        }
+
+        .modal-content .final-score {
+            font-size: 3em;
+            font-weight: bold;
+            color: #ffd700;
+            margin: 20px 0;
+        }
+
+        .menu-modal {
+            max-width: 600px;
+            padding: 30px;
+        }
+
+        .menu-modal h1 {
+            font-size: 2.5em;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+        }
+
+        .character-select, .game-mode-select {
+            margin: 25px 0;
+        }
+
+        .character-select h3, .game-mode-select h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .character-options, .mode-options {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+        }
+
+        .character-card, .mode-card {
+            background: rgba(255,255,255,0.1);
+            border: 3px solid transparent;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .character-card {
+            min-width: 120px;
+        }
+
+        .character-card img {
+            width: 80px;
+            height: 80px;
+            image-rendering: pixelated;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background: #333;
+        }
+
+        .character-card .name {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .mode-card {
+            min-width: 150px;
+        }
+
+        .mode-card .mode-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .mode-card .name {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .character-card:hover, .mode-card:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-5px);
+        }
+
+        .character-card.selected {
+            border-color: #4ecca3;
+            background: rgba(78, 204, 163, 0.2);
+        }
+
+        .mode-card.selected {
+            border-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.2);
+        }
+
+        .formula-display {
+            padding: 15px 30px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .formula-display .formula {
+            font-size: 1.5em;
+            color: #4ecca3;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Creeper Invasion!</h1>
+    
+    <div class="game-info">
+        <div class="info-box">
+            <div style="color: #ff6b6b;">Hero</div>
+            <div class="score" id="heroName" style="font-size: 1.2em; color: #4ecca3;">Steve</div>
+        </div>
+        <div class="info-box" id="timerBox" style="display: none;">
+            <div style="color: #ff6b6b;">Time</div>
+            <div class="score" id="timer" style="font-size: 1.5em; color: #ff6b6b;">30</div>
+        </div>
+        <div class="info-box">
+            <div style="color: #ffd700;">Score</div>
+            <div class="score" id="score" style="color: #ffd700;">0</div>
+        </div>
+        <div class="info-box">
+            <div style="color: #4ecca3;">Creepers Destroyed</div>
+            <div class="score" id="kills" style="color: #4ecca3;">0</div>
+        </div>
+        <div class="info-box">
+            <div style="color: #87CEEB;">Shots Fired</div>
+            <div class="score" id="shots" style="color: #87CEEB;">0</div>
+        </div>
+    </div>
+
+    <div class="world-container">
+        <div class="coordinates-left">
+            <span>0</span>
+            <span>1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+            <span>6</span>
+            <span>7</span>
+            <span>8</span>
+            <span>9</span>
+        </div>
+        <div class="grid" id="gameGrid">
+            <div class="boundary-line"></div>
+            <div class="boundary-label">y = x</div>
+        </div>
+        <div class="coordinates-overlay">
+            <span>0</span>
+            <span>1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+            <span>6</span>
+            <span>7</span>
+            <span>8</span>
+            <span>9</span>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button onclick="showMainMenu()">← Back to Menu</button>
+    </div>
+
+    <div class="instructions">
+        <div class="formula-display" style="margin-bottom: 15px; padding: 10px 20px; background: rgba(0,0,0,0.3); border-radius: 8px; display: inline-block;">
+            <div style="font-size: 1.3em; color: #4ecca3; font-weight: bold;">(x, y) → (y, x)</div>
+        </div>
+        <h3>How to Play</h3>
+        <div>
+            <div>
+                <strong>First click:</strong> Move character & show coordinates<br>
+                <strong>Second click:</strong> Fire arrow across y=x boundary<br>
+                Arrows follow the inverse transform (x,y) → (y,x) to reach the enemy zone.<br>
+                Hit Creepers on the opposite side to score points!
+            </div>
+        </div>
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color green"></div>
+                <span>Your Zone (y &lt; x)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color red"></div>
+                <span>Enemy Zone (y &gt; x)</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="mainMenuModal">
+        <div class="modal-content menu-modal">
+            <h1 style="margin-bottom: 20px;">Creeper Invasion!</h1>
+            
+            <div class="formula-display" style="margin-bottom: 20px; padding: 10px;">
+                <div class="formula">(x, y) → (y, x)</div>
+            </div>
+            
+            <div class="character-select">
+                <h3>🎮 Select Your Hero</h3>
+                <div class="character-options">
+                    <div class="character-card selected" onclick="selectCharacter('Steve')" id="steve-card">
+                        <img src="https://minotar.net/avatar/Steve/80" alt="Steve" onerror="this.src='https://crafatar.com/avatars/8667ba71b85a4004af54457a9734eed7?size=80'">
+                        <div class="name">Steve</div>
+                    </div>
+                    <div class="character-card" onclick="selectCharacter('Alex')" id="alex-card">
+                        <img src="https://minotar.net/avatar/Alex/80" alt="Alex" onerror="this.src='https://crafatar.com/avatars/69c93636a3aa4f2a8f26705d1a83e8a1?size=80'">
+                        <div class="name">Alex</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="game-mode-select">
+                <h3>🎯 Select Game Mode</h3>
+                <div class="mode-options">
+                    <div class="mode-card selected" onclick="selectMode('freeplay')" id="freeplay-card">
+                        <div class="mode-icon">🎮</div>
+                        <div class="name">Freeplay</div>
+                    </div>
+                    <div class="mode-card" onclick="selectMode('timeattack')" id="timeattack-card">
+                        <div class="mode-icon">⏱️</div>
+                        <div class="name">Time Attack</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="start-btn" onclick="startFromMenu()">⚔️ Start Mission</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="endGameModal">
+        <div class="modal-content">
+            <h2 id="endGameTitle">Mission Complete!</h2>
+            <div class="final-score" id="finalScore">0</div>
+            <div class="message" id="endGameMessage"></div>
+            <button onclick="closeModalAndStart()">Play Again</button>
+        </div>
+    </div>
+
+    <script>
+        const GRID_SIZE = 10;
+        const CELL_SIZE = 50;
+        let selectedCharacter = 'Steve';
+        let playerPos = { x: 2, y: 0 };
+        let creepers = [];
+        let score = 0;
+        let kills = 0;
+        let shots = 0;
+        let gameActive = false;
+        let autoFire = false;
+        let autoFireInterval = null;
+        let selectedTarget = null;
+        let gameMode = 'freeplay';
+        let timeRemaining = 30;
+        let timerInterval = null;
+
+        const characterHeads = {
+            'Steve': 'https://minotar.net/avatar/Steve/40',
+            'Alex': 'https://minotar.net/avatar/Alex/40'
+        };
+
+        // Character and mode selection functions
+        function selectCharacter(char) {
+            selectedCharacter = char;
+            document.querySelectorAll('.character-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById(char.toLowerCase() + '-card').classList.add('selected');
+        }
+
+        function selectMode(mode) {
+            gameMode = mode;
+            document.querySelectorAll('.mode-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.getElementById(mode + '-card').classList.add('selected');
+        }
+
+        function startFromMenu() {
+            document.getElementById('mainMenuModal').classList.remove('show');
+            document.getElementById('heroName').textContent = selectedCharacter;
+            if (gameMode === 'timeattack') {
+                document.getElementById('timerBox').style.display = 'block';
+            } else {
+                document.getElementById('timerBox').style.display = 'none';
+            }
+            // Reset player position to starting position
+            playerPos = { x: 2, y: 0 };
+            // Reset game values to initial state
+            score = 0;
+            kills = 0;
+            shots = 0;
+            creepers = [];
+            gameActive = false;
+            selectedTarget = null;
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            if (gameMode === 'timeattack') {
+                timeRemaining = 30;
+                document.getElementById('timer').textContent = timeRemaining;
+            }
+            updateStats();
+            // Clear grid completely
+            const grid = document.getElementById('gameGrid');
+            grid.querySelectorAll('[data-creeper="true"]').forEach(el => el.remove());
+            grid.querySelectorAll('.arrow').forEach(el => el.remove());
+            grid.querySelectorAll('.hit-effect, .miss-effect').forEach(el => el.remove());
+            grid.querySelectorAll('#player-container').forEach(el => el.remove());
+            grid.querySelectorAll('.cell').forEach(c => {
+                c.classList.remove('selected');
+                const label = c.querySelector('.coord-label');
+                if (label) label.style.display = 'none';
+            });
+            placePlayer();
+            startGame();
+        }
+
+        function showMainMenu() {
+            document.getElementById('mainMenuModal').classList.add('show');
+        }
+
+        // Show menu on load
+        window.onload = function() {
+            showMainMenu();
+        };
+
+        const creeperSVG = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4IDgiIHNoYXBlLXJlbmRlcmluZz0iY3Jpc3BFZGdlcyI+PHJlY3Qgd2lkdGg9IjgiIGhlaWdodD0iOCIgZmlsbD0iIzBEQTcwRCIvPjxyZWN0IHg9IjEiIHk9IjIiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMwMDAwMDAiLz48cmVjdCB4PSI0IiB5PSIyIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMDAwMDAwIi8+PHJlY3QgeD0iMiIgeT0iNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjMiIHk9IjQiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMwMDAwMDAiLz48cmVjdCB4PSI0IiB5PSI0IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMDAwMDAwIi8+PHJlY3QgeD0iNSIgeT0iNCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0iIzAwMDAwMCIvPjxyZWN0IHg9IjIiIHk9IjUiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMwMDAwMDAiLz48cmVjdCB4PSI1IiB5PSI1IiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjMDAwMDAwIi8+PHJlY3QgeD0iMyIgeT0iNiIgd2lkdGg9IjIiIGhlaWdodD0iMSIgZmlsbD0iIzAwMDAwMCIvPjwvc3ZnPg==';
+
+        // Load selected character and game mode from menu
+        const savedCharacter = localStorage.getItem('selectedCharacter');
+        if (savedCharacter && characterHeads[savedCharacter]) {
+            selectedCharacter = savedCharacter;
+        }
+        document.getElementById('heroName').textContent = selectedCharacter;
+
+        const savedMode = localStorage.getItem('gameMode');
+        if (savedMode) {
+            gameMode = savedMode;
+        }
+        if (gameMode === 'timeattack') {
+            document.getElementById('timerBox').style.display = 'block';
+        }
+        
+        createGrid();
+        // Don't place player on load, wait for menu selection
+        // placePlayer();
+        // updateHeroPosition();
+
+        function createGrid() {
+            const grid = document.getElementById('gameGrid');
+            for (let y = 0; y < GRID_SIZE; y++) {
+                for (let x = 0; x < GRID_SIZE; x++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.x = x;
+                    cell.dataset.y = GRID_SIZE - 1 - y;
+                    
+                    // Mark zones based on y=x boundary
+                    const actualY = GRID_SIZE - 1 - y;
+                    if (actualY < x) {
+                        cell.classList.add('player-zone');
+                    } else if (actualY > x) {
+                        cell.classList.add('enemy-zone');
+                    }
+                    
+                    // Add coordinate label
+                    const coordLabel = document.createElement('div');
+                    coordLabel.className = 'coord-label';
+                    coordLabel.textContent = `(${x},${GRID_SIZE - 1 - y})`;
+                    coordLabel.style.display = 'none';
+                    cell.appendChild(coordLabel);
+                    
+                    cell.addEventListener('click', () => {
+                        if (gameActive) {
+                            handleCellClick(parseInt(cell.dataset.x), parseInt(cell.dataset.y), cell);
+                        }
+                    });
+                    
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        function placePlayer() {
+            const grid = document.getElementById('gameGrid');
+            const cell = getCell(grid, playerPos.x, playerPos.y);
+            if (cell && !cell.querySelector('.character')) {
+                const container = document.createElement('div');
+                container.style.position = 'relative';
+                container.id = 'player-container';
+                
+                const img = document.createElement('img');
+                img.src = characterHeads[selectedCharacter];
+                img.className = 'character';
+                img.id = 'player';
+                img.alt = selectedCharacter;
+                img.onerror = function() {
+                    this.src = 'https://mc-heads.net/avatar/' + selectedCharacter + '/40';
+                };
+                container.appendChild(img);
+                
+                // Add large coordinate tooltip
+                const tooltip = document.createElement('div');
+                tooltip.className = 'character-tooltip';
+                tooltip.textContent = `(${playerPos.x}, ${playerPos.y})`;
+                tooltip.id = 'player-tooltip';
+                container.appendChild(tooltip);
+                
+                cell.appendChild(container);
+            }
+        }
+
+        function getCell(grid, x, y) {
+            const cells = grid.querySelectorAll('.cell');
+            for (let cell of cells) {
+                if (parseInt(cell.dataset.x) === x && parseInt(cell.dataset.y) === y) {
+                    return cell;
+                }
+            }
+            return null;
+        }
+
+        function handleCellClick(x, y, cell) {
+            // Prevent moving to enemy zone (y >= x)
+            if (y >= x) {
+                alert('Cannot cross the y=x boundary! Stay in your zone (y < x).');
+                return;
+            }
+            
+            if (selectedTarget && selectedTarget.x === x && selectedTarget.y === y) {
+                // Second click - fire!
+                shootArrow(x, y);
+                selectedTarget = null;
+                document.querySelectorAll('.cell').forEach(c => c.classList.remove('selected'));
+            } else {
+                // First click - move player
+                document.querySelectorAll('.cell').forEach(c => {
+                    c.classList.remove('selected');
+                });
+                
+                selectedTarget = { x, y };
+                cell.classList.add('selected');
+                
+                // Move player to this cell
+                movePlayer(x, y);
+            }
+        }
+
+        function movePlayer(x, y) {
+            const grid = document.getElementById('gameGrid');
+            const container = document.getElementById('player-container');
+            
+            if (container) container.remove();
+            
+            playerPos = { x, y };
+            const cell = getCell(grid, x, y);
+            if (cell) {
+                const newContainer = document.createElement('div');
+                newContainer.style.position = 'relative';
+                newContainer.id = 'player-container';
+                
+                const img = document.createElement('img');
+                img.src = characterHeads[selectedCharacter];
+                img.className = 'character';
+                img.id = 'player';
+                img.alt = selectedCharacter;
+                img.onerror = function() {
+                    this.src = 'https://mc-heads.net/avatar/' + selectedCharacter + '/40';
+                };
+                newContainer.appendChild(img);
+                
+                // Add large coordinate tooltip
+                const tooltip = document.createElement('div');
+                tooltip.className = 'character-tooltip';
+                tooltip.textContent = `(${x}, ${y})`;
+                tooltip.id = 'player-tooltip';
+                newContainer.appendChild(tooltip);
+                
+                cell.appendChild(newContainer);
+            }
+            
+            updateHeroPosition();
+        }
+
+        function updateHeroPosition() {
+            document.getElementById('heroPosition').textContent = `(${playerPos.x}, ${playerPos.y})`;
+        }
+
+        function shootArrow(targetX, targetY) {
+            shots++;
+            updateStats();
+            
+            const grid = document.getElementById('gameGrid');
+            const startCell = getCell(grid, playerPos.x, playerPos.y);
+            const targetCell = getCell(grid, targetX, targetY);
+            
+            if (!startCell || !targetCell) return;
+            
+            // Calculate arrow path using inverse relation (x,y) -> (y,x)
+            // The arrow crosses the y=x boundary to hit transformed coordinates
+            const transformedX = targetY;
+            const transformedY = targetX;
+            
+            const arrow = document.createElement('div');
+            arrow.className = 'arrow';
+            
+            const startRect = startCell.getBoundingClientRect();
+            const gridRect = grid.getBoundingClientRect();
+            const targetRect = targetCell.getBoundingClientRect();
+            
+            const startX = startRect.left - gridRect.left + 25;
+            const startY = startRect.top - gridRect.top + 25;
+            const endX = targetRect.left - gridRect.left + 25;
+            const endY = targetRect.top - gridRect.top + 25;
+            
+            const angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
+            const distance = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+            
+            arrow.style.left = startX + 'px';
+            arrow.style.top = startY + 'px';
+            arrow.style.width = distance + 'px';
+            arrow.style.transform = `rotate(${angle}deg)`;
+            
+            grid.appendChild(arrow);
+            
+            // Animate arrow
+            arrow.style.transition = 'all 0.3s ease-out';
+            setTimeout(() => {
+                arrow.style.opacity = '0';
+            }, 250);
+            
+            setTimeout(() => {
+                arrow.remove();
+                checkHit(transformedX, transformedY);
+                createExplosion(endX, endY, targetX, targetY);
+            }, 300);
+        }
+
+        function checkHit(hitX, hitY) {
+            // Simple check: does a creeper exist at the inverse coordinates (hitX, hitY)?
+            const hitIndex = creepers.findIndex(c => c.x === hitX && c.y === hitY);
+            if (hitIndex !== -1) {
+                kills++;
+                score += 100;
+                const destroyedCreeper = creepers[hitIndex];
+                creepers.splice(hitIndex, 1);
+                removeCreeper(destroyedCreeper.x, destroyedCreeper.y);
+            } else {
+                score -= 10;
+            }
+            updateStats();
+        }
+
+        function createExplosion(x, y, gridX, gridY) {
+            const grid = document.getElementById('gameGrid');
+            const effect = document.createElement('div');
+            
+            // Check if there's a creeper at the hit location (gridX, gridY are the inverse/target coords)
+            const isHit = creepers.some(c => c.x === gridX && c.y === gridY);
+            effect.className = isHit ? 'hit-effect' : 'miss-effect';
+            
+            effect.style.left = (x - 20) + 'px';
+            effect.style.top = (y - 20) + 'px';
+            grid.appendChild(effect);
+            
+            setTimeout(() => effect.remove(), 500);
+        }
+
+        function spawnCreeper() {
+            if (!gameActive) return;
+            
+            // Spawn creepers in enemy zone (y > x)
+            let x, y;
+            let attempts = 0;
+            do {
+                x = Math.floor(Math.random() * GRID_SIZE);
+                y = Math.floor(Math.random() * GRID_SIZE);
+                attempts++;
+            } while ((y <= x || creepers.some(c => c.x === x && c.y === y)) && attempts < 50);
+            
+            if (attempts >= 50) return;
+            
+            creepers.push({ x, y });
+            
+            const grid = document.getElementById('gameGrid');
+            const cell = getCell(grid, x, y);
+            if (cell && !cell.querySelector('.character')) {
+                const img = document.createElement('img');
+                img.src = creeperSVG;
+                img.className = 'character';
+                img.dataset.creeper = 'true';
+                img.dataset.x = x;
+                img.dataset.y = y;
+                cell.appendChild(img);
+            }
+        }
+
+        function removeCreeper(x, y) {
+            const grid = document.getElementById('gameGrid');
+            const creeperImgs = grid.querySelectorAll('[data-creeper="true"]');
+            creeperImgs.forEach(img => {
+                if (parseInt(img.dataset.x) === x && parseInt(img.dataset.y) === y) {
+                    // Create death tooltip
+                    const deathTooltip = document.createElement('div');
+                    deathTooltip.className = 'creeper-death-tooltip';
+                    deathTooltip.textContent = `(${x}, ${y}) DESTROYED!`;
+                    img.parentElement.appendChild(deathTooltip);
+                    
+                    // Add death animation
+                    img.classList.add('creeper-dying');
+                    
+                    // Remove after animation
+                    setTimeout(() => {
+                        img.remove();
+                        deathTooltip.remove();
+                    }, 600);
+                }
+            });
+        }
+
+        function startGame() {
+            if (gameActive) return;
+            gameActive = true;
+            score = 0;
+            kills = 0;
+            shots = 0;
+            creepers = [];
+            updateStats();
+
+            if (gameMode === 'timeattack') {
+                timeRemaining = 30;
+                document.getElementById('timer').textContent = timeRemaining;
+                timerInterval = setInterval(() => {
+                    timeRemaining--;
+                    document.getElementById('timer').textContent = timeRemaining;
+                    if (timeRemaining <= 0) {
+                        endTimeAttack();
+                    }
+                }, 1000);
+            }
+            
+            // Spawn creepers periodically
+            const spawner = setInterval(() => {
+                if (!gameActive) {
+                    clearInterval(spawner);
+                    return;
+                }
+                if (creepers.length < 5) {
+                    spawnCreeper();
+                }
+            }, 2000);
+            
+            // Initial spawns
+            for (let i = 0; i < 3; i++) {
+                setTimeout(spawnCreeper, i * 500);
+            }
+        }
+
+        function endTimeAttack() {
+            gameActive = false;
+            clearInterval(timerInterval);
+            
+            const modal = document.getElementById('endGameModal');
+            const title = document.getElementById('endGameTitle');
+            const finalScore = document.getElementById('finalScore');
+            const message = document.getElementById('endGameMessage');
+            
+            finalScore.textContent = score;
+            
+            if (score >= 700) {
+                title.textContent = 'Success!';
+                title.className = 'success';
+                message.textContent = 'You survived the invasion and saved the world!';
+            } else {
+                title.textContent = 'Mission Failed!';
+                title.className = 'fail';
+                message.textContent = 'You failed to stop the creeper invasion.';
+            }
+            
+            modal.classList.add('show');
+        }
+
+        function closeModalAndStart() {
+            const modal = document.getElementById('endGameModal');
+            modal.classList.remove('show');
+            // Explicitly reset all game values
+            score = 0;
+            kills = 0;
+            shots = 0;
+            creepers = [];
+            gameActive = false;
+            selectedTarget = null;
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            if (gameMode === 'timeattack') {
+                timeRemaining = 30;
+                document.getElementById('timer').textContent = timeRemaining;
+            }
+            updateStats();
+            // Clear grid
+            const grid = document.getElementById('gameGrid');
+            grid.querySelectorAll('[data-creeper="true"]').forEach(el => el.remove());
+            grid.querySelectorAll('.arrow').forEach(el => el.remove());
+            grid.querySelectorAll('.hit-effect, .miss-effect').forEach(el => el.remove());
+            grid.querySelectorAll('#player-container').forEach(el => el.remove());
+            grid.querySelectorAll('.cell').forEach(c => {
+                c.classList.remove('selected');
+                const label = c.querySelector('.coord-label');
+                if (label) label.style.display = 'none';
+            });
+            placePlayer();
+            startGame();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('endGameModal');
+            modal.classList.remove('show');
+            resetGame();
+        }
+
+        function resetGame() {
+            gameActive = false;
+            score = 0;
+            kills = 0;
+            shots = 0;
+            creepers = [];
+            selectedTarget = null;
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            if (gameMode === 'timeattack') {
+                timeRemaining = 30;
+                document.getElementById('timer').textContent = timeRemaining;
+            }
+            updateStats();
+            
+            const grid = document.getElementById('gameGrid');
+            grid.querySelectorAll('[data-creeper="true"]').forEach(el => el.remove());
+            grid.querySelectorAll('.arrow').forEach(el => el.remove());
+            grid.querySelectorAll('.hit-effect, .miss-effect').forEach(el => el.remove());
+            grid.querySelectorAll('#player-container').forEach(el => el.remove());
+            grid.querySelectorAll('.cell').forEach(c => {
+                c.classList.remove('selected');
+                const label = c.querySelector('.coord-label');
+                if (label) label.style.display = 'none';
+            });
+        }
+
+        function toggleAutoFire() {
+            autoFire = !autoFire;
+            document.getElementById('autoFireBtn').textContent = `Auto Fire: ${autoFire ? 'ON' : 'OFF'}`;
+            
+            if (autoFire && gameActive) {
+                autoFireInterval = setInterval(() => {
+                    if (!gameActive) {
+                        clearInterval(autoFireInterval);
+                        return;
+                    }
+                    // Random target in enemy zone
+                    let x, y;
+                    do {
+                        x = Math.floor(Math.random() * GRID_SIZE);
+                        y = Math.floor(Math.random() * GRID_SIZE);
+                    } while (y <= x);
+                    shootArrow(x, y);
+                }, 1000);
+            } else {
+                clearInterval(autoFireInterval);
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('kills').textContent = kills;
+            document.getElementById('shots').textContent = shots;
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
