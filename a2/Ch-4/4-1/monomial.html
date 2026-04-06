@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monomials</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #38bdf8;
+            --accent: #10b981;
+            --error: #fb7185;
+            --warning: #fb923c;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+        }
+
+        /* LOADER STYLES */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #0f172a;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(59, 130, 246, 0.2);
+            border-left-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        #loadingEmoji {
+            font-size: 2rem;
+            margin-top: 1rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bounce 0.6s infinite alternate;
+        }
+
+        .loader-text-style {
+            color: #60a5fa;
+            font-weight: bold;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            margin-top: 10px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-10px); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+
+        /* ORIGINAL APP STYLES */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            background-color: var(--bg); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+            font-family: 'Outfit', sans-serif;
+            color: var(--text);
+            overflow: hidden;
+        }
+
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background: var(--card-bg);
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 24px;
+            box-shadow: 0 40px 100px -20px rgba(0,0,0,0.5);
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .lang-toggle {
+            position: absolute;
+            top: 40px;
+            right: 60px;
+            display: flex;
+            background: rgba(255,255,255,0.05);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 100;
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            transition: all 0.2s;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: #0f172a;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 80px;
+            color: var(--text);
+            letter-spacing: -3px;
+            line-height: 1;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 60px;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .rules-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .rule-item {
+            padding: 20px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.03);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .rule-item.featured {
+            border: 2px solid var(--warning);
+            background: rgba(251, 146, 60, 0.05);
+            box-shadow: 0 0 20px rgba(251, 146, 60, 0.1);
+            animation: soft-pulse 3s infinite;
+        }
+
+        @keyframes soft-pulse {
+            0% { box-shadow: 0 0 10px rgba(251, 146, 60, 0.1); }
+            50% { box-shadow: 0 0 25px rgba(251, 146, 60, 0.25); }
+            100% { box-shadow: 0 0 10px rgba(251, 146, 60, 0.1); }
+        }
+
+        .badge {
+            position: absolute;
+            right: 15px;
+            top: -10px;
+            background: var(--warning);
+            color: #0f172a;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .rule-item i {
+            font-size: 24px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .rule-item .tooltip {
+            position: absolute;
+            bottom: 115%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f1f5f9;
+            color: #0f172a;
+            padding: 14px 22px;
+            border-radius: 12px;
+            width: 320px;
+            font-size: 15px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+            z-index: 10;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .rule-item .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -8px;
+            border-width: 8px;
+            border-style: solid;
+            border-color: #f1f5f9 transparent transparent transparent;
+        }
+
+        .rule-item:hover, .rule-item.demo-active {
+            background: rgba(255,255,255,0.08);
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .rule-item.featured:hover, .rule-item.featured.demo-active {
+            border-color: var(--warning);
+            background: rgba(251, 146, 60, 0.12);
+        }
+
+        .rule-item:hover .tooltip, .rule-item.demo-active .tooltip {
+            opacity: 1;
+            bottom: 125%;
+        }
+
+        .visual-display {
+            background: #020617;
+            height: 100%;
+            border-radius: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.05);
+            min-height: 400px;
+        }
+
+        .hero-math {
+            font-size: 90px;
+            transition: all 0.5s;
+        }
+
+        .highlight-part {
+            transition: all 0.3s;
+            padding: 4px 10px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        body[data-active="coefficient"] .highlight-coeff { color: var(--error); background: rgba(251, 113, 133, 0.2); transform: scale(1.08); }
+        body[data-active="variable"] .highlight-var { color: var(--primary); background: rgba(56, 189, 248, 0.2); transform: scale(1.08); }
+        body[data-active="exponent"] .highlight-exp { color: var(--accent); background: rgba(16, 185, 129, 0.2); transform: scale(1.08); }
+        
+        body[data-active="degree"] .highlight-var { color: var(--warning); background: rgba(251, 146, 60, 0.1); }
+        body[data-active="degree"] .highlight-exp { color: var(--warning); background: rgba(251, 146, 60, 0.3); transform: scale(1.15); font-weight: bold; }
+
+        .demo-overlay {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            opacity: 0;
+            transition: opacity 0.5s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        body.demo-running .demo-overlay { opacity: 1; }
+
+        [data-lang="zh"] .lang-en, [data-lang="en"] .lang-zh { display: none; }
+    </style>
+</head>
+<body data-active="none" data-lang="en">
+
+    <!-- Loading Overlay -->
+    <div id="loader">
+        <div class="spinner mb-4"></div>
+        <div id="loadingEmoji">🦁</div>
+        <div id="loaderText" class="loader-text-style">Loading...</div>
+    </div>
+
+    <div class="slide">
+        <div class="lang-toggle">
+            <button class="lang-btn active" id="btn-en" onclick="setLanguage('en')">EN</button>
+            <button class="lang-btn" id="btn-zh" onclick="setLanguage('zh')">中文</button>
+        </div>
+
+        <header>
+            <h1 class="lang-en">Monomials</h1>
+            <h1 class="lang-zh">单项式</h1>
+        </header>
+
+        <div class="main-layout">
+            <div class="rules-container">
+                <div class="rule-item" id="rule-coeff" onmouseenter="setMode('coefficient')">
+                    <i class="fa-solid fa-hashtag" style="color: var(--error)"></i>
+                    <strong class="lang-en">The Coefficient</strong>
+                    <strong class="lang-zh">系数</strong>
+                    <div class="tooltip">
+                        <span class="lang-en">Any real number: negative, positive, or constants like \(\pi\) or \(\sqrt{2}\).</span>
+                        <span class="lang-zh">任意实数：包括正数、负数或像 \(\pi\) 或 \(\sqrt{2}\) 这样的常数。</span>
+                    </div>
+                </div>
+
+                <div class="rule-item" id="rule-var" onmouseenter="setMode('variable')">
+                    <i class="fa-solid fa-italic" style="color: var(--primary)"></i>
+                    <strong class="lang-en">The Variables</strong>
+                    <strong class="lang-zh">变量</strong>
+                    <div class="tooltip">
+                        <span class="lang-en">Letters representing values. They must be multiplied, never added or subtracted.</span>
+                        <span class="lang-zh">代表数值的字母。在单项式中，它们只能进行乘法运算，不能相加或相减。</span>
+                    </div>
+                </div>
+
+                <div class="rule-item" id="rule-exp" onmouseenter="setMode('exponent')">
+                    <i class="fa-solid fa-arrow-up-9-1" style="color: var(--accent)"></i>
+                    <strong class="lang-en">The Exponents</strong>
+                    <strong class="lang-zh">指数</strong>
+                    <div class="tooltip">
+                        <span class="lang-en">Must be whole numbers \(\{0, 1, 2, \dots\}\). No fractions or negative powers.</span>
+                        <span class="lang-zh">必须是自然数 \(\{0, 1, 2, \dots\}\)。不能是分数或负指数。</span>
+                    </div>
+                </div>
+
+                <div class="rule-item featured" id="rule-degree" onmouseenter="setMode('degree')">
+                    <div class="badge lang-en">Key Concept</div>
+                    <div class="badge lang-zh">核心概念</div>
+                    <i class="fa-solid fa-plus-minus" style="color: var(--warning)"></i>
+                    <strong class="lang-en">The Degree</strong>
+                    <strong class="lang-zh">次数</strong>
+                    <div class="tooltip">
+                        <span class="lang-en">The sum of all exponents of the variables. For example, \(-7x^4y^2\) has a degree of \(4 + 2 = 6\).</span>
+                        <span class="lang-zh">所有变量指数的和。例如，\(-7x^4y^2\) 的次数是 \(4 + 2 = 6\)。</span>
+                    </div>
+                </div>
+
+                <div class="rule-item" id="rule-none" onmouseenter="setMode('none')">
+                    <i class="fa-solid fa-ban" style="color: var(--text-muted)"></i>
+                    <strong class="lang-en">Invalid Terms</strong>
+                    <strong class="lang-zh">非单项式</strong>
+                    <div class="tooltip">
+                        <span class="lang-en">Expressions like \(x + 1\), \(\frac{1}{x}\), or \(\sqrt{x}\) are NOT monomials.</span>
+                        <span class="lang-zh">像 \(x + 1\)、\(\frac{1}{x}\) 或 \(\sqrt{x}\) 这样的表达式不属于单项式。</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="visual-display">
+                <div class="demo-overlay">
+                    <i class="fa-solid fa-circle-play"></i> 
+                    <span class="lang-en">Auto-Demo Running</span>
+                    <span class="lang-zh">自动演示中</span>
+                </div>
+                
+                <div class="hero-math">
+                    <span class="highlight-part highlight-coeff">\(-7\)</span><span class="highlight-part highlight-var">\(x\)</span><sup class="highlight-part highlight-exp">\(4\)</sup><span class="highlight-part highlight-var">\(y\)</span><sup class="highlight-part highlight-exp">\(2\)</sup>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // LOADER CONFIG
+        const animals = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐙', '🐵', '🦄', '🐝', '🐧', '🦉'];
+        const loader = document.getElementById('loader');
+        const loadingEmoji = document.getElementById('loadingEmoji');
+
+        function startEmojiRotation() {
+            return setInterval(() => {
+                const randomEmoji = animals[Math.floor(Math.random() * animals.length)];
+                loadingEmoji.innerText = randomEmoji;
+            }, 800);
+        }
+
+        // ORIGINAL LOGIC
+        const body = document.body;
+        const rules = document.querySelectorAll('.rule-item');
+        let demoInProgress = true;
+
+        function setLanguage(lang) {
+            body.dataset.lang = lang;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${lang}`).classList.add('active');
+            document.getElementById('loaderText').innerText = lang === 'en' ? 'Loading...' : '加载中...';
+        }
+
+        function setMode(mode) {
+            if (demoInProgress) stopDemo();
+            body.dataset.active = mode;
+        }
+
+        function stopDemo() {
+            demoInProgress = false;
+            body.classList.remove('demo-running');
+            rules.forEach(r => r.classList.remove('demo-active'));
+        }
+
+        async function runDemo() {
+            if (!demoInProgress) return;
+            body.classList.add('demo-running');
+
+            const sequence = [
+                { id: 'rule-coeff', mode: 'coefficient', time: 2500 },
+                { id: 'rule-var', mode: 'variable', time: 2500 },
+                { id: 'rule-exp', mode: 'exponent', time: 2500 },
+                { id: 'rule-degree', mode: 'degree', time: 4000 }
+            ];
+
+            for (const step of sequence) {
+                if (!demoInProgress) break;
+                rules.forEach(r => r.classList.remove('demo-active'));
+                const el = document.getElementById(step.id);
+                el.classList.add('demo-active');
+                body.dataset.active = step.mode;
+                await new Promise(r => setTimeout(r, step.time));
+            }
+
+            if (demoInProgress) {
+                stopDemo();
+                body.dataset.active = 'none';
+            }
+        }
+
+        window.onload = async function() {
+            const emojiInterval = startEmojiRotation();
+            // Artificial delay for loading experience
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                clearInterval(emojiInterval);
+                loader.style.display = 'none';
+                runDemo();
+            }, 500);
+        };
+
+        // Reset display when not hovering
+        document.querySelector('.rules-container').addEventListener('mouseleave', () => {
+            if (!demoInProgress) body.dataset.active = 'none';
+        });
+    </script>
+</body>
+</html>

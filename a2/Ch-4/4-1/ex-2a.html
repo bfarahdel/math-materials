@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Degree of a Polynomial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --primary: #38bdf8;
+            --accent: #10b981;
+            --error: #fb7185;
+            --warning: #fb923c;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+        }
+
+        /* LOADER STYLES */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #0f172a;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(59, 130, 246, 0.2);
+            border-left-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        #loadingEmoji {
+            font-size: 2rem;
+            margin-top: 1rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bounce 0.6s infinite alternate;
+        }
+
+        .loader-text-style {
+            color: #60a5fa;
+            font-weight: bold;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            margin-top: 10px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-10px); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+
+        /* ORIGINAL APP STYLES */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            background-color: var(--bg); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+            font-family: 'Outfit', sans-serif;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        .slide {
+            width: 95%;
+            max-width: 1280px;
+            min-height: 720px;
+            background: var(--card-bg);
+            padding: 40px 60px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 24px;
+            box-shadow: 0 40px 100px -20px rgba(0,0,0,0.5);
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.05);
+            margin: 20px;
+        }
+
+        .lang-toggle {
+            position: absolute;
+            top: 40px;
+            right: 60px;
+            display: flex;
+            background: rgba(255,255,255,0.05);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 100;
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            transition: all 0.2s;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: #0f172a;
+        }
+
+        [data-lang="zh"] .lang-en, [data-lang="en"] .lang-zh { display: none; }
+
+        header {
+            text-align: left;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--primary);
+            padding-left: 20px;
+        }
+
+        .example-label {
+            text-transform: uppercase;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        h1 {
+            font-size: 48px;
+            color: var(--text);
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .instruction {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            max-width: 800px;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .analysis-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .step-item {
+            padding: 20px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.03);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .step-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .step-item:hover, .step-item.demo-active {
+            background: rgba(255,255,255,0.08);
+            border-color: var(--primary);
+            transform: translateX(10px);
+        }
+
+        .step-item.highlight-1:hover, .step-item.highlight-1.demo-active { border-color: var(--primary); }
+        .step-item.highlight-2:hover, .step-item.highlight-2.demo-active { border-color: var(--error); }
+        .step-item.highlight-final:hover, .step-item.highlight-final.demo-active { 
+            border-color: var(--warning); 
+            background: rgba(251, 146, 60, 0.05);
+        }
+
+        .visual-display {
+            background: #020617;
+            height: 100%;
+            border-radius: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.05);
+            min-height: 400px;
+            padding: 40px;
+        }
+
+        .math-hero {
+            font-size: 72px;
+            transition: all 0.5s;
+            margin-bottom: 40px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .math-term-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .term-degree-indicator {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%) scale(0.5);
+            background: var(--primary);
+            color: #0f172a;
+            font-size: 18px;
+            font-weight: 800;
+            padding: 6px 16px;
+            border-radius: 8px;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+            white-space: nowrap;
+        }
+
+        .term-degree-indicator::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--primary);
+        }
+
+        .math-term-2-wrapper .term-degree-indicator { 
+            background: var(--error); 
+            min-width: 130px; 
+            text-align: center;
+        }
+        .math-term-2-wrapper .term-degree-indicator::after { border-top-color: var(--error); }
+
+        body[data-active="term1"] .math-term-1-wrapper .term-degree-indicator,
+        body[data-active="term2"] .math-term-2-wrapper .term-degree-indicator {
+            opacity: 1;
+            transform: translateX(-50%) scale(1) translateY(-10px);
+        }
+
+        .math-hero span {
+            display: inline-block;
+            transition: all 0.3s;
+            padding: 5px 10px;
+            border-radius: 12px;
+        }
+
+        body[data-active="term1"] .math-term-1 { background: rgba(56, 189, 248, 0.2); transform: scale(1.05); color: var(--primary); }
+        body[data-active="term2"] .math-term-2 { background: rgba(251, 113, 133, 0.2); transform: scale(1.05); color: var(--error); }
+        body[data-active="degree"] .math-hero { opacity: 0.3; filter: blur(2px); }
+
+        .degree-breakdown {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s;
+        }
+
+        body[data-active="degree"] .degree-breakdown {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .degree-card {
+            background: #1e293b;
+            padding: 15px 25px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .degree-card h4 { font-size: 12px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px; }
+        .degree-card p { font-size: 24px; font-weight: 700; color: var(--primary); }
+        .degree-card.winner { border: 2px solid var(--warning); box-shadow: 0 0 20px rgba(251, 146, 60, 0.2); }
+        .degree-card.winner p { color: var(--warning); }
+
+        .demo-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: #0f172a;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            display: none;
+            align-items: center;
+            gap: 6px;
+        }
+
+        body.demo-running .demo-badge { display: flex; }
+
+        @media (max-width: 1024px) {
+            .main-layout { grid-template-columns: 1fr; }
+            .slide { height: auto; padding: 30px; }
+            .math-hero { font-size: 48px; }
+            .term-degree-indicator { top: -30px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body data-active="none" data-lang="en">
+
+    <!-- Loading Overlay -->
+    <div id="loader">
+        <div class="spinner mb-4"></div>
+        <div id="loadingEmoji">🐨</div>
+        <div id="loaderText" class="loader-text-style">Loading...</div>
+    </div>
+
+    <div class="slide">
+        <div class="lang-toggle">
+            <button class="lang-btn active" id="btn-en" onclick="setLanguage('en')">EN</button>
+            <button class="lang-btn" id="btn-zh" onclick="setLanguage('zh')">中文</button>
+        </div>
+
+        <header>
+            <div class="example-label lang-en">Example 2a</div>
+            <div class="example-label lang-zh">例题 2a</div>
+            <h1 class="lang-en">Degree of a Polynomial</h1>
+            <h1 class="lang-zh">多项式的次数</h1>
+            <p class="instruction lang-en">Determine whether the expression is a polynomial. If it is, state the degree of the polynomial.</p>
+            <p class="instruction lang-zh">判断该表达式是否为多项式。如果是，请说明该多项式的次数。</p>
+        </header>
+
+        <div class="main-layout">
+            <div class="analysis-container">
+                <div class="step-item highlight-1" id="step-1" onmouseenter="setMode('term1')">
+                    <div class="step-header">
+                        <i class="fa-solid fa-1" style="color: var(--primary)"></i>
+                        <span class="lang-en">First Term Analysis</span>
+                        <span class="lang-zh">第一项分析</span>
+                    </div>
+                    <p class="step-desc lang-en">The first term is \(\frac{1}{4}x^4y^3\). It is a monomial. To find its degree, we add the exponents: \(4 + 3 = 7\).</p>
+                    <p class="step-desc lang-zh">第一项是 \(\frac{1}{4}x^4y^3\)。它是一个单项式。为了求它的次数，我们将指数相加：\(4 + 3 = 7\)。</p>
+                </div>
+
+                <div class="step-item highlight-2" id="step-2" onmouseenter="setMode('term2')">
+                    <div class="step-header">
+                        <i class="fa-solid fa-2" style="color: var(--error)"></i>
+                        <span class="lang-en">Second Term Analysis</span>
+                        <span class="lang-zh">第二项分析</span>
+                    </div>
+                    <p class="step-desc lang-en">The second term is \(-8x^5\). It is also a monomial. Its degree is simply its exponent: \(5\).</p>
+                    <p class="step-desc lang-zh">第二项是 \(-8x^5\)。它也是一个单项式。它的次数就是其指数：\(5\)。</p>
+                </div>
+
+                <div class="step-item highlight-final" id="step-final" onmouseenter="setMode('degree')">
+                    <div class="step-header">
+                        <i class="fa-solid fa-crown" style="color: var(--warning)"></i>
+                        <span class="lang-en">Final Conclusion</span>
+                        <span class="lang-zh">最终结论</span>
+                    </div>
+                    <p class="step-desc lang-en">Since both terms are monomials, the expression is a <strong>polynomial</strong>. The degree is the <strong>highest</strong> degree among all terms: \(7\).</p>
+                    <p class="step-desc lang-zh">由于两项都是单项式，因此该表达式是一个<strong>多项式</strong>。次数是所有项中次数<strong>最高</strong>的一项：\(7\)。</p>
+                </div>
+            </div>
+
+            <div class="visual-display">
+                <div class="demo-badge">
+                    <i class="fa-solid fa-play"></i> 
+                    <span class="lang-en">AUTO-DEMO</span>
+                    <span class="lang-zh">自动演示</span>
+                </div>
+
+                <div class="math-hero">
+                    <div class="math-term-wrapper math-term-1-wrapper">
+                        <div class="term-degree-indicator">
+                            <span class="lang-en">Degree: 7</span>
+                            <span class="lang-zh">次数: 7</span>
+                        </div>
+                        <span class="math-term-1">\(\frac{1}{4}x^4y^3\)</span>
+                    </div>
+                    <span>\(-\)</span>
+                    <div class="math-term-wrapper math-term-2-wrapper">
+                        <div class="term-degree-indicator">
+                            <span class="lang-en">Degree: 5</span>
+                            <span class="lang-zh">次数: 5</span>
+                        </div>
+                        <span class="math-term-2">\(8x^5\)</span>
+                    </div>
+                </div>
+
+                <div class="degree-breakdown">
+                    <div class="degree-card">
+                        <h4 class="lang-en">Term 1 Degree</h4>
+                        <h4 class="lang-zh">第一项次数</h4>
+                        <p>7</p>
+                    </div>
+                    <div class="degree-card">
+                        <h4 class="lang-en">Term 2 Degree</h4>
+                        <h4 class="lang-zh">第二项次数</h4>
+                        <p>5</p>
+                    </div>
+                    <div class="degree-card winner">
+                        <h4 class="lang-en">Polynomial Degree</h4>
+                        <h4 class="lang-zh">多项式次数</h4>
+                        <p>7</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // LOADER CONFIG
+        const animals = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐙', '🐵', '🦄', '🐝', '🐧', '🦉'];
+        const loader = document.getElementById('loader');
+        const loadingEmoji = document.getElementById('loadingEmoji');
+
+        function startEmojiRotation() {
+            return setInterval(() => {
+                const randomEmoji = animals[Math.floor(Math.random() * animals.length)];
+                loadingEmoji.innerText = randomEmoji;
+            }, 800);
+        }
+
+        // ORIGINAL LOGIC
+        const body = document.body;
+        const steps = document.querySelectorAll('.step-item');
+        let demoActive = true;
+
+        function setLanguage(lang) {
+            body.dataset.lang = lang;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${lang}`).classList.add('active');
+            document.getElementById('loaderText').innerText = lang === 'en' ? 'Loading...' : '加载中...';
+        }
+
+        function setMode(mode) {
+            if (demoActive) stopDemo();
+            body.dataset.active = mode;
+        }
+
+        function stopDemo() {
+            demoActive = false;
+            body.classList.remove('demo-running');
+            steps.forEach(s => s.classList.remove('demo-active'));
+        }
+
+        async function runDemo() {
+            body.classList.add('demo-running');
+            
+            const sequence = [
+                { id: 'step-1', mode: 'term1', delay: 3500 },
+                { id: 'step-2', mode: 'term2', delay: 3500 },
+                { id: 'step-final', mode: 'degree', delay: 4500 }
+            ];
+
+            await new Promise(r => setTimeout(r, 1000));
+
+            for (const step of sequence) {
+                if (!demoActive) break;
+                
+                steps.forEach(s => s.classList.remove('demo-active'));
+                const el = document.getElementById(step.id);
+                el.classList.add('demo-active');
+                body.dataset.active = step.mode;
+                
+                await new Promise(r => setTimeout(r, step.delay));
+            }
+
+            if (demoActive) {
+                body.classList.remove('demo-running');
+                steps.forEach(s => s.classList.remove('demo-active'));
+                body.dataset.active = 'none';
+                demoActive = false;
+            }
+        }
+
+        window.onload = async function() {
+            const emojiInterval = startEmojiRotation();
+            // Show loader for 1.5 seconds
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                clearInterval(emojiInterval);
+                loader.style.display = 'none';
+                // Trigger the original Demo sequence after loader is gone
+                runDemo();
+            }, 500);
+        };
+
+        document.querySelector('.analysis-container').addEventListener('mouseleave', () => {
+            if (!demoActive) body.dataset.active = 'none';
+        });
+    </script>
+</body>
+</html>
