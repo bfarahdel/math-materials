@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binomial Theorem - Example 4</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #38bdf8; 
+            --border-color: #334155;
+            --step-bg: #0f172a;
+            --highlight-k: #fde047;
+            --highlight-bg: rgba(253, 224, 71, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            font-size: 18px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+        }
+
+        .example-badge {
+            background: #0ea5e9;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        h1 { margin: 0; font-size: 2rem; }
+
+        .lang-toggle {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            border: 1px solid var(--border-color);
+        }
+
+        .problem-statement {
+            font-size: 1.4rem;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(56, 189, 248, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .step-item {
+            background: var(--step-bg);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .step-label {
+            background: #6366f1;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .math-display {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.5rem;
+            line-height: 1.8;
+            background: #020617;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow-x: auto;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .k-highlight-box {
+            background: var(--highlight-bg);
+            border: 1px dashed var(--highlight-k);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .highlight-text {
+            color: var(--highlight-k);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .side-note {
+            color: var(--text-secondary);
+            font-style: italic;
+            font-size: 0.95rem;
+            margin-top: 10px;
+            display: block;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header>
+            <div>
+                <div class="example-badge" id="badge">Example 4</div>
+                <h1 id="title">Determine a Single Term</h1>
+            </div>
+            <button class="lang-toggle" onclick="toggleLanguage()">中文 / EN</button>
+        </header>
+
+        <section class="card">
+            <div class="problem-statement" id="problem">
+                Find the <strong>fifth term</strong> of $(y + z)^{11}$.
+            </div>
+
+            <!-- Step 1: General Equation -->
+            <div class="step-item">
+                <div class="step-label" id="label1">Step 1</div>
+                <div id="step1Desc">Write the general formula for the binomial expansion:</div>
+                <div class="math-display">
+                    $$(a + b)^n = \sum_{k=0}^{n} \frac{n!}{k!(n - k)!} a^{n - k}b^k$$
+                </div>
+                <div id="step1Context">Applying this to $(y + z)^{11}$:</div>
+                <div class="math-display">
+                    $$(y + z)^{11} = \sum_{k=0}^{11} \frac{11!}{k!(11 - k)!} y^{11 - k}z^k$$
+                </div>
+            </div>
+
+            <!-- Step 2: Logic for k=4 -->
+            <div class="step-item">
+                <div class="step-label" id="label2">Step 2</div>
+                <div id="step2Desc">Determine the value of $k$ and substitute into the formula.</div>
+                
+                <div class="k-highlight-box" id="kBox">
+                    <strong>Critical Logic:</strong> The first term starts at $k=0$. Therefore, the $n^{th}$ term corresponds to $k = n - 1$.
+                    <br><br>
+                    <span id="kChoice">For the <span class="highlight-text">fifth term</span>, we use </span>
+                    <span class="highlight-text">k = 4</span>.
+                </div>
+
+                <div id="finalEqDesc" style="margin-top: 20px;">The equation for the 5th term is:</div>
+                <div class="math-display">
+                    $$\text{Term}_5 = \frac{11!}{4!(11 - 4)!} y^{11 - 4}z^4$$
+                </div>
+
+                <div class="math-display">
+                    $$= 330y^7z^4$$
+                </div>
+
+                <span class="side-note" id="calcNote">Calculation: $C(11, 4) = \frac{11 \cdot 10 \cdot 9 \cdot 8}{4 \cdot 3 \cdot 2 \cdot 1} = 330$</span>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        let currentLang = 'en';
+        
+        const i18n = {
+            en: {
+                badge: "Example 4",
+                title: "Determine a Single Term",
+                problem: "Find the <strong>fifth term</strong> of $(y + z)^{11}$.",
+                label1: "Step 1",
+                step1Desc: "Write the general formula for the binomial expansion:",
+                step1Context: "Applying this to $(y + z)^{11}$:",
+                label2: "Step 2",
+                step2Desc: "Determine the value of $k$ and substitute into the formula.",
+                kBox: "<strong>Critical Logic:</strong> The first term starts at $k=0$. Therefore, the $n^{th}$ term corresponds to $k = n - 1$.",
+                kChoice: "For the <span class='highlight-text'>fifth term</span>, we use ",
+                finalEqDesc: "The equation for the 5th term is:",
+                calcNote: "Calculation: $C(11, 4) = 330$"
+            },
+            zh: {
+                badge: "例题 4",
+                title: "确定单项",
+                problem: "求 $(y + z)^{11}$ 的<strong>第五项</strong>。",
+                label1: "步骤 1",
+                step1Desc: "写出二项式展开的通用公式：",
+                step1Context: "将其应用于 $(y + z)^{11}$：",
+                label2: "步骤 2",
+                step2Desc: "确定 $k$ 的值并代入公式。",
+                kBox: "<strong>核心逻辑：</strong> 第一项从 $k=0$ 开始。因此，第 $n$ 项对应的是 $k = n - 1$。",
+                kChoice: "对于<span class='highlight-text'>第五项</span>，我们使用 ",
+                finalEqDesc: "第五项的方程为：",
+                calcNote: "计算过程：$C(11, 4) = 330$"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'zh' : 'en';
+            const t = i18n[currentLang];
+            
+            document.getElementById('badge').innerText = t.badge;
+            document.getElementById('title').innerText = t.title;
+            document.getElementById('problem').innerHTML = t.problem;
+            document.getElementById('label1').innerText = t.label1;
+            document.getElementById('step1Desc').innerText = t.step1Desc;
+            document.getElementById('step1Context').innerText = t.step1Context;
+            document.getElementById('label2').innerText = t.label2;
+            document.getElementById('step2Desc').innerText = t.step2Desc;
+            document.getElementById('kBox').innerHTML = t.kBox + "<br><br>" + t.kChoice + "<span class='highlight-text'>k = 4</span>.";
+            document.getElementById('finalEqDesc').innerText = t.finalEqDesc;
+            document.getElementById('calcNote').innerText = t.calcNote;
+
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        window.onload = function() {
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        };
+    </script>
+</body>
+</html>
