@@ -4,17 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Binomial Theorem & Pascal's Triangle</title>
-    <!-- Load MathJax for professional math rendering -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']]
-            }
-        };
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" 
+        onload="renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false}
+            ]
+        });">
     </script>
+
     <style>
         :root {
             --bg-color: #0f172a;
@@ -22,7 +25,6 @@
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --accent-blue: #38bdf8; 
-            --coefficient-red: #fb7185; 
             --border-color: #334155;
             --highlight-bg: #0ea5e9;
             --row-select-bg: rgba(56, 189, 248, 0.1);
@@ -30,7 +32,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-primary);
             margin: 0;
@@ -56,27 +58,16 @@
             padding-bottom: 15px;
         }
 
-        .title-section h1 {
-            margin: 0;
-            font-size: 2.2rem;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-        }
-
         .example-badge {
             background: #0ea5e9;
-            color: var(--off-white) !important;
+            color: white;
             padding: 4px 12px;
             border-radius: 6px;
             font-size: 1rem;
             font-weight: 900;
             margin-right: 15px;
             text-transform: uppercase;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
             border: 2px solid var(--off-white);
-            display: inline-block;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
         .lang-toggle {
@@ -87,13 +78,10 @@
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 1rem;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
 
-        .lang-toggle:hover {
-            background: #334155;
-        }
+        .lang-toggle:hover { background: #334155; }
 
         .card {
             background: var(--card-bg);
@@ -103,27 +91,15 @@
             border: 1px solid var(--border-color);
         }
 
-        .explanation-title {
-            margin-top: 0;
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-        }
-
         .math-display {
-            font-family: 'Times New Roman', Times, serif;
             font-size: 1.4rem;
-            line-height: 1.8;
             background: #020617;
             padding: 20px;
             border-radius: 8px;
             margin: 10px 0;
             overflow-x: auto;
-            white-space: nowrap;
-            border: 1px solid var(--border-color);
             text-align: center;
+            border: 1px solid var(--border-color);
         }
 
         .triangle-scroll {
@@ -137,19 +113,12 @@
             justify-content: center;
             align-items: center;
             margin-bottom: 8px;
-            min-width: max-content;
-        }
-
-        .triangle-row.selected-row {
-            background: var(--row-select-bg);
-            border-radius: 6px;
         }
 
         .row-label {
-            width: 100px;
+            width: 80px;
             text-align: right;
             padding-right: 20px;
-            font-family: serif;
             color: var(--text-secondary);
             font-style: italic;
         }
@@ -162,33 +131,19 @@
             justify-content: center;
             margin: 0 4px;
             border-radius: 4px;
-            font-weight: bold;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .selected-row .node {
             background: var(--highlight-bg);
             color: white;
-            box-shadow: 0 0 10px rgba(14, 165, 233, 0.3);
-        }
-
-        .method-tag {
-            display: inline-block;
-            background: #475569;
-            color: white;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
         }
 
         .formula-box {
             border-left: 4px solid var(--accent-blue);
-            padding-left: 15px;
+            padding: 10px 15px;
             margin: 15px 0;
             background: rgba(56, 189, 248, 0.05);
-            padding-top: 10px;
-            padding-bottom: 10px;
         }
     </style>
 </head>
@@ -206,19 +161,18 @@
         </header>
 
         <section class="card">
-            <h3 class="explanation-title" id="theoryTitle">Key Concept: Binomial Theorem</h3>
+            <h3 id="theoryTitle">Key Concept: Binomial Theorem</h3>
             <div class="formula-box">
-                $$(a + b)^n = \sum_{k=0}^{n} {}_nC_k a^{n-k}b^k$$
+                $$(a + b)^n = \sum_{k=0}^{n} \binom{n}{k} a^{n-k}b^k$$
             </div>
             <p id="theoryText">Replace $n$ with 7 to determine the coefficients and exponents.</p>
         </section>
 
-        <!-- New Combination Formula Card -->
         <section class="card">
-            <h3 class="explanation-title" id="comboFormulaTitle">Combination Formula</h3>
+            <h3 id="comboFormulaTitle">Combination Formula</h3>
             <p id="comboFormulaText">The coefficients are calculated using the combination formula:</p>
             <div class="math-display">
-                $${}_nC_r = \frac{n!}{r!(n - r)!}$$
+                $$\binom{n}{r} = \frac{n!}{r!(n - r)!}$$
             </div>
             <p style="font-size: 0.9rem; color: var(--text-secondary);" id="factorialNote">
                 Where $!$ denotes a factorial (e.g., $3! = 3 \times 2 \times 1 = 6$).
@@ -226,40 +180,28 @@
         </section>
 
         <section class="card">
-            <h3 class="explanation-title" id="method1Title">Method 1: Use Combinations</h3>
-            <div class="method-tag">Method 1</div>
+            <h3 id="method1Title">Method 1: Use Combinations</h3>
             <div id="method1Content">
                 <p id="method1Intro">The expansion using combination notation:</p>
                 <div class="math-display">
-                    $$(a + b)^7 = {}_7C_0 a^7 + {}_7C_1 a^6b^1 + {}_7C_2 a^5b^2 + \dots + {}_7C_7 b^7$$
+                    $$(a + b)^7 = \binom{7}{0} a^7 + \binom{7}{1} a^6b^1 + \dots + \binom{7}{7} b^7$$
                 </div>
-                <p id="method1Calc">Calculating the coefficients using the formula above:</p>
+                <p id="method1Calc">Calculating the coefficients:</p>
                 <div class="math-display">
-                    $$1a^7 + 7a^6b + 21a^5b^2 + 35a^4b^3 + 35a^3b^4 + 21a^2b^5 + 7ab^6 + 1b^7$$
+                    $$a^7 + 7a^6b + 21a^5b^2 + 35a^4b^3 + 35a^3b^4 + 21a^2b^5 + 7ab^6 + b^7$$
                 </div>
             </div>
         </section>
 
         <section class="card">
-            <h3 class="explanation-title" id="method2Title">Method 2: Use Pascal's Triangle</h3>
-            <div class="method-tag">Method 2</div>
-            <p id="method2Text">Instead of using combinations, look at the 7th row of Pascal's triangle:</p>
-            <div class="triangle-scroll" id="triangleDisplay">
-                <!-- Triangle generated by JS -->
-            </div>
-        </section>
-
-        <section class="card">
-            <h3 class="explanation-title" id="finalTitle">Final Result</h3>
-            <div class="math-display">
-                $$(a + b)^7 = a^7 + 7a^6b + 21a^5b^2 + 35a^4b^3 + 35a^3b^4 + 21a^2b^5 + 7ab^6 + b^7$$
-            </div>
+            <h3 id="method2Title">Method 2: Use Pascal's Triangle</h3>
+            <p id="method2Text">Observe the 7th row of Pascal's triangle:</p>
+            <div class="triangle-scroll" id="triangleDisplay"></div>
         </section>
     </div>
 
     <script>
         let currentLang = 'en';
-        
         const translations = {
             en: {
                 example: "Example 2",
@@ -272,10 +214,9 @@
                 factorialNote: "Where $!$ denotes a factorial (e.g., $3! = 3 \\times 2 \\times 1 = 6$).",
                 method1Title: "Method 1: Use Combinations",
                 method1Intro: "The expansion using combination notation:",
-                method1Calc: "Calculating the coefficients using the formula above:",
+                method1Calc: "Calculating the coefficients:",
                 method2Title: "Method 2: Use Pascal's Triangle",
-                method2Text: "Instead of using combinations, look at the 7th row of Pascal's triangle:",
-                finalTitle: "Final Result"
+                method2Text: "Observe the 7th row of Pascal's triangle:"
             },
             zh: {
                 example: "例题 2",
@@ -288,21 +229,21 @@
                 factorialNote: "其中 $!$ 表示阶乘（例如，$3! = 3 \\times 2 \\times 1 = 6$）。",
                 method1Title: "方法 1：使用组合数",
                 method1Intro: "使用组合数符号的展开式：",
-                method1Calc: "使用上述公式计算系数：",
+                method1Calc: "计算系数后：",
                 method2Title: "方法 2：使用杨辉三角",
-                method2Text: "不使用组合数公式，而是直接观察杨辉三角的第7行：",
-                finalTitle: "最终结果"
+                method2Text: "观察杨辉三角的第7行："
             }
         };
 
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'zh' : 'en';
             const t = translations[currentLang];
+            
             document.querySelector('.example-badge').innerText = t.example;
             document.getElementById('headerTitle').innerText = t.headerTitle;
-            document.getElementById('headerIntro').innerText = t.headerIntro;
+            document.getElementById('headerIntro').innerHTML = t.headerIntro; // innerHTML to parse $
             document.getElementById('theoryTitle').innerText = t.theoryTitle;
-            document.getElementById('theoryText').innerText = t.theoryText;
+            document.getElementById('theoryText').innerHTML = t.theoryText;
             document.getElementById('comboFormulaTitle').innerText = t.comboFormulaTitle;
             document.getElementById('comboFormulaText').innerText = t.comboFormulaText;
             document.getElementById('factorialNote').innerHTML = t.factorialNote;
@@ -311,54 +252,39 @@
             document.getElementById('method1Calc').innerText = t.method1Calc;
             document.getElementById('method2Title').innerText = t.method2Title;
             document.getElementById('method2Text').innerText = t.method2Text;
-            document.getElementById('finalTitle').innerText = t.finalTitle;
             
-            // Re-render MathJax
-            if (window.MathJax) {
-                MathJax.typesetPromise();
-            }
+            // Re-render KaTeX instantly
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
         }
 
         function getPascalValue(n, k) {
-            if (k < 0 || k > n) return 0;
-            if (k === 0 || k === n) return 1;
             let res = 1;
-            for (let i = 1; i <= k; i++) {
-                res = res * (n - i + 1) / i;
-            }
+            for (let i = 1; i <= k; i++) res = res * (n - i + 1) / i;
             return Math.round(res);
         }
 
         function renderTriangle() {
             const container = document.getElementById('triangleDisplay');
-            container.innerHTML = '';
-            
             for (let n = 0; n <= 7; n++) {
                 const rowDiv = document.createElement('div');
-                rowDiv.className = `triangle-row row-${n} ${n === 7 ? 'selected-row' : ''}`;
-                
-                const label = document.createElement('div');
-                label.className = 'row-label';
-                label.innerHTML = `Row ${n}`;
-                rowDiv.appendChild(label);
-
+                rowDiv.className = `triangle-row ${n === 7 ? 'selected-row' : ''}`;
+                rowDiv.innerHTML = `<div class="row-label">Row ${n}</div>`;
                 for (let k = 0; k <= n; k++) {
-                    const val = getPascalValue(n, k);
                     const node = document.createElement('div');
                     node.className = 'node';
-                    node.innerText = val;
+                    node.innerText = getPascalValue(n, k);
                     rowDiv.appendChild(node);
                 }
                 container.appendChild(rowDiv);
             }
         }
 
-        window.onload = function() {
-            renderTriangle();
-            if (window.MathJax) {
-                MathJax.typesetPromise();
-            }
-        };
+        window.onload = renderTriangle;
     </script>
 </body>
 </html>
