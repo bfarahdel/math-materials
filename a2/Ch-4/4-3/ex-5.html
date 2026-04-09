@@ -157,7 +157,7 @@
         en: {
             title: "Synthetic Division",
             correctMsg: "Correct! Proceed to the next step.",
-            finalMsg: "Complete! The quotient is 2x² - 5x + 6.",
+            finalMsg: "Complete! The quotient is 2x² - 5x + 6. \nCode: dinosaur",
             steps: [
                 { t: "Step 1: Setup", p: "Value of r for x - 4:", ans: "4", text: "Write the coefficients and place the constant r in the box. Bring down the first coefficient." },
                 { t: "Step 2: Multiply & Add", p: "Calculate -13 + 2 * 4:", ans: "-5", text: "Multiply the first result by r and add it to the next coefficient." },
@@ -168,7 +168,7 @@
         zh: {
             title: "综合除法",
             correctMsg: "正确！请继续下一步。",
-            finalMsg: "完成！商式为 2x² - 5x + 6。",
+            finalMsg: "完成！商式为 2x² - 5x + 6。 \nCode: dinosaur",
             steps: [
                 { t: "步骤 1: 设置", p: "x - 4 的 r 值:", ans: "4", text: "写出系数并将常数 r 放入方框中。将第一个系数直接落下来。" },
                 { t: "步骤 2: 乘法与加法", p: "计算 -13 + 2 * 4:", ans: "-5", text: "将第一个结果乘以 r，然后与下一个系数相加。" },
@@ -195,8 +195,6 @@
         const step = translations[currentLang].steps[currentStep];
         document.getElementById('stepTitle').innerText = step.t;
         document.getElementById('stepText').innerText = step.text;
-        
-        // Removed KaTeX delimiters from prompt to prevent parentheses glitch
         document.getElementById('formulaPrompt').innerText = step.p;
         document.getElementById('stepCounter').innerText = `STEP ${currentStep + 1} / 4`;
         
@@ -210,6 +208,7 @@
             document.getElementById('feedbackContainer').classList.remove('hidden');
             
             if (currentStep === 3) {
+                // Using innerText to preserve the line break for the dinosaur code
                 document.getElementById('feedback').innerText = translations[currentLang].finalMsg;
                 document.getElementById('nextBtn').disabled = true;
                 document.getElementById('nextBtn').style.opacity = "0.1";
@@ -231,7 +230,6 @@
         prevBtn.disabled = currentStep === 0;
         prevBtn.style.opacity = currentStep === 0 ? "0.5" : "1";
 
-        // Only render the problem display and table with KaTeX
         if (window.renderMathInElement) {
             renderMathInElement(document.getElementById('problemDisplay'));
         }
@@ -266,17 +264,12 @@
     document.getElementById('nextBtn').onclick = () => { if (currentStep < 3) { currentStep++; updateUI(); } };
     document.getElementById('prevBtn').onclick = () => { if (currentStep > 0) { currentStep--; updateUI(); } };
 
-    // Self-starting logic
     (function startApp() {
         const emojiSpan = document.getElementById('animalEmoji');
         if (emojiSpan) {
             emojiSpan.innerText = animals[Math.floor(Math.random() * animals.length)];
         }
-        
-        // Run updateUI twice to ensure layout is solid
         updateUI();
-        
-        // Remove loader immediately since content is lightweight
         setTimeout(() => {
             const loader = document.getElementById('loader');
             if (loader) {
