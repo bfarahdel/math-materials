@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synthetic Division - Example 5</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code&display=swap');
+
+        body {
+            background-color: #0f172a; 
+            background-image: radial-gradient(#1e293b 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            font-family: 'Inter', sans-serif;
+            color: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .math-card {
+            width: 100%;
+            max-width: 1100px;
+            background: #1e293b;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid #334155;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .synthetic-table {
+            display: grid;
+            grid-template-columns: 60px 20px repeat(4, 85px);
+            font-family: 'Fira Code', monospace;
+            gap: 12px;
+            text-align: center;
+            font-size: 1.875rem;
+            margin: 2rem auto;
+        }
+
+        .box-r { border: 2px solid #f59e0b; border-radius: 8px; color: #f59e0b; padding: 2px; }
+        .coeff-row { color: #94a3b8; }
+        .multiply-row { color: #10b981; min-height: 40px; font-size: 1.5rem; }
+        .result-row { color: #3b82f6; font-weight: bold; border-top: 2px solid #64748b; padding-top: 10px; }
+        .remainder-pipe { border-left: 2px solid #475569; margin-left: -6px; }
+
+        #loader {
+            position: absolute; inset: 0; background: #0f172a; z-index: 100;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .step-input {
+            width: 140px; background: #0f172a; border: 2px solid #475569; border-radius: 8px;
+            padding: 8px; text-align: center; color: #f1f5f9; transition: all 0.3s ease;
+        }
+
+        .input-correct { border-color: #10b981 !important; background: rgba(16, 185, 129, 0.1); }
+        .input-error { animation: shake 0.4s; border-color: #f43f5e !important; }
+
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        .lang-btn.active { background-color: #3b82f6; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="math-card">
+    <div id="loader">
+        <span id="animalEmoji" class="text-6xl mb-4">🦒</span>
+        <div class="text-blue-400 font-bold animate-pulse">LOADING...</div>
+    </div>
+
+    <div class="bg-slate-800/80 p-6 border-b border-slate-700 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <span class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-[10px] font-bold uppercase border border-blue-500/30">Example 5</span>
+            <h1 id="mainTitle" class="text-xl font-bold text-white">Synthetic Division</h1>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="flex bg-slate-900 rounded-lg p-1 border border-slate-700">
+                <button onclick="setLanguage('en')" id="enBtn" class="lang-btn active px-3 py-1 text-[10px] font-bold rounded-md">EN</button>
+                <button onclick="setLanguage('zh')" id="zhBtn" class="lang-btn px-3 py-1 text-[10px] font-bold rounded-md text-slate-400">中文</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row flex-1">
+        <div class="w-full md:w-3/5 p-8 flex flex-col items-center justify-center bg-slate-900/30 border-r border-slate-700">
+            <div id="problemDisplay" class="text-2xl font-light mb-8">
+                Find \( (2x^3 - 13x^2 + 26x - 24) \div (x - 4) \)
+            </div>
+            
+            <div class="synthetic-table">
+                <div id="vis-r" class="box-r invisible">4</div>
+                <div></div>
+                <div class="coeff-row">2</div>
+                <div class="coeff-row">-13</div>
+                <div class="coeff-row">26</div>
+                <div class="coeff-row">-24</div>
+
+                <div></div><div></div>
+                <div class="multiply-row"></div>
+                <div id="m1" class="multiply-row invisible">8</div>
+                <div id="m2" class="multiply-row invisible">-20</div>
+                <div id="m3" class="multiply-row invisible">24</div>
+
+                <div></div><div></div>
+                <div id="r1" class="result-row invisible">2</div>
+                <div id="r2" class="result-row invisible">-5</div>
+                <div id="r3" class="result-row invisible">6</div>
+                <div id="r4" class="result-row remainder-pipe invisible">0</div>
+            </div>
+        </div>
+
+        <div class="w-full md:w-2/5 p-8 flex flex-col bg-slate-800/20">
+            <div id="stepContent" class="flex-1">
+                <h2 id="stepTitle" class="text-blue-400 font-bold uppercase text-sm mb-4"></h2>
+                <p id="stepText" class="text-slate-200 text-lg mb-6"></p>
+                
+                <div id="inputArea" class="bg-slate-900/50 p-6 rounded-xl border border-slate-700">
+                    <div id="formulaPrompt" class="text-xl mb-4"></div>
+                    <input type="text" id="mainInput" class="step-input text-2xl" placeholder="?" autocomplete="off">
+                    <button id="checkBtn" class="mt-4 w-full bg-blue-600 py-3 rounded-lg font-bold transition-colors">Check Answer</button>
+                    
+                    <button id="solveBtn" class="mt-2 w-full border border-amber-500/50 text-amber-500 py-2 rounded-lg font-medium text-sm hidden hover:bg-amber-500/10 transition-all">
+                        Show Solution
+                    </button>
+
+                    <div id="feedbackContainer" class="mt-4 p-4 rounded-lg bg-slate-900 border border-slate-700 hidden text-center">
+                        <p id="feedback" class="text-base font-bold text-emerald-400"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex items-center justify-between border-t border-slate-700 pt-6">
+                <button id="prevBtn" class="opacity-50 text-slate-400" disabled>PREV</button>
+                <span id="stepCounter" class="text-xs font-mono text-slate-500"></span>
+                <button id="nextBtn" class="bg-blue-600 px-6 py-2 rounded-lg font-bold opacity-30" disabled>NEXT</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const translations = {
+        en: {
+            title: "Synthetic Division",
+            correctMsg: "Correct! Proceed to the next step.",
+            finalMsg: "Complete! The quotient is 2x² - 5x + 6.",
+            steps: [
+                { t: "Step 1: Setup", p: "Value of r for x - 4:", ans: "4", text: "Write the coefficients and place the constant r in the box. Bring down the first coefficient." },
+                { t: "Step 2: Multiply & Add", p: "Calculate -13 + 2 * 4:", ans: "-5", text: "Multiply the first result by r and add it to the next coefficient." },
+                { t: "Step 3: Repeat", p: "Calculate 26 + -5 * 4:", ans: "6", text: "Multiply the new sum by r and add it to the next coefficient." },
+                { t: "Step 4: Final Remainder", p: "Calculate -24 + 6 * 4:", ans: "0", text: "Perform the final multiplication and addition to find the remainder." }
+            ]
+        },
+        zh: {
+            title: "综合除法",
+            correctMsg: "正确！请继续下一步。",
+            finalMsg: "完成！商式为 2x² - 5x + 6。",
+            steps: [
+                { t: "步骤 1: 设置", p: "x - 4 的 r 值:", ans: "4", text: "写出系数并将常数 r 放入方框中。将第一个系数直接落下来。" },
+                { t: "步骤 2: 乘法与加法", p: "计算 -13 + 2 * 4:", ans: "-5", text: "将第一个结果乘以 r，然后与下一个系数相加。" },
+                { t: "步骤 3: 重复步骤", p: "计算 26 + -5 * 4:", ans: "6", text: "将新的和乘以 r，然后与下一个系数相加。" },
+                { t: "步骤 4: 最终余数", p: "计算 -24 + 6 * 4:", ans: "0", text: "进行最后的乘法和加法以找出余数。" }
+            ]
+        }
+    };
+
+    let currentLang = 'en';
+    let currentStep = 0;
+    let failureCount = 0;
+    let stepState = [false, false, false, false]; 
+    const animals = ['🦒', '🦁', '🦉', '🐝', '🦕', '🐼', '🦊'];
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.getElementById('enBtn').classList.toggle('active', lang === 'en');
+        document.getElementById('zhBtn').classList.toggle('active', lang === 'zh');
+        updateUI();
+    }
+
+    function updateUI() {
+        const step = translations[currentLang].steps[currentStep];
+        document.getElementById('stepTitle').innerText = step.t;
+        document.getElementById('stepText').innerText = step.text;
+        
+        // Removed KaTeX delimiters from prompt to prevent parentheses glitch
+        document.getElementById('formulaPrompt').innerText = step.p;
+        document.getElementById('stepCounter').innerText = `STEP ${currentStep + 1} / 4`;
+        
+        failureCount = 0;
+        document.getElementById('solveBtn').classList.add('hidden');
+        
+        if (stepState[currentStep]) {
+            document.getElementById('mainInput').value = step.ans;
+            document.getElementById('mainInput').classList.add('input-correct');
+            document.getElementById('checkBtn').classList.add('hidden');
+            document.getElementById('feedbackContainer').classList.remove('hidden');
+            
+            if (currentStep === 3) {
+                document.getElementById('feedback').innerText = translations[currentLang].finalMsg;
+                document.getElementById('nextBtn').disabled = true;
+                document.getElementById('nextBtn').style.opacity = "0.1";
+            } else {
+                document.getElementById('feedback').innerText = translations[currentLang].correctMsg;
+                document.getElementById('nextBtn').disabled = false;
+                document.getElementById('nextBtn').style.opacity = "1";
+            }
+        } else {
+            document.getElementById('checkBtn').classList.remove('hidden');
+            document.getElementById('feedbackContainer').classList.add('hidden');
+            document.getElementById('mainInput').classList.remove('input-correct');
+            document.getElementById('mainInput').value = '';
+            document.getElementById('nextBtn').disabled = true;
+            document.getElementById('nextBtn').style.opacity = "0.3";
+        }
+
+        const prevBtn = document.getElementById('prevBtn');
+        prevBtn.disabled = currentStep === 0;
+        prevBtn.style.opacity = currentStep === 0 ? "0.5" : "1";
+
+        // Only render the problem display and table with KaTeX
+        if (window.renderMathInElement) {
+            renderMathInElement(document.getElementById('problemDisplay'));
+        }
+    }
+
+    function handleSuccess() {
+        stepState[currentStep] = true;
+        if (currentStep >= 0) { document.getElementById('vis-r').classList.remove('invisible'); document.getElementById('r1').classList.remove('invisible'); }
+        if (currentStep >= 1) { document.getElementById('m1').classList.remove('invisible'); document.getElementById('r2').classList.remove('invisible'); }
+        if (currentStep >= 2) { document.getElementById('m2').classList.remove('invisible'); document.getElementById('r3').classList.remove('invisible'); }
+        if (currentStep >= 3) { document.getElementById('m3').classList.remove('invisible'); document.getElementById('r4').classList.remove('invisible'); }
+        updateUI();
+    }
+
+    document.getElementById('checkBtn').onclick = () => {
+        const step = translations[currentLang].steps[currentStep];
+        const val = document.getElementById('mainInput').value.trim();
+        if (val === step.ans) { handleSuccess(); } 
+        else {
+            failureCount++;
+            document.getElementById('mainInput').classList.add('input-error');
+            setTimeout(() => document.getElementById('mainInput').classList.remove('input-error'), 400);
+            if (failureCount >= 2) document.getElementById('solveBtn').classList.remove('hidden');
+        }
+    };
+
+    document.getElementById('solveBtn').onclick = () => {
+        document.getElementById('mainInput').value = translations[currentLang].steps[currentStep].ans;
+        handleSuccess();
+    };
+
+    document.getElementById('nextBtn').onclick = () => { if (currentStep < 3) { currentStep++; updateUI(); } };
+    document.getElementById('prevBtn').onclick = () => { if (currentStep > 0) { currentStep--; updateUI(); } };
+
+    // Self-starting logic
+    (function startApp() {
+        const emojiSpan = document.getElementById('animalEmoji');
+        if (emojiSpan) {
+            emojiSpan.innerText = animals[Math.floor(Math.random() * animals.length)];
+        }
+        
+        // Run updateUI twice to ensure layout is solid
+        updateUI();
+        
+        // Remove loader immediately since content is lightweight
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }
+        }, 500);
+    })();
+</script>
+</body>
+</html>
