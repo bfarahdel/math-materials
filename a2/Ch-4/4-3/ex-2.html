@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Division Algorithm - Example 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body);"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code&display=swap');
+
+        body {
+            background-color: #0f172a; 
+            background-image: radial-gradient(#1e293b 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            font-family: 'Inter', sans-serif;
+            color: #f1f5f9;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .math-card {
+            width: 100%;
+            max-width: 1100px;
+            background: #1e293b;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border: 1px solid #334155;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .division-grid {
+            display: grid;
+            grid-template-columns: min-content min-content auto;
+            font-family: 'Fira Code', monospace;
+            line-height: 1.1;
+            margin: 2rem auto;
+            white-space: pre;
+        }
+
+        .div-quotient {
+            grid-column: 3;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #64748b;
+            color: #3b82f6; 
+            font-weight: bold;
+        }
+
+        .div-divisor { grid-column: 1; padding-right: 8px; color: #f59e0b; display: flex; align-items: center; } 
+        .div-bracket { grid-column: 2; border-left: 2px solid #64748b; border-top-left-radius: 12px; width: 15px; margin-right: 5px; }
+        .div-dividend { grid-column: 3; padding-top: 8px; color: #94a3b8; }
+
+        .sub-row { grid-column: 3; color: #10b981; } 
+        .rem-row { grid-column: 3; color: #f1f5f9; }
+
+        .sub-line { grid-column: 3; border-bottom: 1px solid #475569; margin: 4px 0; width: 60%; }
+        
+        #loader {
+            position: absolute;
+            inset: 0;
+            background: #0f172a;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .step-input {
+            width: 120px;
+            background: #0f172a;
+            border: 2px solid #475569;
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+            color: #f1f5f9;
+            transition: all 0.3s ease;
+        }
+
+        .input-correct { border-color: #10b981 !important; background: rgba(16, 185, 129, 0.1); }
+        .input-error { animation: shake 0.4s; border-color: #f43f5e !important; }
+
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+        .lang-btn.active { background-color: #3b82f6; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="math-card">
+    <div id="loader">
+        <span id="animalEmoji" class="text-6xl mb-4"></span>
+        <div class="text-blue-400 font-bold animate-pulse">LOADING...</div>
+    </div>
+
+    <div class="bg-slate-800/80 p-6 border-b border-slate-700 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <span class="bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full text-[10px] font-bold uppercase border border-blue-500/30">Example 2</span>
+            <h1 id="mainTitle" class="text-xl font-bold text-white">Division Algorithm</h1>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="flex bg-slate-900 rounded-lg p-1 border border-slate-700">
+                <button onclick="setLanguage('en')" id="enBtn" class="lang-btn active px-3 py-1 text-[10px] font-bold rounded-md">EN</button>
+                <button onclick="setLanguage('zh')" id="zhBtn" class="lang-btn px-3 py-1 text-[10px] font-bold rounded-md text-slate-400">中文</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row flex-1">
+        <div class="w-full md:w-3/5 p-8 flex flex-col items-center justify-center bg-slate-900/30 border-r border-slate-700">
+            <div id="problemDisplay" class="text-2xl font-light mb-8">
+                Use long division to find \( (x^2 + 3x - 40) \div (x - 5) \)
+            </div>
+            
+            <div class="division-grid text-3xl">
+                <div class="div-quotient">
+                    <span id="q1" class="invisible">x</span><span id="q2" class="invisible"> + 8</span>
+                </div>
+
+                <div class="div-divisor">x - 5</div>
+                <div class="div-bracket"></div>
+                <div class="div-dividend">x² + 3x - 40</div>
+
+                <div id="vis-step2" class="hidden contents">
+                    <div class="sub-row">(-) x² - 5x</div>
+                    <div class="sub-line"></div>
+                    <div class="rem-row">     8x - 40</div>
+                </div>
+
+                <div id="vis-step4" class="hidden contents">
+                    <div class="sub-row">(-)  8x - 40</div>
+                    <div class="sub-line"></div>
+                    <div class="rem-row">          0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full md:w-2/5 p-8 flex flex-col bg-slate-800/20">
+            <div id="stepContent" class="flex-1">
+                <h2 id="stepTitle" class="text-blue-400 font-bold uppercase text-sm mb-4"></h2>
+                <p id="stepText" class="text-slate-200 text-lg mb-6"></p>
+                
+                <div id="inputArea" class="bg-slate-900/50 p-6 rounded-xl border border-slate-700">
+                    <div id="formulaPrompt" class="text-xl mb-4"></div>
+                    <input type="text" id="mainInput" class="step-input text-2xl" placeholder="?" autocomplete="off">
+                    <button id="checkBtn" class="mt-4 w-full bg-blue-600 py-3 rounded-lg font-bold transition-colors">Check Answer</button>
+                    
+                    <button id="solveBtn" class="mt-2 w-full border border-amber-500/50 text-amber-500 py-2 rounded-lg font-medium text-sm hidden hover:bg-amber-500/10 transition-all">
+                        Show Solution
+                    </button>
+
+                    <div id="feedbackContainer" class="mt-4 p-4 rounded-lg bg-slate-900 border border-slate-700 hidden text-center">
+                        <p id="feedback" class="text-base font-bold text-emerald-400"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex items-center justify-between border-t border-slate-700 pt-6">
+                <button id="prevBtn" class="opacity-50 text-slate-400" disabled>PREV</button>
+                <span id="stepCounter" class="text-xs font-mono text-slate-500"></span>
+                <button id="nextBtn" class="bg-blue-600 px-6 py-2 rounded-lg font-bold opacity-30" disabled>NEXT</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const translations = {
+        en: {
+            title: "Division Algorithm",
+            correctMsg: "Correct! Click the Next button below.",
+            finalMsg: "Correct! The long division is complete.",
+            steps: [
+                { t: "Step 1: Divide", p: "Divide \\(x^2\\) by \\(x\\):", ans: "x", text: "Divide the leading term of the dividend by the leading term of the divisor." },
+                { t: "Step 2: Subtract", p: "Bring down the remainder:", ans: "skip", text: "Multiply \\(x(x-5)\\) and subtract it from the dividend." },
+                { t: "Step 3: Divide Again", p: "Divide \\(8x\\) by \\(x\\):", ans: "8", text: "Now divide the new leading term by \\(x\\)." },
+                { t: "Step 4: Remainder", p: "Final Subtraction:", ans: "skip", text: "Multiply \\(8(x-5)\\) and find the final remainder." }
+            ]
+        },
+        zh: {
+            title: "除法算法",
+            correctMsg: "正确！点击下方的下一步按钮。",
+            finalMsg: "正确！长除法已完成。",
+            steps: [
+                { t: "步骤 1: 除法", p: "用 \\(x^2\\) 除以 \\(x\\):", ans: "x", text: "将被除数的首项除以除数的首项。" },
+                { t: "步骤 2: 减法", p: "移下余数:", ans: "skip", text: "计算 \\(x(x-5)\\) 并从被除数中减去。" },
+                { t: "步骤 3: 再次除法", p: "用 \\(8x\\) 除以 \\(x\\):", ans: "8", text: "现在将新的首项除以 \\(x\\)。" },
+                { t: "步骤 4: 余数", p: "最终减法:", ans: "skip", text: "计算 \\(8(x-5)\\) 并找出最终余数。" }
+            ]
+        }
+    };
+
+    let currentLang = 'en';
+    let currentStep = 0;
+    let failureCount = 0;
+    // Track which steps have been solved successfully
+    let stepState = [false, false, false, false]; 
+    const animals = ['🦁', '🦊', '🐼', '🐨', '🐯'];
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.getElementById('enBtn').classList.toggle('active', lang === 'en');
+        document.getElementById('zhBtn').classList.toggle('active', lang === 'zh');
+        updateUI();
+    }
+
+    function updateUI() {
+        const step = translations[currentLang].steps[currentStep];
+        document.getElementById('stepTitle').innerText = step.t;
+        document.getElementById('stepText').innerText = step.text;
+        document.getElementById('formulaPrompt').innerHTML = step.p;
+        document.getElementById('stepCounter').innerText = `STEP ${currentStep + 1} / 4`;
+        
+        failureCount = 0;
+        document.getElementById('solveBtn').classList.add('hidden');
+        
+        // PERSISTENCE LOGIC: If step is already solved
+        if (stepState[currentStep]) {
+            document.getElementById('mainInput').value = (step.ans === 'skip') ? "" : step.ans;
+            document.getElementById('mainInput').classList.add('input-correct');
+            document.getElementById('checkBtn').classList.add('hidden');
+            document.getElementById('feedbackContainer').classList.remove('hidden');
+            
+            if (currentStep === 3) {
+                document.getElementById('feedback').innerText = translations[currentLang].finalMsg;
+                document.getElementById('nextBtn').disabled = true;
+                document.getElementById('nextBtn').style.opacity = "0.1";
+            } else {
+                document.getElementById('feedback').innerText = translations[currentLang].correctMsg;
+                document.getElementById('nextBtn').disabled = false;
+                document.getElementById('nextBtn').style.opacity = "1";
+            }
+        } else {
+            // Standard reset for unsolved steps
+            document.getElementById('checkBtn').classList.remove('hidden');
+            document.getElementById('feedbackContainer').classList.add('hidden');
+            document.getElementById('mainInput').classList.remove('input-correct');
+            document.getElementById('mainInput').value = '';
+            document.getElementById('nextBtn').disabled = true;
+            document.getElementById('nextBtn').style.opacity = "0.3";
+        }
+
+        // Handle skip visuals
+        if (step.ans === 'skip') {
+            document.getElementById('mainInput').classList.add('hidden');
+            if (!stepState[currentStep]) document.getElementById('checkBtn').innerText = "Continue";
+        } else {
+            document.getElementById('mainInput').classList.remove('hidden');
+            if (!stepState[currentStep]) document.getElementById('checkBtn').innerText = "Check Answer";
+        }
+
+        // Prev Button Persistence
+        const prevBtn = document.getElementById('prevBtn');
+        if (currentStep > 0) {
+            prevBtn.disabled = false;
+            prevBtn.classList.remove('opacity-50');
+            prevBtn.classList.add('opacity-100');
+        } else {
+            prevBtn.disabled = true;
+            prevBtn.classList.add('opacity-50');
+            prevBtn.classList.remove('opacity-100');
+        }
+
+        renderMathInElement(document.body);
+    }
+
+    function handleSuccess() {
+        stepState[currentStep] = true; // Mark as solved
+        
+        // Ensure Visuals stay on the grid
+        if (currentStep === 0) document.getElementById('q1').classList.remove('invisible');
+        if (currentStep === 1) document.getElementById('vis-step2').classList.remove('hidden');
+        if (currentStep === 2) document.getElementById('q2').classList.remove('invisible');
+        if (currentStep === 3) document.getElementById('vis-step4').classList.remove('hidden');
+
+        updateUI(); // Refresh UI with the newly saved state
+    }
+
+    document.getElementById('checkBtn').onclick = () => {
+        const step = translations[currentLang].steps[currentStep];
+        const val = document.getElementById('mainInput').value.trim().toLowerCase();
+        
+        if (step.ans === 'skip' || val === step.ans) {
+            handleSuccess();
+        } else {
+            failureCount++;
+            document.getElementById('mainInput').classList.add('input-error');
+            setTimeout(() => document.getElementById('mainInput').classList.remove('input-error'), 400);
+            
+            if (failureCount >= 3) {
+                document.getElementById('solveBtn').classList.remove('hidden');
+            }
+        }
+    };
+
+    document.getElementById('solveBtn').onclick = () => {
+        const step = translations[currentLang].steps[currentStep];
+        document.getElementById('mainInput').value = step.ans;
+        handleSuccess();
+    };
+
+    document.getElementById('nextBtn').onclick = () => {
+        if (currentStep < 3) {
+            currentStep++;
+            updateUI();
+        }
+    };
+
+    document.getElementById('prevBtn').onclick = () => {
+        if (currentStep > 0) {
+            currentStep--;
+            updateUI();
+        }
+    };
+
+    window.onload = () => {
+        document.getElementById('animalEmoji').innerText = animals[Math.floor(Math.random()*animals.length)];
+        setTimeout(() => {
+            document.getElementById('loader').style.opacity = '0';
+            setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
+        }, 1500);
+        updateUI();
+    };
+</script>
+</body>
+</html>
