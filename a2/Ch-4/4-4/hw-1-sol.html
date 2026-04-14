@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polynomial Mastery Quiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+/* 1. CORE SYSTEM SETUP */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #0f172a;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin: 0;
+    padding: 40px 0;
+    align-items: center;
+}
+
+.slide-container {
+    background-color: #020617; /* Deepest blue-black */
+    border-radius: 16px;
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    font-family: 'Urbanist', sans-serif;
+    height: 720px;
+    overflow: hidden;
+    padding: 80px;
+    position: relative;
+    width: 1280px;
+    border: 1px solid #1e293b;
+}
+
+/* DECORATIVE BACKGROUND */
+.slide-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, #00f2fe 0%, #4facfe 100%);
+    z-index: 10;
+}
+
+.slide-container::after {
+    content: '';
+    position: absolute;
+    bottom: -150px;
+    right: -150px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(79, 172, 254, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.slide-container > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* 2. TYPOGRAPHY */
+.slide-title {
+    color: #4facfe;
+    font-size: 56px;
+    font-weight: 700;
+    margin-bottom: 60px;
+    letter-spacing: -1px;
+}
+
+h3 {
+    color: #f8fafc;
+    font-size: 26px;
+    font-weight: 400;
+    margin-bottom: 25px;
+    opacity: 0.9;
+}
+
+p, li {
+    color: #cbd5e1;
+    font-size: 22px;
+    line-height: 1.6;
+}
+
+/* 3. INTERACTIVE SOLUTIONS */
+details {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    margin-top: 40px;
+    padding: 0;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+details[open] {
+    border-color: #4facfe;
+    box-shadow: 0 0 20px rgba(79, 172, 254, 0.1);
+}
+
+summary {
+    color: #4facfe;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+    list-style: none;
+    padding: 24px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+summary::after {
+    content: '\f067';
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    transition: transform 0.3s ease;
+}
+
+details[open] summary::after {
+    transform: rotate(45deg);
+    color: #f8fafc;
+}
+
+.solution-content {
+    padding: 0 24px 30px 24px;
+    border-top: 1px solid #1e293b;
+    margin-top: 0;
+}
+
+.result-tag {
+    color: #00f2fe;
+    font-weight: 700;
+}
+
+/* 4. LAYOUT COMPONENTS */
+.content-area {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.two-column {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 80px;
+    align-items: center;
+}
+
+.formula-display {
+    background: #111827; /* Slightly darker than slide for depth */
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 40px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* IMPROVED MATH VISIBILITY */
+math {
+    font-size: 34px;
+    color: #ffffff; /* Bright white for maximum readability */
+}
+
+/* Adjusting solution math colors */
+.solution-content math {
+    font-size: 24px;
+    color: #e2e8f0;
+}
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 1: Problem 1 -->
+<div class="slide-container" id="slide1">
+    <h2 class="slide-title">Problem 1</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>State the degree and leading coefficient:</h3>
+                <div class="formula-display">
+                    <math display="math">
+                        <mn>11</mn><msup><mi>x</mi><mn>6</mn></msup><mo>-</mo><mn>5</mn><msup><mi>x</mi><mn>5</mn></msup><mo>+</mo><mn>4</mn><msup><mi>x</mi><mn>2</mn></msup>
+                    </math>
+                </div>
+            </div>
+            <details>
+                <summary>Solution</summary>
+                <div class="solution-content">
+                    <p><strong>Degree:</strong> <span class="result-tag">6</span></p>
+                    <p><strong>Leading Coefficient:</strong> <span class="result-tag">11</span></p>
+                    <p>The highest exponent is 6, and its coefficient is 11.</p>
+                </div>
+            </details>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 2: Problem 2 -->
+<div class="slide-container" id="slide2">
+    <h2 class="slide-title">Problem 2</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>State the degree and leading coefficient:</h3>
+                <div class="formula-display">
+                    <math display="math">
+                        <mo>-</mo><mn>10</mn><msup><mi>x</mi><mn>7</mn></msup><mo>-</mo><mn>5</mn><msup><mi>x</mi><mn>3</mn></msup><mo>+</mo><mn>4</mn><mi>x</mi><mo>-</mo><mn>22</mn>
+                    </math>
+                </div>
+            </div>
+            <details>
+                <summary>Solution</summary>
+                <div class="solution-content">
+                    <p><strong>Degree:</strong> <span class="result-tag">7</span></p>
+                    <p><strong>Leading Coefficient:</strong> <span class="result-tag">-10</span></p>
+                    <p>This is a polynomial in one variable.</p>
+                </div>
+            </details>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 3: Problem 3 -->
+<div class="slide-container" id="slide3">
+    <h2 class="slide-title">Problem 3</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>Check if it is a polynomial in one variable:</h3>
+                <div class="formula-display">
+                    <math display="math">
+                        <mn>14</mn><msup><mi>x</mi><mn>4</mn></msup><mo>-</mo><mn>9</mn><msup><mi>x</mi><mn>3</mn></msup><mo>+</mo><mn>3</mn><mi>x</mi><mo>-</mo><mn>4</mn><mi>y</mi>
+                    </math>
+                </div>
+            </div>
+            <details>
+                <summary>Solution</summary>
+                <div class="solution-content">
+                    <p><strong>Status:</strong> <span class="result-tag">Not a polynomial in one variable</span></p>
+                    <p><strong>Reason:</strong> The expression contains two different variables: <math><mi>x</mi></math> and <math><mi>y</mi></math>.</p>
+                </div>
+            </details>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 4: Problem 4 -->
+<div class="slide-container" id="slide4">
+    <h2 class="slide-title">Problem 4</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>Check if it is a polynomial in one variable:</h3>
+                <div class="formula-display">
+                    <math display="math">
+                        <mn>8</mn><msup><mi>x</mi><mn>5</mn></msup><mo>-</mo><mn>3</mn><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mn>4</mn><mi>xy</mi><mo>-</mo><mn>5</mn>
+                    </math>
+                </div>
+            </div>
+            <details>
+                <summary>Solution</summary>
+                <div class="solution-content">
+                    <p><strong>Status:</strong> <span class="result-tag">Not a polynomial in one variable</span></p>
+                    <p><strong>Reason:</strong> Contains two variables, <math><mi>x</mi></math> and <math><mi>y</mi></math>, including the term <math><mi>xy</mi></math>.</p>
+                </div>
+            </details>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 5: Problem 5 -->
+<div class="slide-container" id="slide5">
+    <h2 class="slide-title">Problem 5</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>Find <math><mi>w</mi><mo>(</mo><mn>5</mn><mo>)</mo></math> and <math><mi>w</mi><mo>(</mo><mo>-</mo><mn>4</mn><mo>)</mo></math>:</h3>
+                <div class="formula-display">
+                    <math display="math">
+                        <mi>w</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mo>-</mo><mn>2</mn><msup><mi>x</mi><mn>3</mn></msup><mo>+</mo><mn>3</mn><mi>x</mi><mo>-</mo><mn>12</mn>
+                    </math>
+                </div>
+            </div>
+            <details>
+                <summary>Solution</summary>
+                <div class="solution-content">
+                    <p><strong>w(5) = </strong> <span class="result-tag">-247</span></p>
+                    <p><math><mo>-</mo><mn>2</mn><mo>(</mo><mn>125</mn><mo>)</mo><mo>+</mo><mn>15</mn><mo>-</mo><mn>12</mn></math></p>
+                    <p><strong>w(-4) = </strong> <span class="result-tag">104</span></p>
+                    <p><math><mo>-</mo><mn>2</mn><mo>(</mo><mo>-</mo><mn>64</mn><mo>)</mo><mo>-</mo><mn>12</mn><mo>-</mo><mn>12</mn></math></p>
+                </div>
+            </details>
+        </div>
+    </div>
+</div>
+
+<!-- SLIDE 6: Problem 6 -->
+<div class="slide-container" id="slide6">
+    <h2 class="slide-title">Problem 6</h2>
+    <div class="content-area">
+        <div class="two-column">
+            <div>
+                <h3>Find <math><mi>w</mi><mo>(</mo><mn>5</mn><mo>)</mo></math> and <math><mi>w</mi><mo>(</mo><mo>-</mo><mn>4</mn><mo>)</mo></math>:</h3>
+                <div class="formula-display">
+                    <math display="math">
+                        <mi>w</mi><mo>(</mo><mi>x</mi><mo>)</mo><mo>=</mo><mn>2</mn><msup><mi>x</mi><mn>4</mn></msup><mo>-</mo><mn>5</mn><msup><mi>x</mi><mn>3</mn></msup><mo>+</mo><mn>3</mn><msup><mi>x</mi><mn>2</mn></msup><mo>-</mo><mn>2</mn><mi>x</mi><mo>+</mo><mn>8</mn>
+                    </math>
+                </div>
+            </div>
+            <details>
+                <summary>Solution</summary>
+                <div class="solution-content">
+                    <p><strong>w(5) = </strong> <span class="result-tag">698</span></p>
+                    <p><math><mn>1250</mn><mo>-</mo><mn>625</mn><mo>+</mo><mn>75</mn><mo>-</mo><mn>10</mn><mo>+</mo><mn>8</mn></math></p>
+                    <p><strong>w(-4) = </strong> <span class="result-tag">896</span></p>
+                    <p><math><mn>512</mn><mo>+</mo><mn>320</mn><mo>+</mo><mn>48</mn><mo>+</mo><mn>8</mn><mo>+</mo><mn>8</mn></math></p>
+                </div>
+            </details>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
