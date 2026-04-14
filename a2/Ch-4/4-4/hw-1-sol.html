@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polynomial Mastery Quiz</title>
+    <title>Polynomial Leading Coefficients</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
@@ -20,26 +20,29 @@ body {
     flex-direction: column;
     gap: 30px;
     margin: 0;
-    padding: 40px 0;
+    padding: 20px; /* Reduced for iframe padding */
     align-items: center;
 }
 
 .slide-container {
-    background-color: #020617; /* Deepest blue-black */
+    background-color: #020617;
     border-radius: 16px;
     box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6);
     display: flex;
     flex-direction: column;
     font-family: 'Urbanist', sans-serif;
-    height: 720px;
+    
+    /* FIX FOR IFRAME: Use 100% width and auto height instead of fixed 1280x720 */
+    width: 100%;
+    max-width: 1200px;
+    min-height: 500px; 
+    
     overflow: hidden;
-    padding: 80px;
+    padding: 40px; /* Reduced from 80px to save vertical space in 600px iframe */
     position: relative;
-    width: 1280px;
     border: 1px solid #1e293b;
 }
 
-/* DECORATIVE BACKGROUND */
 .slide-container::before {
     content: '';
     position: absolute;
@@ -51,43 +54,27 @@ body {
     z-index: 10;
 }
 
-.slide-container::after {
-    content: '';
-    position: absolute;
-    bottom: -150px;
-    right: -150px;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(79, 172, 254, 0.05) 0%, transparent 70%);
-    border-radius: 50%;
-}
-
-.slide-container > * {
-    position: relative;
-    z-index: 2;
-}
-
-/* 2. TYPOGRAPHY */
+/* 2. TYPOGRAPHY - Added clamp for responsive sizing */
 .slide-title {
     color: #4facfe;
-    font-size: 56px;
+    font-size: clamp(32px, 5vw, 48px);
     font-weight: 700;
-    margin-bottom: 60px;
+    margin-bottom: 30px;
     letter-spacing: -1px;
 }
 
 h3 {
     color: #f8fafc;
-    font-size: 26px;
+    font-size: clamp(20px, 2.5vw, 26px);
     font-weight: 400;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     opacity: 0.9;
 }
 
 p, li {
     color: #cbd5e1;
-    font-size: 22px;
-    line-height: 1.6;
+    font-size: clamp(16px, 1.8vw, 20px);
+    line-height: 1.5;
 }
 
 /* 3. INTERACTIVE SOLUTIONS */
@@ -95,26 +82,18 @@ details {
     background: #0f172a;
     border: 1px solid #334155;
     border-radius: 12px;
-    margin-top: 40px;
-    padding: 0;
+    margin-top: 20px;
     width: 100%;
-    transition: all 0.3s ease;
-}
-
-details[open] {
-    border-color: #4facfe;
-    box-shadow: 0 0 20px rgba(79, 172, 254, 0.1);
 }
 
 summary {
     color: #4facfe;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     list-style: none;
-    padding: 24px;
+    padding: 20px;
     text-transform: uppercase;
-    letter-spacing: 2px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -124,18 +103,11 @@ summary::after {
     content: '\f067';
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
-    transition: transform 0.3s ease;
-}
-
-details[open] summary::after {
-    transform: rotate(45deg);
-    color: #f8fafc;
 }
 
 .solution-content {
-    padding: 0 24px 30px 24px;
+    padding: 0 20px 20px 20px;
     border-top: 1px solid #1e293b;
-    margin-top: 0;
 }
 
 .result-tag {
@@ -153,37 +125,35 @@ details[open] summary::after {
 
 .two-column {
     display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: 80px;
-    align-items: center;
+    /* This allows the column to stack if the iframe is very narrow */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    align-items: start;
 }
 
 .formula-display {
-    background: #111827; /* Slightly darker than slide for depth */
+    background: #111827;
     border: 1px solid #334155;
     border-radius: 12px;
-    padding: 40px;
-    margin: 20px 0;
+    padding: 30px;
+    margin: 10px 0;
     display: flex;
     justify-content: center;
 }
 
-/* IMPROVED MATH VISIBILITY */
 math {
-    font-size: 34px;
-    color: #ffffff; /* Bright white for maximum readability */
+    font-size: clamp(24px, 4vw, 34px);
+    color: #ffffff;
 }
 
-/* Adjusting solution math colors */
 .solution-content math {
-    font-size: 24px;
+    font-size: 20px;
     color: #e2e8f0;
 }
     </style>
 </head>
 <body>
 
-<!-- SLIDE 1: Problem 1 -->
 <div class="slide-container" id="slide1">
     <h2 class="slide-title">Problem 1</h2>
     <div class="content-area">
@@ -208,7 +178,6 @@ math {
     </div>
 </div>
 
-<!-- SLIDE 2: Problem 2 -->
 <div class="slide-container" id="slide2">
     <h2 class="slide-title">Problem 2</h2>
     <div class="content-area">
@@ -233,7 +202,6 @@ math {
     </div>
 </div>
 
-<!-- SLIDE 3: Problem 3 -->
 <div class="slide-container" id="slide3">
     <h2 class="slide-title">Problem 3</h2>
     <div class="content-area">
@@ -257,7 +225,6 @@ math {
     </div>
 </div>
 
-<!-- SLIDE 4: Problem 4 -->
 <div class="slide-container" id="slide4">
     <h2 class="slide-title">Problem 4</h2>
     <div class="content-area">
@@ -281,7 +248,6 @@ math {
     </div>
 </div>
 
-<!-- SLIDE 5: Problem 5 -->
 <div class="slide-container" id="slide5">
     <h2 class="slide-title">Problem 5</h2>
     <div class="content-area">
@@ -298,7 +264,7 @@ math {
                 <summary>Solution</summary>
                 <div class="solution-content">
                     <p><strong>w(5) = </strong> <span class="result-tag">-247</span></p>
-                    <p><math><mo>-</mo><mn>2</mn><mo>(</mo><mn>125</mn><mo>)</mo><mo>+</mo><mn>15</mn><mo>-</mo><mn>12</mn></math></p>
+                    <p><math><mo>-</mo><mn>2</mn><mo>(</mo>< 125</mo><mo>)</mo><mo>+</mo><mn>15</mn><mo>-</mo><mn>12</mn></math></p>
                     <p><strong>w(-4) = </strong> <span class="result-tag">104</span></p>
                     <p><math><mo>-</mo><mn>2</mn><mo>(</mo><mo>-</mo><mn>64</mn><mo>)</mo><mo>-</mo><mn>12</mn><mo>-</mo><mn>12</mn></math></p>
                 </div>
@@ -307,7 +273,6 @@ math {
     </div>
 </div>
 
-<!-- SLIDE 6: Problem 6 -->
 <div class="slide-container" id="slide6">
     <h2 class="slide-title">Problem 6</h2>
     <div class="content-area">
