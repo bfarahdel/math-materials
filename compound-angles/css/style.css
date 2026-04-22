@@ -1,0 +1,340 @@
+:root {
+    --base-font-size: 1.1vw;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background-color: #f1f5f9;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-size: var(--base-font-size);
+}
+
+/* 2. SLIDE SYSTEM */
+.presentation-wrapper {
+    position: relative;
+    width: 90vw;
+    max-width: 1400px;
+    aspect-ratio: 16 / 9;
+    margin: auto;
+}
+
+.slide-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fdfbf7;
+  border-radius: 1vw;
+  box-shadow: 0 1.5vw 4vw rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  font-family: 'Lato', sans-serif;
+  padding: 2vw 5vw;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  z-index: 1;
+}
+
+.slide-container.active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 2;
+}
+
+/* 3. TYPOGRAPHY */
+.slide-container h1 { font-size: 6vw; font-weight: 700; margin-bottom: 1vw; color: #1e293b; font-family: 'Poppins'; }
+.slide-container h2.slide-title { 
+    font-size: 3.2vw; 
+    font-weight: 700; 
+    margin-bottom: 1.5vw; 
+    border-left: 0.8vw solid #2563eb; 
+    padding-left: 1.5vw;
+    font-family: 'Poppins';
+}
+.slide-container h3 { font-size: 2.2vw; font-weight: 600; color: #2563eb; margin-bottom: 0.8vw; font-family: 'Poppins'; }
+.slide-container p { font-size: 1.6vw; color: #334155; line-height: 1.4; margin: 0.5vw 0; }
+
+.page-header {
+    font-size: 1.1vw;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.1vw;
+    margin-bottom: 0.5vw;
+}
+
+.slide-footer {
+    position: absolute;
+    bottom: 1.5vw;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.2vw;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.2vw;
+}
+
+/* 4. LAYOUT ELEMENTS */
+.content-area { 
+    flex-grow: 1; 
+    width: 100%; 
+    display: flex; 
+    flex-direction: column; 
+    overflow: hidden; 
+    position: relative;
+}
+
+.tile {
+  background-color: #fff;
+  border: 0.1vw solid #e2e8f0;
+  border-radius: 1.2vw;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.5vw;
+  text-align: center;
+  box-shadow: 0 0.4vw 1vw rgba(0,0,0,0.03);
+}
+
+.math-container {
+  background: #f8fafc;
+  border-radius: 1vw;
+  padding: 1vw;
+  margin: 0.5vw 0;
+  border: 0.1vw solid #e2e8f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.2vw;
+  width: 100%;
+}
+
+/* 5. INTERACTIVE SCROLLING */
+.scroll-container {
+    width: 100%;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 1vw;
+    margin-bottom: 1vw;
+}
+
+.scroll-container::-webkit-scrollbar { width: 0.4vw; }
+.scroll-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 1vw; }
+
+.step-item {
+    display: none;
+    width: 100%;
+    margin-bottom: 1vw;
+    animation: fadeInStep 0.4s ease forwards;
+}
+
+.step-card {
+    background: #fff;
+    border-left: 0.5vw solid #2563eb;
+    padding: 1vw 1.5vw;
+    box-shadow: 0 0.2vw 1vw rgba(0,0,0,0.05);
+}
+
+.step-card strong { color: #2563eb; font-family: 'Poppins'; display: block; margin-bottom: 0.3vw; }
+
+
+@keyframes fadeInStep {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 6. BUTTONS & NAV */
+.nav-footer {
+    position: fixed;
+    bottom: 2vh;
+    display: flex;
+    align-items: center;
+    gap: 1.5vw;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 0.6vw 1.5vw;
+    border-radius: 4vw;
+    box-shadow: 0 0.8vw 2vw rgba(0,0,0,0.08);
+    z-index: 1000;
+}
+
+.nav-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    width: 3vw;
+    height: 3vw;
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2vw;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover:not(:disabled) { background: #1d4ed8; transform: scale(1.1); }
+.nav-btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+
+.slide-indicator { font-family: 'Poppins', sans-serif; font-weight: 600; color: #64748b; font-size: 1.2vw; min-width: 4vw; text-align: center; }
+
+.reveal-btn {
+  background-color: #2563eb;
+  border: none;
+  border-radius: 0.6vw;
+  color: white;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.3vw;
+  font-weight: 600;
+  padding: 0.8vw 1.5vw;
+  transition: all 0.3s ease;
+}
+
+.solution-text { display: none; font-size: 2.2vw; font-weight: 700; color: #1e293b; }
+
+/* 7. WHEEL LOGIC (SLIDE 4) */
+.two-column-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3vw; width: 100%; height: 100%; align-items: center; }
+.wheel-column { display: flex; flex-direction: column; align-items: center; }
+.wheel-wrapper { position: relative; width: 28vw; height: 28vw; max-width: 400px; max-height: 400px; margin-bottom: 1vw; }
+.angle-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3vw; font-weight: 800; color: #2563eb; z-index: 5; background: #fdfbf7; padding: 0.5vw; border-radius: 50%; }
+.angle-item { position: absolute; width: 4.5vw; height: 4.5vw; display: flex; align-items: center; justify-content: center; font-size: 1.6vw; font-weight: 700; color: #94a3b8; cursor: pointer; transition: all 0.2s ease; border-radius: 1vw; }
+.angle-item:hover { color: #2563eb; transform: scale(1.1); }
+.angle-item.selected { color: #2563eb; transform: scale(1.25); text-shadow: 0 0 1vw rgba(37, 99, 235, 0.2); }
+.sum-display { font-size: 2.8vw; font-weight: 700; color: #1e293b; margin-top: 0.5vw; }
+.feedback-msg { font-size: 1.4vw; font-weight: 600; height: 2vw; margin-top: 0.2vw; }
+
+/* 8. FORMULA GRID (SLIDE 7) */
+.formula-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5vw; width: 100%; max-width: 1100px; margin: auto; }
+.formula-card { background: white; border: 1px solid #e2e8f0; border-radius: 1vw; padding: 1.2vw; box-shadow: 0 0.4vw 1vw rgba(0,0,0,0.02); }
+.formula-card h4 { margin: 0 0 0.5vw 0; color: #2563eb; font-size: 1.6vw; font-family: 'Poppins'; }
+
+/* REFERENCE TABLE */
+.ref-table-box {
+    position: absolute;
+    top: -2.5vw;
+    right: 0;
+    background: #fff;
+    border: 0.1vw solid #cbd5e1;
+    border-radius: 0.5vw;
+    padding: 0.5vw;
+    box-shadow: 0 0.4vw 1vw rgba(0,0,0,0.05);
+    z-index: 10;
+}
+.ref-table-box table { border-collapse: collapse; font-size: 1.1vw; }
+.ref-table-box th { padding: 0.3vw 0.8vw; text-align: left; color: #2563eb; font-family: 'Poppins'; border-bottom: 1px solid #e2e8f0; }
+.ref-table-box td { padding: 0.3vw 0.8vw; color: #475569; }
+
+/* SLIDE 9 GRID STYLES */
+.grid-panel {
+    animation: fadeInPanel 0.4s ease forwards;
+}
+.panel-hidden { display: none; }
+@keyframes fadeInPanel { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+/* Fix for Slide 9 Button positioning */
+.s9-controls {
+    display: flex; 
+    gap: 1vw; 
+    justify-content: center; 
+    margin-top: 0;
+    padding-bottom: 1vw;
+}
+
+/* 10. BATTLE ACTIVITY (SLIDE 5) */
+.activity-content { position: relative; height: 100%; border-radius: 0.8vw; overflow: hidden; }
+.game-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(253, 251, 247, 0.98);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.battle-side {
+    position: relative;
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.p1-theme { background: linear-gradient(to bottom, #eff6ff, #dbeafe); border-right: 0.2vw solid rgba(37, 99, 235, 0.2); }
+.p2-theme { background: linear-gradient(to bottom, #fff1f2, #ffe4e6); }
+
+.battle-header {
+    padding: 1vw;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5vw;
+    border-bottom: 0.1vw solid rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+.battle-icon { font-size: 3vw; }
+.battle-stats { display: flex; flex-direction: column; align-items: center; }
+.battle-score { font-size: 2vw; font-weight: 800; color: #1e293b; }
+.battle-target { font-size: 1.8vw; font-weight: 700; color: #2563eb; background: #fff; padding: 0.2vw 1vw; border-radius: 2vw; margin-top: 0.5vw; box-shadow: 0 0.2vw 0.5vw rgba(0,0,0,0.05); }
+
+.battle-timer {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ef4444;
+    color: white;
+    padding: 0.5vw 2vw;
+    border-radius: 0 0 1vw 1vw;
+    font-size: 2vw;
+    font-weight: 800;
+    z-index: 20;
+    box-shadow: 0 0.2vw 1vw rgba(0,0,0,0.2);
+}
+
+.bubble-area { position: relative; flex-grow: 1; }
+
+.battle-bubble {
+    position: absolute;
+    width: 7vw;
+    height: 7vw;
+    background: rgba(255, 255, 255, 0.9);
+    border: 0.3vw solid #2563eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 1.2vw;
+    cursor: pointer;
+    box-shadow: 0 0.4vw 1vw rgba(0,0,0,0.1);
+    transition: transform 0.1s ease;
+    user-select: none;
+    touch-action: none;
+}
+
+.battle-bubble:active { transform: scale(0.9); }
+.p2-theme .battle-bubble { border-color: #ef4444; }
+
+.player-config { text-align: center; }
