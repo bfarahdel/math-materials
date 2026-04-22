@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compound Angles - Chapter 3 Trigonometry</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="presentation-wrapper" id="slide-viewer">
+    <div class="slide-container active" id="slide1" style="justify-content: center; text-align: center;">
+        <h1>Compound Angles</h1>
+        <p style="font-size: 2.2vw; color: #64748b; margin-bottom: 0.5vw;">Lesson 3.2: Compound Angle Formulae</p>
+        <p style="font-size: 1.5vw; color: #94a3b8; font-weight: 600; margin-bottom: 0.5vw;">Pg. 58-61</p>
+        <p style="font-size: 1.2vw; color: #94a3b8; font-weight: 500;">Britny Farahdel</p>
+        <div class="slide-footer">Chapter 3: Trigonometry</div>
+    </div>
+
+    <div class="slide-container" id="slide2">
+        <h2 class="slide-title">Warm Up: Special Ratios</h2>
+        <div class="content-area">
+            <p style="margin-bottom: 2vw; font-weight: 600; text-align: center;">Recall the exact values for these sine ratios:</p>
+            <div style="display: flex; gap: 1.5vw; width: 100%;">
+                <div class="tile">
+                    <h3>sin(30°)</h3>
+                    <div>
+                        <button class="reveal-btn" onclick="revealSolution(this)">Show Answer</button>
+                        <div class="solution-text">1/2</div>
+                    </div>
+                </div>
+                <div class="tile">
+                    <h3>sin(45°)</h3>
+                    <div>
+                        <button class="reveal-btn" onclick="revealSolution(this)">Show Answer</button>
+                        <div class="solution-text">√2/2</div>
+                    </div>
+                </div>
+                <div class="tile">
+                    <h3>sin(60°)</h3>
+                    <div>
+                        <button class="reveal-btn" onclick="revealSolution(this)">Show Answer</button>
+                        <div class="solution-text">√3/2</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide3">
+        <span class="page-header">Pg. 59</span>
+        <h2 class="slide-title">The Challenge</h2>
+        <div class="content-area" style="justify-content: center; align-items: center;">
+            <div style="text-align: center;">
+                <h3>Standard Knowns</h3>
+                <p>We memorize exact values for special angles.</p>
+                <div class="math-container" style="max-width: 35vw; margin: 1vw auto;">
+                    sin(60°) = √3/2
+                </div>
+            </div>
+            
+            <div style="margin-top: 3vw; padding-top: 2vw; border-top: 0.1vw solid #e2e8f0; text-align: center; width: 100%;">
+                <p style="color: #ea580c; font-weight: 700; margin-bottom: 1.5vw; font-size: 2.2vw;">How do we find the exact value of a non-special angle?</p>
+                <span style="font-size: 3.5vw; font-weight: 800; color: #1e293b;">
+                    <i class="fa-regular fa-circle-question" style="color: #64748b; margin-right: 1.2vw;"></i> sin(105°)
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide4">
+        <h2 class="slide-title">Decomposition</h2>
+        <div class="content-area">
+            <div class="two-column-grid">
+                <div>
+                    <p>To solve for <span style="color:#2563eb; font-weight:700;">105°</span>, we break it into special angles.</p>
+                    <p style="font-size: 1.4vw; color: #64748b;">Select two special angles that add up to 105°.</p>
+                </div>
+                <div class="wheel-column">
+                    <div class="wheel-wrapper" id="angleWheel">
+                        <div class="angle-center">105°</div>
+                        <div class="angle-item" data-deg="0">0°</div>
+                        <div class="angle-item" data-deg="30">30°</div>
+                        <div class="angle-item" data-deg="45">45°</div>
+                        <div class="angle-item" data-deg="60">60°</div>
+                        <div class="angle-item" data-deg="90">90°</div>
+                        <div class="angle-item" data-deg="180">180°</div>
+                    </div>
+                    <div class="sum-display" id="sumDisplay">105° = ? + ?</div>
+                    <div class="feedback-msg" id="feedback"></div>
+                    <button class="reveal-btn" style="background:#64748b; padding:0.4vw 1vw; font-size:1vw;" onclick="resetAngles()">Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide5">
+        <h2 class="slide-title">Compound Angle Battle</h2>
+        <div class="content-area activity-content" style="padding: 0;">
+            <div id="game-menu" class="game-overlay" style="flex-direction: column;">
+                <h1 style="font-size: 4vw; color: #2563eb; margin-bottom: 1vw;">ANGLE BATTLE</h1>
+                <p style="font-size: 1.5vw; margin-bottom: 2vw;">Match the Compound Angle to its Decomposition!</p>
+                <div style="display: flex; gap: 3vw; margin-bottom: 2vw;">
+                    <div class="player-config">
+                        <div style="font-size: 4vw; margin-bottom: 0.5vw;">🦁</div>
+                        <div style="font-weight: 700; color: #2563eb;">Player 1</div>
+                    </div>
+                    <div class="player-config">
+                        <div style="font-size: 4vw; margin-bottom: 0.5vw;">🐯</div>
+                        <div style="font-weight: 700; color: #ef4444;">Player 2</div>
+                    </div>
+                </div>
+                <button class="reveal-btn" style="font-size: 2.2vw; padding: 1.2vw 3vw;" onclick="startBattle()">Start Battle</button>
+            </div>
+            <div id="battle-container" style="display: none; width: 100%; height: 100%; flex-direction: row; position: relative;">
+                <div id="battle-timer" class="battle-timer">30</div>
+                <div id="p1-side" class="battle-side p1-theme">
+                    <div class="battle-header">
+                        <span class="battle-icon">🦁</span>
+                        <div class="battle-stats">
+                            <span id="p1-score" class="battle-score">0</span>
+                            <span id="p1-target" class="battle-target">105°</span>
+                        </div>
+                    </div>
+                    <div id="p1-bubbles" class="bubble-area"></div>
+                </div>
+                <div id="p2-side" class="battle-side p2-theme">
+                    <div class="battle-header">
+                        <span class="battle-icon">🐯</span>
+                        <div class="battle-stats">
+                            <span id="p2-score" class="battle-score">0</span>
+                            <span id="p2-target" class="battle-target">75°</span>
+                        </div>
+                    </div>
+                    <div id="p2-bubbles" class="bubble-area"></div>
+                </div>
+            </div>
+            <div id="battle-end" class="game-overlay" style="display: none; flex-direction: column; background: rgba(255,255,255,0.98);">
+                <h1 id="winner-text" style="font-size: 5vw; margin: 0;"></h1>
+                <div id="final-scores" style="font-size: 2.5vw; margin: 1vw 0; font-weight: 700;"></div>
+                <button class="reveal-btn" style="font-size: 1.8vw;" onclick="resetBattle()">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide6">
+        <h2 class="slide-title">Sine Compound Angles</h2>
+        <div class="content-area" style="justify-content: center; align-items: center; text-align: center;">
+            <p style="font-size: 3vw; font-weight: 700; margin-bottom: 3vw; display: flex; align-items: center; justify-content: center;">
+                Is <span style="color: #2563eb; margin: 0 0.5vw;">sin(60 + 45)</span> = <span style="color: #10b981; margin: 0 0.5vw;">sin(60)</span> + <span style="color: #f59e0b; margin: 0 0.5vw;">sin(45)</span>? 
+                <span id="slide5-no" style="display: none; color: #ef4444; font-weight: 800; font-size: 4vw; margin-left: 1.5vw; transform: rotate(-5deg);">No!</span>
+            </p>
+            <div id="slide5-evaluation" style="display: none; margin-bottom: 2vw; background: rgba(239, 68, 68, 0.05); padding: 1vw; border-radius: 1vw;">
+                <p style="font-size: 1.4vw; color: #475569; margin: 0.5vw 0;">
+                    <span style="color: #2563eb; font-weight: 700;">sin(105°)</span> ≈ 0.966 
+                    <span style="margin: 0 2vw; color: #94a3b8;">vs.</span> 
+                    <span style="color: #10b981; font-weight: 700;">sin(60°)</span> + <span style="color: #f59e0b; font-weight: 700;">sin(45°)</span> ≈ 1.573
+                </p>
+            </div>
+            <button class="reveal-btn" onclick="revealSlide6Solution(this)">Show Answer</button>
+            <div id="slide5-formula-area" style="display: none; width: 100%;">
+                <div class="math-container" style="font-size: 3vw; background: #f0fdf4; border-color: #10b981; color: #15803d; padding: 1.5vw 3vw;">
+                    <math xmlns="http://www.w3.org/1998/Math/MathML">
+                        <mi>sin</mi><mo>(</mo><mi>A</mi><mo>&#177;</mo><mi>B</mi><mo>)</mo><mo>=</mo><mi>sin</mi><mi>A</mi><mi>cos</mi><mi>B</mi><mo>&#177;</mo><mi>cos</mi><mi>A</mi><mi>sin</mi><mi>B</mi>
+                    </math>
+                </div>
+                <p style="font-size: 1.8vw; color: #334155; margin-top: 1.5vw; font-weight: 600;">
+                    We can use the <span style="color: #2563eb;">Sine Compound Angle formula</span>.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide7">
+        <h2 class="slide-title">Step-by-Step Solution: sin(105°)</h2>
+        <div class="content-area">
+            <p style="font-size: 1.8vw; font-weight: 600; margin: 0 0 1vw 0; text-align: center;">
+                Finding the exact value of <span style="color: #2563eb;">sin(105°)</span>
+            </p>
+            <div class="scroll-container" id="stepsScroll">
+                <div class="step-item" id="step1" style="display: block;">
+                    <div class="step-card">
+                        <strong>Step 1: Rewrite the angle</strong>
+                        <span class="step-math-line">sin(105°) = sin(60° + 45°)</span>
+                    </div>
+                </div>
+                <div class="step-item" id="step2">
+                    <div class="step-card">
+                        <strong>Step 2: Apply the Identity</strong>
+                        <span class="step-math-line">sin(60°)cos(45°) + cos(60°)sin(45°)</span>
+                    </div>
+                </div>
+                <div class="step-item" id="step3">
+                    <div class="step-card">
+                        <strong>Step 3: Substitute Exact Values</strong>
+                        <span class="step-math-line">
+                            <math display="block">
+                                <mrow><mo>(</mo><mfrac><msqrt><mn>3</mn></msqrt><mn>2</mn></mfrac><mo>)</mo></mrow>
+                                <mrow><mo>(</mo><mfrac><msqrt><mn>2</mn></msqrt><mn>2</mn></mfrac><mo>)</mo></mrow>
+                                <mo>+</mo>
+                                <mrow><mo>(</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>)</mo></mrow>
+                                <mrow><mo>(</mo><mfrac><msqrt><mn>2</mn></msqrt><mn>2</mn></mfrac><mo>)</mo></mrow>
+                            </math>
+                        </span>
+                    </div>
+                </div>
+                <div class="step-item" id="step4">
+                    <div class="step-card" style="border-left-color: #10b981; background: #f0fdf4;">
+                        <strong>Step 4: Final Simplification</strong>
+                        <span class="step-math-line" style="color: #15803d;">
+                            <math display="block">
+                                <mfrac><mrow><msqrt><mn>6</mn></msqrt><mo>+</mo><msqrt><mn>2</mn></msqrt></mrow><mn>4</mn></mfrac>
+                            </math>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1vw; justify-content: center; padding: 0.5vw 0 1vw 0;">
+                <button class="reveal-btn" id="nextStepBtn" onclick="nextStep()">Next Step <i class="fa-solid fa-chevron-down"></i></button>
+                <button class="reveal-btn" style="background: #64748b;" onclick="resetStepByStep()">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide8">
+        <h2 class="slide-title">Compound Angle Formulae</h2>
+        <div class="content-area">
+            <div class="formula-summary-grid">
+                <div class="formula-card">
+                    <h4>Sine Addition/Subtraction</h4>
+                    <div class="math-container" style="font-size: 1.8vw; padding: 1vw;">
+                        <math xmlns="http://www.w3.org/1998/Math/MathML">
+                            <mi>sin</mi><mo>(</mo><mi>A</mi><mo>&#177;</mo><mi>B</mi><mo>)</mo><mo>=</mo><mi>sin</mi><mi>A</mi><mi>cos</mi><mi>B</mi><mo>&#177;</mo><mi>cos</mi><mi>A</mi><mi>sin</mi><mi>B</mi>
+                        </math>
+                    </div>
+                </div>
+                <div class="formula-card">
+                    <h4>Cosine Addition/Subtraction</h4>
+                    <div class="math-container" style="font-size: 1.8vw; padding: 1vw;">
+                        <math xmlns="http://www.w3.org/1998/Math/MathML">
+                            <mi>cos</mi><mo>(</mo><mi>A</mi><mo>&#177;</mo><mi>B</mi><mo>)</mo><mo>=</mo><mi>cos</mi><mi>A</mi><mi>cos</mi><mi>B</mi><mo>&#8723;</mo><mi>sin</mi><mi>A</mi><mi>sin</mi><mi>B</mi>
+                        </math>
+                    </div>
+                </div>
+                <div class="formula-card" style="grid-column: span 2;">
+                    <h4>Tangent Addition/Subtraction</h4>
+                    <div class="math-container" style="font-size: 1.8vw; padding: 1vw;">
+                        <math xmlns="http://www.w3.org/1998/Math/MathML">
+                            <mi>tan</mi><mo>(</mo><mi>A</mi><mo>&#177;</mo><mi>B</mi><mo>)</mo><mo>=</mo>
+                            <mfrac><mrow><mi>tan</mi><mi>A</mi><mo>&#177;</mo><mi>tan</mi><mi>B</mi></mrow><mrow><mn>1</mn><mo>&#8723;</mo><mi>tan</mi><mi>A</mi><mi>tan</mi><mi>B</mi></mrow></mfrac>
+                        </math>
+                    </div>
+                </div>
+            </div>
+            <p style="margin-top: 1.5vw; text-align: center; color: #64748b; font-style: italic;">Note the sign reversal in the Cosine formula!</p>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide9">
+        <span class="page-header">Pg. 59</span>
+        <h2 class="slide-title">Example 3.4: cos 42° cos 12° + sin 42° sin 12°</h2>
+        <div class="content-area">
+            <div class="ref-table-box">
+                <table>
+                    <tr><th colspan="2">Reference</th></tr>
+                    <tr><td>sin(A±B)</td><td>sinA cosB ± cosA sinB</td></tr>
+                    <tr><td>cos(A±B)</td><td>cosA cosB ∓ sinA sinB</td></tr>
+                </table>
+            </div>
+            <p style="text-align: center; margin-bottom: 0.5vw;">Simplify and find the exact value:</p>
+            <div class="math-container" style="background: #fff; margin-bottom: 1vw; width: 75%;">
+                cos 42° cos 12° + sin 42° sin 12°
+            </div>
+            <div class="scroll-container" id="slide8Scroll">
+                <div class="step-item" id="s8step1" style="display: block;">
+                    <div class="step-card">
+                        <strong>Step 1: Identify the Pattern</strong>
+                        <p>Observe: <span style="color:#2563eb">cos A cos B + sin A sin B</span></p>
+                    </div>
+                </div>
+                <div class="step-item" id="s8step2">
+                    <div class="step-card">
+                        <strong>Step 2: Apply the Identity</strong>
+                        <p>Matches cos(A - B) where A = 42°, B = 12°</p>
+                        <span class="step-math-line">= cos(42° - 12°)</span>
+                    </div>
+                </div>
+                <div class="step-item" id="s8step3">
+                    <div class="step-card">
+                        <strong>Step 3: Simplify</strong>
+                        <span class="step-math-line">= cos 30°</span>
+                    </div>
+                </div>
+                <div class="step-item" id="s8step4">
+                    <div class="step-card" style="border-left-color: #10b981; background: #f0fdf4;">
+                        <strong>Step 4: Evaluate Exact Value</strong>
+                        <span class="step-math-line" style="color: #15803d;">
+                            <math display="block"><mfrac><msqrt><mn>3</mn></msqrt><mn>2</mn></mfrac></math>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1vw; justify-content: center; padding: 0.5vw 0 1vw 0;">
+                <button class="reveal-btn" id="s8nextStepBtn" onclick="nextStepS8()">Next Step <i class="fa-solid fa-chevron-down"></i></button>
+                <button class="reveal-btn" style="background: #64748b;" onclick="resetS8()">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide10">
+        <span class="page-header">Example 3.4: Identifying Quadrants</span>
+        <h2 class="slide-title">Solving for sin(A + B)</h2>
+        <div class="content-area">
+            <div class="ref-table-box">
+                <table>
+                    <tr><th colspan="2">Reference</th></tr>
+                    <tr><td>sin(A±B)</td><td>sinA cosB ± cosA sinB</td></tr>
+                    <tr><td>cos(A±B)</td><td>cosA cosB ∓ sinA sinB</td></tr>
+                </table>
+            </div>
+            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2vw; height: auto; align-items: start;">
+                <div style="display: flex; flex-direction: column; gap: 1vw;">
+                    <div class="step-card" style="border-left: 0.5vw solid #2563eb; background: #fff; padding: 1vw;">
+                        <p style="margin: 0; font-size: 1.4vw;">
+                            <strong>Problem:</strong> 
+                            Given <math><mi>sin</mi><mi>A</mi><mo>=</mo><mfrac><mn>4</mn><mn>5</mn></mfrac></math> (obtuse) 
+                            and <math><mi>cos</mi><mi>B</mi><mo>=</mo><mfrac><mn>5</mn><mn>13</mn></mfrac></math> (acute), 
+                            find <math><mi>sin</mi><mo>(</mo><mi>A</mi><mo>+</mo><mi>B</mi><mo>)</mo></math>.
+                        </p>
+                    </div>
+                    <div id="s9panel2" class="grid-panel panel-hidden">
+                        <div class="step-card" style="padding: 0.8vw 1.5vw;">
+                            <strong>Step 1: Apply Identity</strong>
+                            <div class="math-container" style="font-size: 1.6vw; padding: 0.5vw; margin: 0.2vw 0;">
+                                <math><mi>sin</mi><mo>(</mo><mi>A</mi><mo>+</mo><mi>B</mi><mo>)</mo><mo>=</mo><mi>sin</mi><mi>A</mi><mi>cos</mi><mi>B</mi><mo>+</mo><mi>cos</mi><mi>A</mi><mi>sin</mi><mi>B</mi></math>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="s9panel3" class="grid-panel panel-hidden">
+                        <div class="step-card" style="padding: 0.8vw 1.5vw;">
+                            <strong>Step 2: Substitute & Solve</strong>
+                            <div class="math-container" style="font-size: 1.6vw; padding: 0.5vw; margin: 0.2vw 0;">
+                                (<math><mfrac><mn>4</mn><mn>5</mn></mfrac></math>)(<math><mfrac><mn>5</mn><mn>13</mn></mfrac></math>) + 
+                                (<math><mfrac><mrow><mo>-</mo><mn>3</mn></mrow><mn>5</mn></mfrac></math>)(<math><mfrac><mn>12</mn><mn>13</mn></mfrac></math>)
+                            </div>
+                            <div class="step-math-line" style="color: #15803d; font-size: 1.8vw; margin-top: 0.2vw;">
+                                = <math><mfrac><mn>20</mn><mn>65</mn></mfrac></math> - <math><mfrac><mn>36</mn><mn>65</mn></mfrac></math> = <math><mfrac><mrow><mo>-</mo><mn>16</mn></mrow><mn>65</mn></mfrac></math>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="geom-figure-wrapper" style="background: #fff; border-radius: 1vw; border: 1px solid #e2e8f0; padding: 1vw;">
+                    <svg viewBox="0 0 120 100" style="width: 100%; height: auto;">
+                        <line x1="10" y1="50" x2="110" y2="50" stroke="#ccc" stroke-width="0.5"/>
+                        <line x1="60" y1="5" x2="60" y2="95" stroke="#ccc" stroke-width="0.5"/>
+                        <polyline points="110,50 107,48 107,52" fill="#ccc"/>
+                        <polyline points="60,5 58,8 62,8" fill="#ccc"/>
+                        <text x="112" y="53" font-size="5" fill="#666">x</text>
+                        <text x="56" y="7" font-size="5" fill="#666">y</text>
+                        <text x="90" y="25" font-size="10" font-weight="700" fill="#a3a" opacity="0.4">A</text>
+                        <text x="25" y="25" font-size="10" font-weight="700" fill="#a3a" opacity="0.4">S</text>
+                        <text x="25" y="85" font-size="10" font-weight="700" fill="#a3a" opacity="0.4">T</text>
+                        <text x="90" y="85" font-size="10" font-weight="700" fill="#a3a" opacity="0.4">C</text>
+                        <line x1="60" y1="50" x2="40" y2="25" stroke="#2563eb" stroke-width="1.5"/>
+                        <line x1="40" y1="25" x2="40" y2="50" stroke="#aaa" stroke-width="0.8" stroke-dasharray="2,2"/>
+                        <path d="M 70,50 A 10,10 0 0,0 52,40" fill="none" stroke="#2563eb" stroke-width="1"/>
+                        <text x="66" y="47" font-size="6" fill="#2563eb">A</text>
+                        <text x="49" y="35" font-size="6" fill="#333">5</text>
+                        <text x="36" y="40" font-size="6" fill="#333">4</text>
+                        <text x="46" y="56" font-size="6" fill="#333">-3</text>
+                        <circle cx="40" cy="25" r="2" fill="#2563eb"/>
+                    </svg>
+                    <p style="text-align: center; font-size: 1.1vw; color: #64748b; margin-top: 1vw;">Quadrant II: Cosine is Negative</p>
+                </div>
+            </div>
+            <div class="s9-controls">
+                <button class="reveal-btn" id="s9nextBtn" onclick="nextGridPanelS9()">Next Step <i class="fa-solid fa-chevron-right"></i></button>
+                <button class="reveal-btn" style="background: #64748b;" onclick="resetGridS9()">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide11">
+        <span class="page-header">Pg. 60</span>
+        <h2 class="slide-title">sin(60° - x) = 2 sin x</h2>
+        <div class="content-area">
+            <div class="ref-table-box">
+                <table>
+                    <tr><th colspan="2">Reference</th></tr>
+                    <tr><td>sin(A±B)</td><td>sinA cosB ± cosA sinB</td></tr>
+                    <tr><td>cos(A±B)</td><td>cosA cosB ∓ sinA sinB</td></tr>
+                </table>
+            </div>
+            <p style="text-align: center; font-weight: 600;">
+                Solve the equation <span style="color: #2563eb;">sin(60° - x) = 2 sin x</span> for <span style="color: #64748b;">0° < x < 360°</span>
+            </p>
+            <div class="scroll-container" id="s10Scroll">
+                <div class="step-item" id="s10step1" style="display: block;">
+                    <div class="step-card">
+                        <strong>Step 1: Expand using Compound Angle Formula</strong>
+                        <span class="step-math-line">sin 60° cos x - cos 60° sin x = 2 sin x</span>
+                    </div>
+                </div>
+                <div class="step-item" id="s10step2">
+                    <div class="step-card">
+                        <strong>Step 2: Substitute Exact Values</strong>
+                        <span class="step-math-line">
+                            <math display="block">
+                                <mfrac><msqrt><mn>3</mn></msqrt><mn>2</mn></mfrac><mi>cos</mi><mi>x</mi>
+                                <mo>-</mo>
+                                <mfrac><mn>1</mn><mn>2</mn></mfrac><mi>sin</mi><mi>x</mi>
+                                <mo>=</mo><mn>2</mn><mi>sin</mi><mi>x</mi>
+                            </math>
+                        </span>
+                    </div>
+                </div>
+                <div class="step-item" id="s10step3">
+                    <div class="step-card">
+                        <strong>Step 3: Eliminate Fractions (Multiply by 2)</strong>
+                        <span class="step-math-line">√3 cos x - sin x = 4 sin x</span>
+                    </div>
+                </div>
+                <div class="step-item" id="s10step4">
+                    <div class="step-card">
+                        <strong>Step 4: Group like terms</strong>
+                        <span class="step-math-line">√3 cos x = 5 sin x</span>
+                    </div>
+                </div>
+                <div class="step-item" id="s10step5">
+                    <div class="step-card">
+                        <strong>Step 5: Rearrange to find tan x</strong>
+                        <span class="step-math-line">
+                            <math display="block">
+                                <mfrac><msqrt><mn>3</mn></msqrt><mn>5</mn></mfrac><mo>=</mo><mi>tan</mi><mi>x</mi>
+                            </math>
+                        </span>
+                    </div>
+                </div>
+                <div class="step-item" id="s10step6">
+                    <div class="step-card" style="border-left-color: #10b981; background: #f0fdf4;">
+                        <strong>Step 6: Solve for x</strong>
+                        <p>Basic angle = tan⁻¹(√3/5) ≈ 19.1°</p>
+                        <p>Since tan x is positive, x is in Quadrant I or III:</p>
+                        <span class="step-math-line" style="color: #15803d;">x = 19.1° or 199.1°</span>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1vw; justify-content: center; padding: 0.5vw 0 1vw 0;">
+                <button class="reveal-btn" id="s10nextStepBtn" onclick="nextStepS10()">Next Step <i class="fa-solid fa-chevron-down"></i></button>
+                <button class="reveal-btn" style="background: #64748b;" onclick="resetS10()">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide12">
+        <span class="page-header">Pg. 60-61</span>
+        <h2 class="slide-title">Worksheet (5 min independent work + 5 min group work + 5 min boardwork)</h2>
+        <div class="content-area" style="overflow-y: auto; padding: 1vw 4vw;">
+            <div class="ref-table-box">
+                <table>
+                    <tr><th colspan="2">Reference</th></tr>
+                    <tr><td>sin(A±B)</td><td>sinA cosB ± cosA sinB</td></tr>
+                    <tr><td>cos(A±B)</td><td>cosA cosB ∓ sinA sinB</td></tr>
+                </table>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 2vw;">
+                <div class="step-card" style="padding: 1.5vw;">
+                    <strong style="font-size: 2.2vw;">1. Expand and simplify:</strong>
+                    <div style="font-size: 2vw; margin-top: 1vw; text-align: center;">
+                        <math><mi>cos</mi><mo>(</mo><mi>x</mi><mo>+</mo><mn>30</mn><mo>°</mo><mo>)</mo></math>
+                    </div>
+                </div>
+                <div class="step-card" style="padding: 1.5vw;">
+                    <strong style="font-size: 2.2vw;">2. Without using a calculator, find the exact value of each of the following:</strong>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2vw; margin-top: 1vw; font-size: 1.8vw;">
+                        <div>
+                            <strong>a)</strong> <math><mi>sin</mi><mn>20</mn><mo>°</mo><mi>cos</mi><mn>70</mn><mo>°</mo><mo>+</mo><mi>cos</mi><mn>20</mn><mo>°</mo><mi>sin</mi><mn>70</mn><mo>°</mo></math>
+                        </div>
+                        <div>
+                            <strong>b)</strong> <math><mi>sin</mi><mn>172</mn><mo>°</mo><mi>cos</mi><mn>37</mn><mo>°</mo><mo>-</mo><mi>cos</mi><mn>172</mn><mo>°</mo><mi>sin</mi><mn>37</mn><mo>°</mo></math>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-card" style="padding: 1.5vw;">
+                    <strong style="font-size: 2.2vw;">3. Without using a calculator, find the exact value of:</strong>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2vw; margin-top: 1vw; font-size: 1.8vw;">
+                        <div><strong>a)</strong> <math><mi>sin</mi><mn>75</mn><mo>°</mo></math></div>
+                        <div><strong>b)</strong> <math><mi>tan</mi><mn>75</mn><mo>°</mo></math></div>
+                    </div>
+                </div>
+                <div class="step-card" style="padding: 1.5vw;">
+                    <strong style="font-size: 1.6vw;">4. Given that <math><mi>cos</mi><mi>x</mi><mo>=</mo><mfrac><mn>4</mn><mn>5</mn></mfrac></math> and that <math><mn>0</mn><mo>°</mo><mo>&lt;</mo><mi>x</mi><mo>&lt;</mo><mn>90</mn><mo>°</mo></math>, without using a calculator find the exact value of <math><mi>cos</mi><mo>(</mo><mi>x</mi><mo>-</mo><mn>60</mn><mo>°</mo><mo>)</mo></math>.</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide13">
+        <span class="page-header">Solution: Question 1</span>
+        <h2 class="slide-title">Expand and simplify: cos(x + 30°)</h2>
+        <div class="content-area">
+            <div class="ref-table-box">
+                <table>
+                    <tr><th colspan="2">Reference</th></tr>
+                    <tr><td>cos(A+B)</td><td>cosA cosB - sinA sinB</td></tr>
+                </table>
+            </div>
+            <div class="scroll-container">
+                <div class="step-item" style="display: block;">
+                    <div class="step-card">
+                        <strong>Step 1: Identify the Identity</strong>
+                        <p>Use <span style="color:#2563eb">cos(A + B) = cos A cos B - sin A sin B</span></p>
+                    </div>
+                </div>
+                <div class="step-item" id="s13step2">
+                    <div class="step-card">
+                        <strong>Step 2: Expand the Expression</strong>
+                        <span class="step-math-line">cos x cos 30° - sin x sin 30°</span>
+                    </div>
+                </div>
+                <div class="step-item" id="s13step3">
+                    <div class="step-card">
+                        <strong>Step 3: Substitute Exact Values</strong>
+                        <p>We know cos 30° = √3/2 and sin 30° = 1/2</p>
+                        <span class="step-math-line">cos x (√3/2) - sin x (1/2)</span>
+                    </div>
+                </div>
+                <div class="step-item" id="s13step4">
+                    <div class="step-card" style="border-left-color: #10b981; background: #f0fdf4;">
+                        <strong>Step 4: Final Simplify</strong>
+                        <span class="step-math-line" style="color: #15803d;">
+                            <math display="block">
+                                <mfrac><sqrt><mn>3</mn></msqrt><mn>2</mn></mfrac><mi>cos</mi><mi>x</mi>
+                                <mo>-</mo>
+                                <mfrac><mn>1</mn><mn>2</mn></mfrac><mi>sin</mi><mi>x</mi>
+                            </math>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1vw; justify-content: center; padding: 0.5vw 0 1vw 0;">
+                <button class="reveal-btn" id="s13nextBtn" onclick="nextWS('s13', 4)">Next Step <i class="fa-solid fa-chevron-down"></i></button>
+                <button class="reveal-btn" style="background: #64748b;" onclick="resetWS('s13', 4)">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide14">
+        <span class="page-header">Solution: Question 2</span>
+        <h2 class="slide-title">sin 20° cos 70° + cos 20° sin 70° and sin 172° cos 37° - cos 172° sin 37°</h2>
+        <div class="content-area">
+            <div class="ref-table-box">
+                <table>
+                    <tr><th colspan="2">Reference</th></tr>
+                    <tr><td>sin(A±B)</td><td>sinA cosB ± cosA sinB</td></tr>
+                </table>
+            </div>
+            <div class="scroll-container">
+                <div class="step-item" style="display: block;">
+                    <div class="step-card">
+                        <strong>Part a) sin 20° cos 70° + cos 20° sin 70°</strong>
+                        <p>Identify: <span style="color:#2563eb">sin A cos B + cos A sin B</span> = sin(A + B)</p>
+                    </div>
+                </div>
+                <div class="step-item" id="s14step2">
+                    <div class="step-card">
+                        <strong>Part a) Solution</strong>
+                        <span class="step-math-line">= sin(20° + 70°) = sin 90° = 1</span>
+                    </div>
+                </div>
+                <div class="step-item" id="s14step3">
+                    <div class="step-card">
+                        <strong>Part b) sin 172° cos 37° - cos 172° sin 37°</strong>
+                        <p>Identify: <span style="color:#2563eb">sin A cos B - cos A sin B</span> = sin(A - B)</p>
+                    </div>
+                </div>
+                <div class="step-item" id="s14step4">
+                    <div class="step-card" style="border-left-color: #10b981; background: #f0fdf4;">
+                        <strong>Part b) Solution</strong>
+                        <span class="step-math-line">= sin(172° - 37°) = sin 135°</span>
+                        <p style="text-align:center;">sin 135° = sin(180° - 135°) = sin 45° = <b>√2/2</b></p>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1vw; justify-content: center; padding: 0.5vw 0 1vw 0;">
+                <button class="reveal-btn" id="s14nextBtn" onclick="nextWS('s14', 4)">Next Step <i class="fa-solid fa-chevron-down"></i></button>
+                <button class="reveal-btn" style="background: #64748b;" onclick="resetWS('s14', 4)">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide15">
+        <span class="page-header">Solution: Question 3</span>
+        <h2 class="slide-title">sin 75° and tan 75°</h2>
+        <div class="content-area" style="overflow-y: auto;">
+            <div class="scroll-container">
+                <div class="step-item" style="display: block;">
+                    <div class="step-card">
+                        <strong>a) sin 75° = sin(45° + 30°)</strong>
+                        <span class="step-math-line" style="font-size: 1.4vw;">= sin 45° cos 30° + cos 45° sin 30°</span>
+                        <span class="step-math-line" style="color:#15803d; font-size: 1.4vw;">= (√2/2)(√3/2) + (√2/2)(1/2) = (√6 + √2)/4</span>
+                    </div>
+                </div>
+                <div class="step-item" id="s15step2">
+                    <div class="step-card" style="border-left-color: #10b981; background: #f0fdf4;">
+                        <strong>b) tan 75° = tan(45° + 30°)</strong>
+                        <span class="step-math-line" style="font-size: 1.4vw;">= (tan 45° + tan 30°)/(1 - tan 45° tan 30°)</span>
+                        <span class="step-math-line" style="color:#15803d; font-size: 1.4vw;">= (1 + √3/3)/(1 - √3/3) = 2 + √3</span>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1vw; justify-content: center; padding: 0.5vw 0 1vw 0;">
+                <button class="reveal-btn" id="s15nextBtn" onclick="nextWS('s15', 2)">Next Step <i class="fa-solid fa-chevron-down"></i></button>
+                <button class="reveal-btn" style="background: #64748b;" onclick="resetWS('s15', 2)">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide16">
+        <span class="page-header">Solution: Question 4</span>
+        <h2 class="slide-title">Finding cos(x - 60°)</h2>
+        <div class="content-area">
+            <div class="scroll-container">
+                <div class="step-item" style="display: block;">
+                    <div class="step-card">
+                        <strong>Step 1: Identify required parts</strong>
+                        <p>cos(x - 60°) = <span style="color:#2563eb">cos x cos 60° + sin x sin 60°</span></p>
+                        <p>We have cos x = 4/5. We need sin x.</p>
+                    </div>
+                </div>
+                <div class="step-item" id="s16step2">
+                    <div class="step-card">
+                        <strong>Step 2: Find sin x</strong>
+                        <p>Since 0° < x < 90°, x is in Quadrant I (all positive).</p>
+                        <span class="step-math-line">sin² x = 1 - (4/5)² = 1 - 16/25 = 9/25</span>
+                        <p style="text-align:center;">sin x = √(9/25) = <b>3/5</b></p>
+                    </div>
+                </div>
+                <div class="step-item" id="s16step3">
+                    <div class="step-card">
+                        <strong>Step 3: Substitute & Calculate</strong>
+                        <span class="step-math-line" style="font-size: 1.4vw;">= (4/5)(1/2) + (3/5)(√3/2)</span>
+                        <span class="step-math-line" style="font-size: 1.4vw;">= 4/10 + (3√3)/10</span>
+                    </div>
+                </div>
+                <div class="step-item" id="s16step4">
+                    <div class="step-card" style="border-left-color: #10b981; background: #f0fdf4;">
+                        <strong>Step 4: Final Value</strong>
+                        <span class="step-math-line" style="color: #15803d;">
+                            <math display="block">
+                                <mfrac><mrow><mn>4</mn><mo>+</mo><mn>3</mn><sqrt><mn>3</mn></sqrt></mrow><mn>10</mn></mfrac>
+                            </math>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1vw; justify-content: center; padding: 0.5vw 0 1vw 0;">
+                <button class="reveal-btn" id="s16nextBtn" onclick="nextWS('s16', 4)">Next Step <i class="fa-solid fa-chevron-down"></i></button>
+                <button class="reveal-btn" style="background: #64748b;" onclick="resetWS('s16', 4)">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-container" id="slide17">
+        <h2 class="slide-title">Lesson Summary: Key Formulae</h2>
+        <div class="content-area">
+            <div class="formula-summary-grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 2vw;">
+                <div class="formula-card" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                    <h4 style="color: #2563eb;">Sine (Same Sign)</h4>
+                    <div style="padding: 1vw; font-size: 1.5vw;">
+                        <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                            <mi>sin</mi><mo>(</mo><mi>A</mi><mo>&#177;</mo><mi>B</mi><mo>)</mo><mo>=</mo><mspace linebreak="newline"/><mi>sin</mi><mi>A</mi><mi>cos</mi><mi>B</mi><mo>&#177;</mo><mi>cos</mi><mi>A</mi><mi>sin</mi><mi>B</mi>
+                        </math>
+                    </div>
+                </div>
+                <div class="formula-card" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                    <h4 style="color: #ea580c;">Cosine (Opposite Sign)</h4>
+                    <div style="padding: 1vw; font-size: 1.5vw;">
+                        <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                            <mi>cos</mi><mo>(</mo><mi>A</mi><mo>&#177;</mo><mi>B</mi><mo>)</mo><mo>=</mo><mspace linebreak="newline"/><mi>cos</mi><mi>A</mi><mi>cos</mi><mi>B</mi><mo>&#8723;</mo><mi>sin</mi><mi>A</mi><mi>sin</mi><mi>B</mi>
+                        </math>
+                    </div>
+                </div>
+                <div class="formula-card" style="background: #f8fafc; border: 1px solid #e2e8f0;">
+                    <h4 style="color: #10b981;">Tangent</h4>
+                    <div style="padding: 1vw; font-size: 1.5vw;">
+                        <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+                            <mi>tan</mi><mo>(</mo><mi>A</mi><mo>&#177;</mo><mi>B</mi><mo>)</mo><mo>=</mo><mspace linebreak="newline"/>
+                            <mfrac><mrow><mi>tan</mi><mi>A</mi><mo>&#177;</mo><mi>tan</mi><mi>B</mi></mrow><mrow><mn>1</mn><mo>&#8723;</mo><mi>tan</mi><mi>A</mi><mi>tan</mi><mi>B</mi></mrow></mfrac>
+                        </math>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 4vw; text-align: center;">
+                <p style="font-size: 1.8vw; color: #64748b; font-weight: 600;">Remember: Use these to find <span style="color: #2563eb;">exact values</span> for non-special angles!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="nav-footer">
+    <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" disabled><i class="fa-solid fa-chevron-left"></i></button>
+    <div class="slide-indicator"><span id="currentSlideNum">1</span> / <span id="totalSlidesNum">17</span></div>
+    <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)"><i class="fa-solid fa-chevron-right"></i></button>
+</div>
+
+<script src="js/engine.js"></script>
+
+</body>
+</html>

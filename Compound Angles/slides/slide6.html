@@ -1,0 +1,45 @@
+<div class="slide-container" id="slide6">
+    <h2 class="slide-title">Step-by-Step Solution</h2>
+    <div class="content-area">
+        <p style="font-size: 1.8vw; font-weight: 600; margin: 0 0 1vw 0; text-align: center;">
+            Finding the exact value of <span style="color: #2563eb;">sin(105°)</span>
+        </p>
+        
+        <div class="scroll-container" id="stepsScroll">
+            <div class="step-item" id="step1" style="display: block;">
+                <div class="step-card">
+                    <strong>Step 1: Rewrite the angle</strong>
+                    <span class="step-math-line">sin(105°) = sin(60° + 45°)</span>
+                </div>
+            </div>
+            <div class="step-item" id="step2">
+                <div class="step-card">
+                    <strong>Step 2: Apply the Identity</strong>
+                    <span class="step-math-line">sin(60°)cos(45°) + cos(60°)sin(45°)</span>
+                </div>
+            </div>
+            <div class="step-item" id="step3">
+                <div class="step-card">
+                    <strong>Step 3: Substitute Exact Values</strong>
+                    <span class="step-math-line">
+                        (<math><mfrac><msqrt><mn>3</mn></msqrt><2</mfrac></math>)(<math><mfrac><msqrt><2</msqrt><2</mfrac></math>) + 
+                        (<math><mfrac><mn>1</mn><2</mfrac></math>)(<math><mfrac><msqrt><2</msqrt><2</mfrac></math>)
+                    </span>
+                </div>
+            </div>
+            <div class="step-item" id="step4">
+                <div class="step-card" style="border-left-color: #10b981; background: #f0fdf4;">
+                    <strong>Step 4: Final Simplification</strong>
+                    <span class="step-math-line" style="color: #15803d;">
+                        <math><mfrac><mrow><msqrt><mn>6</mn></msqrt><mo>+</mo><msqrt><mn>2</mn></msqrt></mrow><mn>4</mn></mfrac></math>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1vw; justify-content: center; padding: 0.5vw 0 1vw 0;">
+            <button class="reveal-btn" id="nextStepBtn" onclick="nextStep()">Next Step <i class="fa-solid fa-chevron-down"></i></button>
+            <button class="reveal-btn" style="background: #64748b;" onclick="resetStepByStep()">Reset</button>
+        </div>
+    </div>
+</div>

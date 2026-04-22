@@ -1,0 +1,71 @@
+<div class="slide-container" id="slide9">
+    <span class="page-header">Example 3.5: Step-by-Step Visualization</span>
+    <h2 class="slide-title">Solving for sin(A + B)</h2>
+    
+    <div class="content-area">
+        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2vw; height: auto; align-items: start;">
+            
+            <div style="display: flex; flex-direction: column; gap: 1vw;">
+                <div class="step-card" style="border-left: 0.5vw solid #2563eb; background: #fff; padding: 1vw;">
+                    <p style="margin: 0; font-size: 1.4vw;">
+                        <strong>Problem:</strong> 
+                        Given <math><mi>sin</mi><mi>A</mi><mo>=</mo><mfrac><mn>4</mn><mn>5</mn></mfrac></math> (obtuse) 
+                        and <math><mi>cos</mi><mi>B</mi><mo>=</mo><mfrac><mn>5</mn><mn>13</mn></mfrac></math> (acute), 
+                        find <math><mi>sin</mi><mo>(</mo><mi>A</mi><mo>+</mo><mi>B</mi><mo>)</mo></math>.
+                    </p>
+                </div>
+
+                <div id="s9panel2" class="grid-panel panel-hidden">
+                    <div class="step-card" style="padding: 0.8vw 1.5vw;">
+                        <strong>Step 1: Apply Identity</strong>
+                        <div class="math-container" style="font-size: 1.6vw; padding: 0.5vw; margin: 0.2vw 0;">
+                            <math><mi>sin</mi><mo>(</mo><mi>A</mi><mo>+</mo><mi>B</mi><mo>)</mo><mo>=</mo><mi>sin</mi><mi>A</mi><mi>cos</mi><mi>B</mi><mo>+</mo><mi>cos</mi><mi>A</mi><mi>sin</mi><mi>B</mi></math>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="s9panel3" class="grid-panel panel-hidden">
+                    <div class="step-card" style="padding: 0.8vw 1.5vw;">
+                        <strong>Step 2: Substitute & Solve</strong>
+                        <div class="math-container" style="font-size: 1.6vw; padding: 0.5vw; margin: 0.2vw 0;">
+                            (<math><mfrac><mn>4</mn><mn>5</mn></mfrac></math>)(<math><mfrac><mn>5</mn><mn>13</mn></mfrac></math>) + 
+                            (<math><mfrac><mn>-3</mn><mn>5</mn></mfrac></math>)(<math><mfrac><mn>12</mn><mn>13</mn></mfrac></math>)
+                        </div>
+                        <div class="step-math-line" style="color: #15803d; font-size: 1.8vw; margin-top: 0.2vw;">
+                            = <math><mfrac><mn>20</mn><mn>65</mn></mfrac></math> - <math><mfrac><mn>36</mn><mn>65</mn></mfrac></math> = <math><mfrac><mn>-16</mn><mn>65</mn></mfrac></math>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="geom-figure-wrapper" style="background: #fff; border-radius: 1vw; border: 1px solid #e2e8f0; padding: 1vw;">
+                <svg viewBox="0 0 120 100" style="width: 100%; height: auto;">
+                    <line x1="10" y1="50" x2="110" y2="50" stroke="#ccc" stroke-width="0.5"/>
+                    <line x1="60" y1="5" x2="60" y2="95" stroke="#ccc" stroke-width="0.5"/>
+                    <polyline points="110,50 107,48 107,52" fill="#ccc"/>
+                    <polyline points="60,5 58,8 62,8" fill="#ccc"/>
+                    <text x="112" y="53" font-size="5" fill="#666">x</text>
+                    <text x="56" y="7" font-size="5" fill="#666">y</text>
+                    <text x="90" y="25" font-size="10" font-weight="700" fill="#a3a" opacity="0.4">A</text>
+                    <text x="25" y="25" font-size="10" font-weight="700" fill="#a3a" opacity="0.4">S</text>
+                    <text x="25" y="85" font-size="10" font-weight="700" fill="#a3a" opacity="0.4">T</text>
+                    <text x="90" y="85" font-size="10" font-weight="700" fill="#a3a" opacity="0.4">C</text>
+                    <line x1="60" y1="50" x2="40" y2="25" stroke="#2563eb" stroke-width="1.5"/>
+                    <line x1="40" y1="25" x2="40" y2="50" stroke="#aaa" stroke-width="0.8" stroke-dasharray="2,2"/>
+                    <path d="M 70,50 A 10,10 0 0,0 52,40" fill="none" stroke="#2563eb" stroke-width="1"/>
+                    <text x="53" y="38" font-size="6" fill="#2563eb">A</text>
+                    <text x="49" y="35" font-size="6" fill="#333">5</text>
+                    <text x="36" y="40" font-size="6" fill="#333">4</text>
+                    <text x="46" y="56" font-size="6" fill="#333">-3</text>
+                    <circle cx="40" cy="25" r="2" fill="#2563eb"/>
+                </svg>
+                <p style="text-align: center; font-size: 1.1vw; color: #64748b; margin-top: 1vw;">Quadrant II: Cosine is Negative</p>
+            </div>
+        </div>
+
+        <div class="s9-controls">
+            <button class="reveal-btn" id="s9nextBtn" onclick="nextGridPanelS9()">Next Step <i class="fa-solid fa-chevron-right"></i></button>
+            <button class="reveal-btn" style="background: #64748b;" onclick="resetGridS9()">Reset</button>
+        </div>
+    </div>
+</div>
