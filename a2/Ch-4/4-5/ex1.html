@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locating Zeros - Interactive Example</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { background-color: #0f172a; font-family: 'Inter', sans-serif; color: #f1f5f9; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; padding: 20px; }
+        .math-card { width: 100%; max-width: 1000px; background: #1e293b; border-radius: 24px; border: 1px solid #334155; overflow: hidden; display: flex; flex-direction: column; }
+        
+        .point-marker { cursor: pointer; transition: all 0.2s; stroke: #1e293b; stroke-width: 2px; }
+        .point-marker:hover { r: 8; filter: brightness(1.2); }
+        .point-active { fill: #84cc16 !important; stroke: #fff !important; filter: drop-shadow(0 0 8px #84cc16); }
+        .point-solution { fill: #facc15 !important; stroke: #fff !important; filter: drop-shadow(0 0 8px #facc15); }
+        
+        .lang-btn.active { background-color: #84cc16; color: #0f172a; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        .error-shake { animation: shake 0.2s ease-in-out 2; }
+    </style>
+</head>
+<body>
+
+<div class="math-card" id="mainContainer">
+    <div class="bg-slate-800/80 p-6 border-b border-slate-700 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <span class="bg-lime-500/20 text-lime-400 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-lime-500/30">Example 1</span>
+            <h1 id="mainTitle" class="text-xl font-bold text-white tracking-tight">Locating Zeros</h1>
+        </div>
+        <div class="flex bg-slate-900 rounded-lg p-1 border border-slate-700">
+            <button onclick="setLanguage('en')" id="enBtn" class="lang-btn active px-3 py-1 text-[10px] font-bold rounded-md transition-all">EN</button>
+            <button onclick="setLanguage('zh')" id="zhBtn" class="lang-btn px-3 py-1 text-[10px] font-bold rounded-md transition-all text-slate-400">中文</button>
+        </div>
+    </div>
+
+    <div class="flex flex-col lg:flex-row">
+        <div class="w-full lg:w-1/2 p-8 flex flex-col items-center justify-center bg-slate-900/30 border-b lg:border-b-0 lg:border-r border-slate-700">
+            <div class="mb-6 text-center">
+                <p class="text-indigo-400 font-serif italic text-lg">$f(x) = x^3 - 4x^2 + 3x + 1$</p>
+            </div>
+            
+            <svg viewBox="0 0 300 300" class="w-full max-w-[350px]">
+                <g stroke="#334155" stroke-width="1">
+                    <line x1="0" y1="50" x2="300" y2="50" /><line x1="0" y1="100" x2="300" y2="100" />
+                    <line x1="0" y1="200" x2="300" y2="200" /><line x1="0" y1="250" x2="300" y2="250" />
+                    <line x1="50" y1="0" x2="50" y2="300" /><line x1="150" y1="0" x2="150" y2="300" />
+                    <line x1="200" y1="0" x2="200" y2="300" /><line x1="250" y1="0" x2="250" y2="300" />
+                </g>
+                
+                <line x1="0" y1="150" x2="300" y2="150" stroke="#94a3b8" stroke-width="2.5" /> 
+                <line x1="100" y1="0" x2="100" y2="300" stroke="#94a3b8" stroke-width="2.5" /> 
+
+                <path d="M40,300 C70,250 85,100 120,120 C150,150 180,220 220,180 C240,150 260,50 280,0" 
+                      fill="none" stroke="#6366f1" stroke-width="3" />
+
+                <circle id="pt1" onclick="togglePoint(1)" cx="92" cy="150" r="6" fill="#475569" class="point-marker"/> 
+                <circle id="pt2" onclick="togglePoint(2)" cx="148" cy="150" r="6" fill="#475569" class="point-marker"/> 
+                <circle id="pt3" onclick="togglePoint(3)" cx="230" cy="150" r="6" fill="#475569" class="point-marker"/> 
+                <circle id="pt4" onclick="togglePoint(4)" cx="100" cy="132" r="6" fill="#475569" class="point-marker"/> 
+                
+                <text x="110" y="20" class="text-[10px] fill-slate-500 font-bold">f(x)</text>
+                <text x="280" y="140" class="text-[10px] fill-slate-500 font-bold">x</text>
+            </svg>
+            
+            <p id="instruction" class="mt-6 text-slate-400 text-sm text-center italic">Select the three points where the function equals zero.</p>
+        </div>
+
+        <div class="w-full lg:w-1/2 p-8 flex flex-col bg-slate-800/20">
+            <h2 id="stepTitle" class="text-lime-400 font-bold text-sm uppercase mb-4">The Location Principle</h2>
+            
+            <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-700 mb-6">
+                <p id="logicText" class="text-slate-300 text-sm leading-relaxed mb-4">
+                    Since $f(x)$ is a 3rd-degree polynomial, it has 1 or 3 real zeros. We find them by looking for sign changes in the table:
+                </p>
+                <div class="overflow-hidden rounded-lg border border-slate-800">
+                    <table class="w-full text-center text-xs">
+                        <thead class="bg-slate-800 text-slate-400">
+                            <tr><th class="p-2">x</th><th class="p-2">f(x)</th><th class="p-2">Sign</th></tr>
+                        </thead>
+                        <tbody class="text-slate-300 font-mono">
+                            <tr class="border-b border-slate-800"><td>-1</td><td>-7</td><td class="text-red-400">(-)</td></tr>
+                            <tr class="bg-lime-500/5 border-b border-slate-800"><td>0</td><td>1</td><td class="text-lime-400">(+)</td></tr>
+                            <tr class="border-b border-slate-800"><td>2</td><td>-1</td><td class="text-red-400">(-)</td></tr>
+                            <tr class="bg-lime-500/5"><td>3</td><td>1</td><td class="text-lime-400">(+)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="feedbackBox" class="flex-grow flex flex-col justify-center items-center p-6 rounded-xl border-2 border-dashed border-slate-700 bg-slate-900/20">
+                <p id="statusMsg" class="text-slate-500 text-sm text-center">Awaiting selection...</p>
+            </div>
+
+            <button id="mainBtn" onclick="checkSelection()" class="w-full mt-6 bg-lime-600 hover:bg-lime-500 text-slate-900 font-bold py-4 rounded-xl transition-all">
+                Check Answers
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selected = new Set();
+    let currentLang = 'en';
+    let failCount = 0;
+    let isFinished = false;
+    const targets = [1, 2, 3];
+
+    const content = {
+        en: {
+            title: "Locating Zeros",
+            logic: "Since $f(x)$ is a 3rd-degree polynomial, it has 1 or 3 real zeros. We find them by looking for sign changes in the table:",
+            instr: "Select the three points where the function equals zero.",
+            btn: "Check Answers",
+            restart: "Restart",
+            correct: "Correct! The zeros are the $x$-values where the graph crosses the $x$-axis.",
+            wrong: "Try again. Look for points that sit exactly on the horizontal axis.",
+            solution: "The zeros are the points where the graph crosses the x-axis ($y = 0$).",
+            wait: "Select 3 points on the graph..."
+        },
+        zh: {
+            title: "确定函数的零点",
+            logic: "由于 $f(x)$ 是三次多项式，它有1个或3个实零点。我们通过观察表中的符号变化来找到它们：",
+            instr: "选择函数等于零的三个点。",
+            btn: "检查答案",
+            restart: "重新开始",
+            correct: "正确！零点是图像穿过 $x$ 轴时对应的 $x$ 值。",
+            wrong: "请重试。寻找恰好位于水平轴上的点。",
+            solution: "零点是图表穿过 x 轴 ($y = 0$) 的点。",
+            wait: "在图表上选择 3 个点..."
+        }
+    };
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.getElementById('enBtn').classList.toggle('active', lang === 'en');
+        document.getElementById('zhBtn').classList.toggle('active', lang === 'zh');
+        document.getElementById('mainTitle').innerText = content[lang].title;
+        document.getElementById('logicText').innerHTML = content[lang].logic;
+        document.getElementById('instruction').innerText = content[lang].instr;
+        
+        // Update button text based on state
+        document.getElementById('mainBtn').innerText = isFinished ? content[lang].restart : content[lang].btn;
+
+        // If a status message exists, update it to the translated version
+        const msg = document.getElementById('statusMsg');
+        if (selected.size === 0 && !isFinished) {
+            msg.innerText = content[lang].wait;
+        } else if (isFinished) {
+            const isActuallyCorrect = selected.size === 3 && targets.every(t => selected.has(t));
+            const baseText = isActuallyCorrect ? content[lang].correct : content[lang].solution;
+            const prefix = isActuallyCorrect ? "✓ " : "";
+            const colorClass = isActuallyCorrect ? "text-lime-400" : "text-yellow-400";
+            msg.innerHTML = `<span class="${colorClass} font-bold text-lg">${prefix}${baseText}</span>`;
+        }
+        
+        MathJax.typesetPromise();
+    }
+
+    function togglePoint(id) {
+        if (isFinished) return;
+        const el = document.getElementById('pt' + id);
+        if (selected.has(id)) {
+            selected.delete(id);
+            el.classList.remove('point-active');
+        } else {
+            if(selected.size < 3) {
+                selected.add(id);
+                el.classList.add('point-active');
+            }
+        }
+    }
+
+    function revealSolution() {
+        isFinished = true;
+        targets.forEach(id => {
+            const el = document.getElementById('pt' + id);
+            el.classList.remove('point-active');
+            el.classList.add('point-solution');
+        });
+        const msg = document.getElementById('statusMsg');
+        msg.innerHTML = `<span class="text-yellow-400 font-bold">${content[currentLang].solution}</span>`;
+        document.getElementById('mainBtn').innerText = content[currentLang].restart;
+        document.getElementById('mainBtn').onclick = () => location.reload();
+        MathJax.typesetPromise([msg]);
+    }
+
+    function checkSelection() {
+        if (isFinished) return;
+        const msg = document.getElementById('statusMsg');
+        const container = document.getElementById('mainContainer');
+        const isCorrect = selected.size === 3 && targets.every(t => selected.has(t));
+
+        if (isCorrect) {
+            isFinished = true;
+            msg.innerHTML = `<span class="text-lime-400 font-bold text-lg">✓ ${content[currentLang].correct}</span>`;
+            document.getElementById('mainBtn').innerText = content[currentLang].restart;
+            document.getElementById('mainBtn').onclick = () => location.reload();
+            MathJax.typesetPromise([msg]);
+        } else {
+            failCount++;
+            if (failCount >= 3) {
+                revealSolution();
+            } else {
+                msg.innerHTML = `<span class="text-red-400 font-bold">${content[currentLang].wrong}</span>`;
+                container.classList.add('error-shake');
+                setTimeout(() => container.classList.remove('error-shake'), 400);
+                MathJax.typesetPromise([msg]);
+            }
+        }
+    }
+
+    window.onload = () => MathJax.typesetPromise();
+</script>
+</body>
+</html>
