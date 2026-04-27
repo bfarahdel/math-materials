@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Properties of Rectangles - Bilingual Example 4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { background-color: #0f172a; font-family: 'Inter', sans-serif; color: #f1f5f9; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; padding: 20px; }
+        .math-card { width: 100%; max-width: 1100px; background: #1e293b; border-radius: 24px; border: 1px solid #334155; overflow: hidden; display: flex; flex-direction: column; }
+        .coord-text { fill: #f8fafc; font-size: 10px; font-weight: 700; font-family: monospace; }
+        .formula-container { container-type: inline-size; width: 100%; }
+        .interactive-formula { display: flex; flex-wrap: nowrap; align-items: center; justify-content: center; gap: 0.1rem; font-size: clamp(14px, 4.2cqw, 28px); font-family: 'Times New Roman', serif; }
+        
+        .math-input { background: #0f172a; border: 2px solid #475569; border-radius: 4px; width: 2.4em; height: 1.8em; text-align: center; color: #84cc16; font-weight: bold; font-size: 0.9em; transition: all 0.2s; }
+        
+        /* UPDATED: Lighter placeholders for better visibility */
+        .math-input::placeholder { color: #94a3b8; opacity: 1; font-weight: 500; }
+
+        .input-correct { border-color: #10b981 !important; background: rgba(16, 185, 129, 0.1) !important; color: #10b981 !important; }
+        .input-revealed { border-color: #eab308 !important; background: rgba(234, 179, 8, 0.1) !important; color: #eab308 !important; }
+        .input-error { border-color: #ef4444 !important; animation: shake 0.2s ease-in-out 2; }
+        .lang-btn.active { background-color: #84cc16; color: #0f172a; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+    </style>
+</head>
+<body>
+
+<div class="math-card">
+    <div class="bg-slate-800/80 p-6 border-b border-slate-700 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+            <span class="bg-lime-500/20 text-lime-400 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-lime-500/30">Example 4</span>
+            <h1 id="mainTitle" class="text-xl font-bold text-white tracking-tight">Distance Formula & Congruence</h1>
+        </div>
+        <div class="flex bg-slate-900 rounded-lg p-1 border border-slate-700">
+            <button onclick="setLanguage('en')" id="enBtn" class="lang-btn active px-3 py-1 text-[10px] font-bold rounded-md transition-all">EN</button>
+            <button onclick="setLanguage('zh')" id="zhBtn" class="lang-btn px-3 py-1 text-[10px] font-bold rounded-md transition-all text-slate-400">中文</button>
+        </div>
+    </div>
+
+    <div class="flex flex-col lg:flex-row">
+        <div class="w-full lg:w-1/2 p-6 flex flex-col items-center justify-center bg-slate-900/30 border-b lg:border-b-0 lg:border-r border-slate-700">
+            <svg viewBox="-20 -20 280 280" class="w-full max-w-[420px]">
+                <g stroke="#334155" stroke-width="0.5">
+                    <path d="M0 0h240M0 20h240M0 40h240M0 60h240M0 80h240M0 100h240M0 120h240M0 140h240M0 160h240M0 180h240M0 200h240M0 220h240"/>
+                    <path d="M0 0v240M20 0v240M40 0v240M60 0v240M80 0v240M100 0v240M120 0v240M140 0v240M160 0v240M180 0v240M200 0v240M220 0v240"/>
+                </g>
+                <line x1="0" y1="140" x2="240" y2="140" stroke="#94a3b8" stroke-width="2" />
+                <line x1="180" y1="0" x2="180" y2="240" stroke="#94a3b8" stroke-width="2" />
+                <polygon points="80,80 200,160 160,220 40,140" fill="rgba(132, 204, 22, 0.1)" stroke="#84cc16" stroke-width="2" />
+                <text x="55" y="73" class="coord-text">P(-5, 3)</text>
+                <text x="205" y="163" class="coord-text">Q(1, -1)</text>
+                <text x="158" y="233" class="coord-text">R(-1, -4)</text>
+                <text x="-12" y="143" class="coord-text">S(-7, 0)</text>
+            </svg>
+        </div>
+
+        <div class="w-full lg:w-1/2 p-8 flex flex-col bg-slate-800/20">
+            <h2 id="stepTitle" class="text-lime-400 font-bold text-sm uppercase mb-6">Step 1: Distance of Side PQ</h2>
+            
+            <div class="flex justify-between items-center mb-6 px-4 py-3 bg-slate-900/40 rounded-xl border border-slate-700">
+                <div class="text-center flex-1">
+                    <p id="p1Label" class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Point P</p>
+                    <p id="p1Coords" class="text-white font-mono">$(-5, 3)$</p>
+                </div>
+                <div class="h-8 w-[1px] bg-slate-700 mx-2"></div>
+                <div class="text-center flex-1">
+                    <p id="p2Label" class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Point Q</p>
+                    <p id="p2Coords" class="text-white font-mono">$(1, -1)$</p>
+                </div>
+            </div>
+
+            <div class="formula-container bg-slate-900/60 p-8 rounded-2xl border border-slate-700 shadow-inner">
+                <div class="interactive-formula">
+                    <span id="sideLabel" class="mr-2 text-white font-bold">PQ =</span>
+                    <span>$\sqrt{ ( }$</span>
+                    <input type="text" id="x2" class="math-input" placeholder="x₂" autocomplete="off">
+                    <span class="px-1">$-$</span>
+                    <input type="text" id="x1" class="math-input" placeholder="x₁" autocomplete="off">
+                    <span>$)^2 + ( $</span>
+                    <input type="text" id="y2" class="math-input" placeholder="y₂" autocomplete="off">
+                    <span class="px-1">$-$</span>
+                    <input type="text" id="y1" class="math-input" placeholder="y₁" autocomplete="off">
+                    <span>$)^2$</span>
+                </div>
+            </div>
+
+            <button id="mainBtn" onclick="checkAnswers()" class="w-full mt-8 bg-lime-600 hover:bg-lime-500 text-slate-900 font-bold py-4 rounded-xl transition-all shadow-lg">
+                Check Substitution
+            </button>
+            <div id="feedback" class="mt-6 text-center font-bold"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentPhase = 0;
+    let attempts = 0;
+    let currentLang = 'en';
+    let isPhaseSolved = false;
+
+    const content = {
+        en: {
+            title: "Distance Formula & Congruence",
+            check: "Check Substitution",
+            next: "Next Step",
+            restart: "Restart Activity",
+            point: "Point",
+            correct: "Correct!",
+            revealed: "The answer is revealed.",
+            error: "Try again. Check your coordinates and signs.",
+            phases: [
+                { title: "Step 1: Distance of Side PQ", side: "PQ", p1: "P", p2: "Q", nextMsg: "Since opposite sides are congruent, <b>RS is also √52</b>. Now let's calculate side PS." },
+                { title: "Step 1: Distance of Side PS", side: "PS", p1: "P", p2: "S", nextMsg: "Opposite side <b>QR is also congruent (√13)</b>. Now check diagonal PR." },
+                { title: "Step 2: Diagonal PR", side: "PR", p1: "P", p2: "R", nextMsg: "Diagonal <b>QS is congruent (√65)</b>. Quadrilateral PQRS is a rectangle!" }
+            ]
+        },
+        zh: {
+            title: "距离公式与全等",
+            check: "检查代入值",
+            next: "下一步",
+            restart: "重新开始",
+            point: "点",
+            correct: "正确！",
+            revealed: "答案已显示。",
+            error: "请重试。检查坐标和正负号。",
+            phases: [
+                { title: "步骤 1: 边 PQ 的距离", side: "PQ", p1: "P", p2: "Q", nextMsg: "由于对边全等，<b>RS 也是 √52</b>。现在让我们计算边 PS。" },
+                { title: "步骤 1: 边 PS 的距离", side: "PS", p1: "P", p2: "S", nextMsg: "对边 <b>QR 也是全等的 (√13)</b>。现在检查对角线 PR。" },
+                { title: "步骤 2: 对角线 PR", side: "PR", p1: "P", p2: "R", nextMsg: "对角线 <b>QS 是全等的 (√65)</b>。四边形 PQRS 是一个矩形！" }
+            ]
+        }
+    };
+
+    const phaseData = [
+        { ans: {x2:"1", x1:"-5", y2:"-1", y1:"3"}, coords: {p1:"(-5, 3)", p2:"(1, -1)"} },
+        { ans: {x2:"-7", x1:"-5", y2:"0", y1:"3"}, coords: {p1:"(-5, 3)", p2:"(-7, 0)"} },
+        { ans: {x2:"-1", x1:"-5", y2:"-4", y1:"3"}, coords: {p1:"(-5, 3)", p2:"(-1, -4)"} }
+    ];
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.getElementById('enBtn').classList.toggle('active', lang === 'en');
+        document.getElementById('zhBtn').classList.toggle('active', lang === 'zh');
+        document.getElementById('enBtn').classList.toggle('text-slate-400', lang !== 'en');
+        document.getElementById('zhBtn').classList.toggle('text-slate-400', lang !== 'zh');
+        updateUI();
+    }
+
+    function updateUI() {
+        const langSet = content[currentLang];
+        const phase = langSet.phases[currentPhase];
+        const data = phaseData[currentPhase];
+
+        document.getElementById('mainTitle').innerText = langSet.title;
+        document.getElementById('stepTitle').innerText = phase.title;
+        document.getElementById('sideLabel').innerText = phase.side + " =";
+        document.getElementById('p1Label').innerText = langSet.point + " " + phase.p1;
+        document.getElementById('p2Label').innerText = langSet.point + " " + phase.p2;
+        document.getElementById('p1Coords').innerText = data.coords.p1;
+        document.getElementById('p2Coords').innerText = data.coords.p2;
+
+        const btn = document.getElementById('mainBtn');
+        const fb = document.getElementById('feedback');
+
+        if (isPhaseSolved) {
+            const isRevealed = attempts >= 3;
+            fb.innerHTML = `
+                <p class="${!isRevealed ? 'text-emerald-400' : 'text-yellow-500'} mb-4">${!isRevealed ? langSet.correct : langSet.revealed}</p>
+                <p class="text-slate-300 text-sm font-normal">${phase.nextMsg}</p>
+            `;
+            btn.innerText = currentPhase < 2 ? langSet.next : langSet.restart;
+        } else {
+            btn.innerText = langSet.check;
+            if (fb.innerHTML.includes('text-red-400')) {
+                fb.innerHTML = `<p class="text-red-400">${langSet.error}</p>`;
+            }
+        }
+        MathJax.typesetPromise();
+    }
+
+    function checkAnswers() {
+        const data = phaseData[currentPhase];
+        const ids = ['x2', 'x1', 'y2', 'y1'];
+        let allCorrect = true;
+
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            if (el.value.trim() === data.ans[id]) {
+                el.classList.add('input-correct');
+                el.classList.remove('input-error');
+            } else {
+                el.classList.add('input-error');
+                allCorrect = false;
+                setTimeout(() => el.classList.remove('input-error'), 400);
+            }
+        });
+
+        if (allCorrect) {
+            handleCompletion(false);
+        } else {
+            attempts++;
+            if (attempts >= 3) {
+                handleCompletion(true);
+            } else {
+                document.getElementById('feedback').innerHTML = `<p class="text-red-400">${content[currentLang].error}</p>`;
+            }
+        }
+    }
+
+    function handleCompletion(wasRevealed) {
+        const data = phaseData[currentPhase];
+        const ids = ['x2', 'x1', 'y2', 'y1'];
+        
+        isPhaseSolved = true;
+        ids.forEach(id => {
+            const el = document.getElementById(id);
+            el.disabled = true;
+            if (wasRevealed) {
+                el.value = data.ans[id];
+                el.classList.add('input-revealed');
+            }
+        });
+
+        const btn = document.getElementById('mainBtn');
+        btn.onclick = nextPhase;
+        updateUI();
+    }
+
+    function nextPhase() {
+        if (currentPhase >= phaseData.length - 1) {
+            location.reload();
+            return;
+        }
+        currentPhase++;
+        attempts = 0;
+        isPhaseSolved = false;
+
+        ['x2', 'x1', 'y2', 'y1'].forEach(id => {
+            const el = document.getElementById(id);
+            el.value = "";
+            el.disabled = false;
+            el.classList.remove('input-correct', 'input-error', 'input-revealed');
+        });
+
+        document.getElementById('feedback').innerHTML = "";
+        document.getElementById('mainBtn').onclick = checkAnswers;
+        updateUI();
+    }
+
+    window.onload = updateUI;
+</script>
+</body>
+</html>
