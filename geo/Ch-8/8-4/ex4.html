@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example 4: Find Angle Measures Using Inverse Trigonometric Ratios</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #1e293b;
+            font-family: 'Merriweather', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .presentation-frame {
+            width: 1280px;
+            height: 720px;
+            background-color: #fcfcf9;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+        }
+
+        .textbook-header {
+            background-color: #76a46a; 
+            display: flex;
+            align-items: stretch;
+            height: 75px;
+            border-bottom: 2px solid #cbd5e1;
+        }
+
+        .header-tag {
+            font-weight: 700;
+            font-size: 34px;
+            color: #000000;
+            display: flex;
+            align-items: center;
+            padding: 0 45px;
+            border-right: 2px solid rgba(0, 0, 0, 0.15);
+        }
+
+        .header-title {
+            font-weight: 400;
+            font-size: 34px;
+            color: #111111;
+            display: flex;
+            align-items: center;
+            padding-left: 35px;
+        }
+
+        .workspace {
+            padding: 40px 60px 40px 80px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        .content-area {
+            width: 780px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .visual-area {
+            width: 320px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 10px;
+        }
+
+        .main-problem-prompt {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111111;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            letter-spacing: -0.5px;
+        }
+
+        .step-layer {
+            width: 100%;
+        }
+
+        .problem-explanation {
+            font-size: 20px;
+            line-height: 1.6;
+            color: #222222;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(4px);
+            transition: opacity 0.35s ease-out, transform 0.35s ease-out;
+            visibility: hidden;
+        }
+
+        .problem-explanation.revealed {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+
+        .ratio-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 5px;
+        }
+
+        .ratio-card {
+            background-color: #f1f5f9;
+            border-radius: 8px;
+            padding: 10px 20px;
+            border-left: 5px solid #76a46a;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+            visibility: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ratio-card.revealed {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+
+        .ratio-title {
+            font-family: 'Roboto', sans-serif;
+            font-size: 19px;
+            font-weight: 700;
+            color: #334155;
+            min-width: 250px;
+        }
+
+        .math-element {
+            font-size: 26px;
+            color: #000000;
+            display: inline-flex;
+            align-items: center;
+            min-height: 52px;
+            font-family: 'Merriweather', serif;
+        }
+
+        .math-frac {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0 6px;
+            line-height: 1;
+        }
+        .math-num {
+            padding-bottom: 3px;
+        }
+        .math-den {
+            border-top: 2px solid #000000;
+            padding-top: 4px;
+        }
+
+        .keystroke-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .key-cap {
+            background: #e2e8f0;
+            border: 2px solid #94a3b8;
+            border-radius: 4px;
+            padding: 2px 8px;
+            min-width: 32px;
+            text-align: center;
+            box-shadow: 0 2px 0 #cbd5e1;
+            color: #1e293b;
+        }
+
+        .key-cap-dark {
+            background: #64748b;
+            border-color: #475569;
+            color: #ffffff;
+            box-shadow: 0 2px 0 #334155;
+        }
+
+        .color-blue { color: #2563eb; }    /* Opposite leg */
+        .color-red { color: #dc2626; }     /* Hypotenuse */
+
+        .interactive-dock {
+            position: absolute;
+            bottom: 45px;
+            right: 55px;
+            z-index: 100;
+        }
+
+        .action-button {
+            background-color: #76a46a;
+            color: #ffffff;
+            border: none;
+            padding: 16px 36px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .action-button:hover {
+            background-color: #638d58;
+        }
+
+        .action-button:active {
+            transform: scale(0.97);
+        }
+
+        svg {
+            filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.08));
+        }
+        .line-edge {
+            stroke: #1e3a8a;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .right-angle-box {
+            fill: none;
+            stroke: #dc2626;
+            stroke-width: 2.5;
+        }
+        .lbl-text {
+            font-family: 'Roboto', sans-serif;
+            font-size: 24px;
+            font-weight: 500;
+            fill: #222222;
+        }
+    </style>
+</head>
+<body>
+
+<div class="presentation-frame">
+    <div class="textbook-header">
+        <div class="header-tag">Example 4</div>
+        <div class="header-title">Find Angle Measures Using Inverse Trigonometric Ratios</div>
+    </div>
+
+    <div class="workspace">
+        <div class="content-area">
+            <h1 class="main-problem-prompt">
+                Use a calculator to find the measure of &ang;A to the nearest tenth.
+            </h1>
+
+            <div class="step-layer">
+                <p class="problem-explanation" id="exp-setup">
+                    The measures given are those of the leg <b>opposite</b> &ang;A and the <b>hypotenuse</b>, so write an equation using the sine ratio.
+                </p>
+                
+                <div class="ratio-grid">
+                    <div class="ratio-card" id="card-ratio">
+                        <div class="ratio-title">Set up the sine ratio</div>
+                        <div class="math-element">
+                            sin <i>A</i> = <div class="math-frac"><span class="math-num color-blue">18</span><span class="math-den color-red">27</span></div> = <div class="math-frac"><span class="math-num">2</span><span class="math-den">3</span></div>
+                        </div>
+                    </div>
+
+                    <div class="ratio-card" id="card-inverse">
+                        <div class="ratio-title">Write the inverse equation</div>
+                        <div class="math-element">
+                            If sin <i>A</i> = <div class="math-frac"><span class="math-num">2</span><span class="math-den">3</span></div>, then sin<sup>&minus;1</sup><div class="math-frac"><span class="math-num">2</span><span class="math-den">3</span></div> = <i>m</i>&ang;<i>A</i>
+                        </div>
+                    </div>
+
+                    <div class="ratio-card" id="card-keystrokes">
+                        <div class="ratio-title">Calculator keystrokes</div>
+                        <div class="keystroke-container">
+                            <span class="key-cap key-cap-dark">2nd</span>
+                            <span class="key-cap">[SIN<sup>&minus;1</sup>]</span>
+                            <span class="key-cap">(</span>
+                            <span class="key-cap">2</span>
+                            <span class="key-cap">&divide;</span>
+                            <span class="key-cap">3</span>
+                            <span class="key-cap">)</span>
+                            <span class="key-cap key-cap-dark">ENTER</span>
+                            <span style="font-size: 22px; margin-left: 10px; font-weight: normal; font-family: monospace;">41.8103149</span>
+                        </div>
+                    </div>
+
+                    <div class="ratio-card" id="card-final">
+                        <div class="ratio-title">Round to the nearest tenth</div>
+                        <div class="math-element">
+                            <i>m</i>&ang;<i>A</i> &asymp; 41.8&deg;
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="visual-area">
+            <svg width="320" height="460" viewBox="0 0 320 460">
+                <polygon points="240,60 240,380 60,380" fill="none" class="line-edge" />
+                
+                <path d="M 220,380 L 220,360 L 240,360" class="right-angle-box" />
+                
+                <text x="235" y="45" class="lbl-text">A</text>
+                <text x="35" y="395" class="lbl-text">B</text>
+                <text x="255" y="395" class="lbl-text">C</text>
+                
+                <text x="140" y="415" class="lbl-text color-blue" style="font-weight: 700;">18</text>
+                <text x="120" y="210" class="lbl-text color-red" style="font-weight: 700;">27</text>
+            </svg>
+        </div>
+    </div>
+
+    <div class="interactive-dock">
+        <button class="action-button" id="triggerBtn" onclick="advanceSequence()">
+            <span id="btn-text-content">Show Strategy</span>
+            <i class="fa-solid fa-chevron-right" id="btn-icon-marker"></i>
+        </button>
+    </div>
+</div>
+
+<script>
+    let step = 0;
+    const btnText = document.getElementById('btn-text-content');
+    const btnIcon = document.getElementById('btn-icon-marker');
+
+    function safeReveal(elementId) {
+        const target = document.getElementById(elementId);
+        if (target) {
+            target.classList.add('revealed');
+        }
+    }
+
+    function advanceSequence() {
+        step++;
+        
+        switch(step) {
+            case 1:
+                safeReveal('exp-setup');
+                btnText.textContent = "Set up ratio";
+                break;
+            case 2:
+                safeReveal('card-ratio');
+                btnText.textContent = "Apply inverse";
+                break;
+            case 3:
+                safeReveal('card-inverse');
+                btnText.textContent = "Show keystrokes";
+                break;
+            case 4:
+                safeReveal('card-keystrokes');
+                btnText.textContent = "Final Answer";
+                break;
+            case 5:
+                safeReveal('card-final');
+                btnText.textContent = "Reset Slide";
+                btnIcon.className = "fa-solid fa-rotate-right";
+                break;
+            default:
+                resetSlide();
+        }
+    }
+
+    function resetSlide() {
+        step = 0;
+        btnText.textContent = "Show Strategy";
+        btnIcon.className = "fa-solid fa-chevron-right";
+
+        const itemsToClear = [
+            'exp-setup', 'card-ratio', 'card-inverse', 'card-keystrokes', 'card-final'
+        ];
+        itemsToClear.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.classList.remove('revealed');
+        });
+    }
+</script>
+
+</body>
+</html>
