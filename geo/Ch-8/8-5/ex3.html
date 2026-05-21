@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trigonometry E-Learning: The Bike Ramp Problem</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- MathJax Configuration for inline rendering -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      },
+      startup: {
+        ready: () => {
+          MathJax.startup.defaultReady();
+          // Force initial rendering once ready
+          MathJax.startup.promise.then(() => {
+            if (typeof updateSandboxValues === 'function') {
+              updateSandboxValues();
+            }
+          });
+        }
+      }
+    };
+  </script>
+  <!-- LaTeX Rendering Support (MathJax - Using correct stable ES5 distribution) -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
+
+  <!-- Header (Without TrigAcademy branding, holds Lang Toggle & Mode Switch) -->
+  <header class="bg-white border-b border-slate-100 py-5 px-6 sticky top-0 z-50 shadow-sm">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+      
+      <!-- Language Selector Toggle -->
+      <div class="flex items-center gap-3">
+        <span class="text-sm font-bold text-slate-400 uppercase tracking-wider" id="lang-label-text">Language / 语言:</span>
+        <div class="inline-flex bg-slate-100 p-1.5 rounded-xl">
+          <button id="lang-en" onclick="setLanguage('en')" class="px-4 py-1.5 text-sm font-bold rounded-lg transition-all duration-150 bg-white text-indigo-600 shadow-sm">
+            English
+          </button>
+          <button id="lang-zh" onclick="setLanguage('zh')" class="px-4 py-1.5 text-sm font-semibold rounded-lg transition-all duration-150 text-slate-600 hover:text-slate-900">
+            简体中文
+          </button>
+        </div>
+      </div>
+      
+      <!-- Tab Navigation -->
+      <nav class="flex bg-slate-100 p-1.5 rounded-xl">
+        <button id="tab-guided" onclick="switchTab('guided')" class="px-6 py-2.5 text-base font-bold rounded-lg transition-all duration-250 bg-white text-indigo-600 shadow-sm">
+          Guided Walkthrough
+        </button>
+        <button id="tab-sandbox" onclick="switchTab('sandbox')" class="px-6 py-2.5 text-base font-bold rounded-lg transition-all duration-250 text-slate-600 hover:text-slate-900">
+          Interactive Sandbox
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    
+    <!-- LEFT PANEL: Dynamic Visualization / Canvas -->
+    <section class="lg:col-span-5 bg-white rounded-2xl border border-slate-100 shadow-sm p-6 flex flex-col gap-6 sticky top-28">
+      <div class="flex justify-between items-center">
+        <span id="badge" class="bg-indigo-50 text-indigo-700 text-sm font-extrabold px-4 py-1.5 rounded-full uppercase tracking-wider">
+          Problem Model
+        </span>
+        <div class="flex items-center gap-2 text-slate-400 text-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span id="label-interactive-view" class="font-semibold">Interactive View</span>
+        </div>
+      </div>
+
+      <!-- SVG Container representing the Ramp -->
+      <div class="relative w-full aspect-[4/3] bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-center p-4 overflow-hidden">
+        <svg id="ramp-svg" viewBox="0 0 400 300" class="w-full h-full max-w-[360px] drop-shadow-sm">
+          <defs>
+            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(226, 232, 240, 0.6)" stroke-width="1"/>
+            </pattern>
+          </defs>
+          
+          <!-- Background Grid -->
+          <rect width="100%" height="100%" fill="url(#grid)" />
+
+          <!-- Ground Line -->
+          <line x1="20" y1="260" x2="380" y2="260" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" />
+
+          <!-- Right Angle Indicator Square -->
+          <path id="right-angle" d="M 320,260 L 320,240 L 340,240" fill="none" stroke="#f43f5e" stroke-width="1.5" />
+
+          <!-- Main Triangle Shape -->
+          <polygon id="triangle-poly" points="60,260 340,80 340,260" fill="rgba(99, 102, 241, 0.08)" stroke="#4f46e5" stroke-width="3" stroke-linejoin="round" />
+          
+          <!-- Bike icon decoration on the hypotenuse -->
+          <g id="bike-icon-group" transform="translate(180, 150) rotate(-32)">
+            <circle cx="-12" cy="0" r="7" fill="none" stroke="#6366f1" stroke-width="2"/>
+            <circle cx="12" cy="0" r="7" fill="none" stroke="#6366f1" stroke-width="2"/>
+            <line x1="-12" y1="0" x2="0" y2="-8" stroke="#6366f1" stroke-width="2"/>
+            <line x1="12" y1="0" x2="0" y2="-8" stroke="#6366f1" stroke-width="2"/>
+            <line x1="-5" y1="-8" x2="8" y2="-8" stroke="#6366f1" stroke-width="2"/>
+            <circle cx="-5" cy="-8" r="1.5" fill="#6366f1"/>
+          </g>
+
+          <!-- Label: Height (Opposite) -->
+          <g id="height-label" transform="translate(365, 170)">
+            <line x1="0" y1="-85" x2="0" y2="85" stroke="#475569" stroke-width="1" />
+            <polygon points="0,-85 -4,-77 4,-77" fill="#475569" />
+            <polygon points="0,85 -4,77 4,77" fill="#475569" />
+            <rect x="-35" y="-12" width="70" height="24" rx="4" fill="white" stroke="#e2e8f0" />
+            <text id="height-text" x="0" y="5" font-size="14" font-weight="bold" fill="#0f172a" text-anchor="middle">10 ft</text>
+          </g>
+
+          <!-- Label: Angle of Elevation -->
+          <path id="angle-arc" d="M 110,260 A 50,50 0 0,0 100,233" fill="none" stroke="#f43f5e" stroke-width="2" />
+          <text id="angle-text" x="120" y="245" font-size="15" font-weight="bold" fill="#f43f5e">20°</text>
+
+          <!-- Label: Base (Adjacent) -->
+          <g id="base-label" transform="translate(200, 285)">
+            <text id="base-text" x="0" y="0" font-size="16" font-weight="bold" fill="#4f46e5" text-anchor="middle">base = ?</text>
+          </g>
+
+          <!-- Label: Hypotenuse (Ramp surface) -->
+          <g id="hyp-label" transform="translate(180, 140)">
+            <text id="hyp-text" x="0" y="0" font-size="13" fill="#94a3b8" font-style="italic" text-anchor="middle">Ramp Surface</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Quick stats/values helper -->
+      <div class="grid grid-cols-3 gap-3 text-center border-t border-slate-100 pt-4">
+        <div class="p-2.5 bg-slate-50 rounded-xl">
+          <p class="text-xs text-slate-400 font-extrabold uppercase tracking-wider" id="stat-opp-label">Opposite Side</p>
+          <p id="opp-indicator" class="text-base font-extrabold text-slate-800">10 ft</p>
+        </div>
+        <div class="p-2.5 bg-slate-50 rounded-xl">
+          <p class="text-xs text-slate-400 font-extrabold uppercase tracking-wider" id="stat-angle-label">Angle ($\theta$)</p>
+          <p id="angle-indicator" class="text-base font-extrabold text-slate-800">20°</p>
+        </div>
+        <div class="p-2.5 bg-indigo-50/50 rounded-xl border border-indigo-100/40">
+          <p class="text-xs text-indigo-400 font-extrabold uppercase tracking-wider" id="stat-adj-label">Adjacent (Base)</p>
+          <p id="adj-indicator" class="text-base font-extrabold text-indigo-600">Calculated...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL: Guided Flow or Sandbox Controls -->
+    <section class="lg:col-span-7 space-y-6">
+      
+      <!-- TAB CONTENT 1: Guided Walkthrough -->
+      <div id="panel-guided" class="space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 sm:p-8">
+          <h2 class="text-2xl font-bold text-slate-950 mb-3" id="prob-title">Lenora's Bike Ramp Problem</h2>
+          <p class="text-slate-600 text-base sm:text-lg leading-relaxed mb-6" id="prob-desc">
+            Lenora wants to build a backyard bike ramp. She knows the height needs to be <strong class="text-slate-900">10 feet</strong> to clear safety specifications, and the slope requires an angle of elevation of <strong class="text-slate-900">20°</strong>. How long should the base of the ramp be?
+          </p>
+
+          <!-- Stepper indicators -->
+          <div class="flex items-center justify-between mb-8 relative">
+            <div class="absolute h-0.5 bg-slate-100 left-0 right-0 top-1/2 -translate-y-1/2 z-0"></div>
+            <div id="step-line-progress" class="absolute h-0.5 bg-indigo-600 left-0 top-1/2 -translate-y-1/2 z-0 transition-all duration-300" style="width: 0%"></div>
+            
+            <!-- Step Buttons -->
+            <button onclick="goToStep(1)" id="step-btn-1" class="relative z-10 w-10 h-10 rounded-full flex items-center justify-center font-bold text-base bg-indigo-600 text-white transition-all duration-300 shadow">1</button>
+            <button onclick="goToStep(2)" id="step-btn-2" class="relative z-10 w-10 h-10 rounded-full flex items-center justify-center font-bold text-base bg-slate-100 text-slate-400 transition-all duration-300">2</button>
+            <button onclick="goToStep(3)" id="step-btn-3" class="relative z-10 w-10 h-10 rounded-full flex items-center justify-center font-bold text-base bg-slate-100 text-slate-400 transition-all duration-300">3</button>
+            <button onclick="goToStep(4)" id="step-btn-4" class="relative z-10 w-10 h-10 rounded-full flex items-center justify-center font-bold text-base bg-slate-100 text-slate-400 transition-all duration-300">4</button>
+          </div>
+
+          <!-- Step Contents Frame -->
+          <div class="min-h-[240px]">
+            
+            <!-- STEP 1 Content: Identify Relationship -->
+            <div id="step-content-1" class="step-pane space-y-4">
+              <h3 class="text-xl font-bold text-slate-900" id="step1-title">Step 1: Choose the Right Trigonometric Function</h3>
+              <p class="text-base text-slate-500" id="step1-subtitle">Look at our triangle. Relative to our angle of elevation ($20^\circ$):</p>
+              <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm font-semibold text-slate-600">
+                <li class="flex items-center gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                  <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span> <span id="step1-opp-val">Opposite Side = 10 ft</span>
+                </li>
+                <li class="flex items-center gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                  <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span> <span id="step1-adj-val">Adjacent Side = Unknown (base)</span>
+                </li>
+              </ul>
+              <p class="text-base text-slate-600 font-medium" id="step1-question">Which formula connects <span class="text-pink-600" id="step1-span-opp">Opposite</span> and <span class="text-indigo-600" id="step1-span-adj">Adjacent</span>?</p>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                <button onclick="selectTrig('sin')" id="trig-sin" class="p-5 border border-slate-100 hover:border-slate-300 rounded-xl text-left transition flex flex-col justify-between">
+                  <span class="block font-bold text-slate-800 text-xl">$\sin(\theta)$</span>
+                  <span class="block text-sm text-slate-400 group-hover:text-slate-500">$\frac{\text{Opposite}}{\text{Hypotenuse}}$</span>
+                </button>
+                <button onclick="selectTrig('cos')" id="trig-cos" class="p-5 border border-slate-100 hover:border-slate-300 rounded-xl text-left transition flex flex-col justify-between">
+                  <span class="block font-bold text-slate-800 text-xl">$\cos(\theta)$</span>
+                  <span class="block text-sm text-slate-400 group-hover:text-slate-500">$\frac{\text{Adjacent}}{\text{Hypotenuse}}$</span>
+                </button>
+                <button onclick="selectTrig('tan')" id="trig-tan" class="p-5 border border-slate-100 hover:border-slate-300 rounded-xl text-left transition flex flex-col justify-between">
+                  <span class="block font-bold text-slate-800 text-xl">$\tan(\theta)$</span>
+                  <span class="block text-sm text-slate-400 group-hover:text-slate-500">$\frac{\text{Opposite}}{\text{Adjacent}}$</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 2 Content: Setup Equation -->
+            <div id="step-content-2" class="step-pane hidden space-y-4">
+              <h3 class="text-xl font-bold text-slate-900" id="step2-title">Step 2: Set up the Equation</h3>
+              <p class="text-base text-slate-600" id="step2-desc">
+                Correct! We use the **tangent** ratio because it directly compares the height (Opposite) with the base (Adjacent). Let's plug in our known values into the template:
+              </p>
+              <div class="bg-indigo-50/50 rounded-xl p-5 text-center border border-indigo-100">
+                <p class="text-xl font-bold text-indigo-900">
+                  $\tan(\theta) = \frac{\text{Opposite}}{\text{Adjacent}}$
+                </p>
+              </div>
+              <p class="text-base text-slate-600" id="step2-instructions">Fill the fraction setup below: <strong class="inline-block mt-1">$\tan(20^\circ) = \frac{\text{Numerator}}{\text{Denominator}}$</strong></p>
+              
+              <div class="flex flex-col sm:flex-row items-center gap-6 justify-center bg-slate-50 p-5 rounded-xl">
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-slate-700 text-xl">$\tan(20^\circ) = $</span>
+                  <div class="flex flex-col items-center">
+                    <!-- Numerator input -->
+                    <input type="text" id="eq-num" placeholder="?" class="w-20 h-11 border border-slate-200 text-center rounded-lg font-bold text-slate-800 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition shadow-sm bg-white" />
+                    <div class="w-24 h-0.5 bg-slate-400 my-1.5"></div>
+                    <!-- Denominator input -->
+                    <input type="text" id="eq-den" placeholder="?" class="w-20 h-11 border border-slate-200 text-center rounded-lg font-bold text-slate-800 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition shadow-sm bg-white" />
+                  </div>
+                </div>
+                <button onclick="checkStep2()" id="btn-verify" class="px-6 py-3.5 bg-indigo-600 text-white rounded-xl font-bold text-base hover:bg-indigo-700 transition shadow-md shadow-indigo-100">
+                  Verify Setup
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 3 Content: Isolate Variable -->
+            <div id="step-content-3" class="step-pane hidden space-y-4">
+              <h3 class="text-xl font-bold text-slate-900" id="step3-title">Step 3: Solve for the Base variable ($x$)</h3>
+              <p class="text-base text-slate-600" id="step3-desc">
+                Our equation currently stands as:
+              </p>
+              <div class="bg-indigo-50/50 rounded-xl p-5 text-center border border-indigo-100">
+                <p class="text-xl font-bold text-indigo-900">
+                  $\tan(20^\circ) = \frac{10}{x}$
+                </p>
+              </div>
+              <p class="text-base text-slate-600" id="step3-instructions">
+                We need to isolate $x$. If we multiply both sides by $x$ and then divide by $\tan(20^\circ)$, which rewritten statement represents the correct solved form of $x$?
+              </p>
+              
+              <div class="grid grid-cols-1 gap-3">
+                <button onclick="selectIsolate('incorrect-mul')" id="iso-option-1" class="p-4.5 border border-slate-100 hover:border-slate-300 rounded-xl text-left transition hover:bg-slate-50 flex items-center justify-between">
+                  <span class="font-bold text-slate-800 text-base">$x = 10 \cdot \tan(20^\circ)$</span>
+                  <span class="text-sm text-slate-400" id="iso-label-1">Multiplied incorrectly</span>
+                </button>
+                <button onclick="selectIsolate('correct')" id="iso-option-2" class="p-4.5 border border-slate-100 hover:border-slate-300 rounded-xl text-left transition hover:bg-slate-50 flex items-center justify-between">
+                  <span class="font-bold text-slate-800 text-base">$x = \frac{10}{\tan(20^\circ)}$</span>
+                  <span class="text-sm text-emerald-600 font-bold bg-emerald-50 px-2.5 py-1 rounded" id="iso-label-2">Correct Isolation</span>
+                </button>
+                <button onclick="selectIsolate('incorrect-inv')" id="iso-option-3" class="p-4.5 border border-slate-100 hover:border-slate-300 rounded-xl text-left transition hover:bg-slate-50 flex items-center justify-between">
+                  <span class="font-bold text-slate-800 text-base">$x = \frac{\tan(20^\circ)}{10}$</span>
+                  <span class="text-sm text-slate-400" id="iso-label-3">Inverted ratio</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 4 Content: Complete & Calculate -->
+            <div id="step-content-4" class="step-pane hidden space-y-4">
+              <h3 class="text-xl font-bold text-slate-900" id="step4-title">Step 4: Calculate the Final Length</h3>
+              <p class="text-base text-slate-600" id="step4-desc">
+                Now calculate the numerical value of $x$. 
+                <br><em>Tip: Look up or calculate $\tan(20^\circ)$ using degrees mode!</em>
+              </p>
+              
+              <!-- Built-in Mini Calculator Widget -->
+              <div class="bg-slate-50 rounded-xl p-5 border border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="text-sm text-slate-500">
+                  <span class="block font-bold text-slate-700 text-base" id="calc-ref-title">Math Reference:</span>
+                  $\tan(20^\circ) \approx 0.36397$
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="text-sm font-semibold text-slate-600">$10 \div 0.36397 \approx$</span>
+                  <span id="quick-calc" class="bg-indigo-50 px-3.5 py-1.5 text-sm font-extrabold text-indigo-700 rounded-lg border border-indigo-100">27.47 ft</span>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <label class="block text-base font-bold text-slate-700" id="label-final-answer">Enter final length (rounded to nearest tenth):</label>
+                <div class="flex gap-3">
+                  <div class="relative flex-1">
+                    <input type="number" id="final-answer" step="0.1" placeholder="..." class="w-full h-12 border border-slate-200 px-4 rounded-xl font-bold text-slate-800 text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition shadow-sm bg-white" />
+                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-base text-slate-400 font-bold" id="unit-text-guided">feet</span>
+                  </div>
+                  <button onclick="checkFinalAnswer()" id="btn-submit-answer" class="px-7 h-12 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-base transition shadow-md shadow-indigo-100 whitespace-nowrap">
+                    Submit Answer
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Dynamic Step Feedback Box -->
+          <div id="feedback-box" class="mt-6 p-5 rounded-xl border hidden transition-all duration-300">
+            <div class="flex items-start gap-4.5">
+              <span id="feedback-icon" class="p-1.5 rounded-full text-white mt-0.5"></span>
+              <div>
+                <p id="feedback-title" class="font-extrabold text-base"></p>
+                <p id="feedback-desc" class="text-sm mt-1 leading-relaxed"></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flow control buttons at bottom -->
+          <div class="flex justify-between items-center border-t border-slate-100 pt-6 mt-6">
+            <button onclick="prevStep()" id="prev-btn" class="px-5 py-2.5 text-base font-bold text-slate-400 hover:text-slate-700 transition flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+              <span id="btn-back-text">Back</span>
+            </button>
+            <button onclick="nextStep()" id="next-btn" class="px-6 py-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-xl font-bold text-base transition flex items-center gap-2">
+              <span id="btn-next-text">Next Step</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB CONTENT 2: Interactive Sandbox -->
+      <div id="panel-sandbox" class="hidden space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 sm:p-8">
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <h2 class="text-2xl font-bold text-slate-950" id="sandbox-title">Trigonometric Explorer Sandbox</h2>
+              <p class="text-base text-slate-500 mt-1" id="sandbox-subtitle">Change parameters and observe the mathematics recalculate in real-time.</p>
+            </div>
+            <button onclick="resetSandbox()" class="p-2.5 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-50 transition" title="Reset default values">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.2 8H17" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Control Sliders -->
+          <div class="space-y-6 bg-slate-50 p-6 rounded-xl border border-slate-100">
+            <!-- Slider 1: Height -->
+            <div>
+              <div class="flex justify-between text-base font-bold mb-2">
+                <span class="text-slate-600" id="slider-height-label">Ramp Height (Opposite Side)</span>
+                <span id="slider-height-val" class="text-indigo-600 font-extrabold text-lg">10 ft</span>
+              </div>
+              <input type="range" id="height-range" min="3" max="25" value="10" oninput="updateSandboxValues()" class="w-full accent-indigo-600 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer" />
+              <div class="flex justify-between text-xs text-slate-400 font-bold mt-1">
+                <span id="height-range-min-label">3 ft (Kid's Curb Ramp)</span>
+                <span id="height-range-max-label">25 ft (Monster Half-pipe)</span>
+              </div>
+            </div>
+
+            <!-- Slider 2: Angle -->
+            <div>
+              <div class="flex justify-between text-base font-bold mb-2">
+                <span class="text-slate-600" id="slider-angle-label">Angle of Elevation ($\theta$)</span>
+                <span id="slider-angle-val" class="text-pink-600 font-extrabold text-lg">20°</span>
+              </div>
+              <input type="range" id="angle-range" min="5" max="60" value="20" oninput="updateSandboxValues()" class="w-full accent-pink-600 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer" />
+              <div class="flex justify-between text-xs text-slate-400 font-bold mt-1">
+                <span id="angle-range-min-label">5° (Very Gentle)</span>
+                <span id="angle-range-max-label">60° (Super Steep / Extreme)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formula output section -->
+          <div class="mt-6 space-y-5">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-400" id="sandbox-calc-title">Formula Calculations</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Tangent Form Setup -->
+              <div class="bg-indigo-50/30 border border-indigo-100/50 p-5 rounded-xl">
+                <p class="text-xs text-indigo-500 font-bold uppercase tracking-wider mb-2" id="sandbox-setup-header">Equation Setup</p>
+                <div class="font-bold text-slate-800 text-xl py-2">
+                  $\tan(\text{angle}) = \frac{\text{height}}{\text{base}}$
+                </div>
+                <div id="sandbox-setup-render" class="text-base font-semibold text-slate-600 mt-1">
+                  $\tan(20^\circ) = \frac{10}{\text{base}}$
+                </div>
+              </div>
+
+              <!-- Computed Isolation -->
+              <div class="bg-emerald-50/30 border border-emerald-100/50 p-5 rounded-xl">
+                <p class="text-xs text-emerald-600 font-bold uppercase tracking-wider mb-2" id="sandbox-solved-header">Solved Equation</p>
+                <div class="font-bold text-slate-800 text-xl py-2">
+                  $\text{base} = \frac{\text{height}}{\tan(\text{angle})}$
+                </div>
+                <div id="sandbox-solved-render" class="text-base font-semibold text-slate-600 mt-1">
+                  $\text{base} = \frac{10}{\tan(20^\circ)}$
+                </div>
+              </div>
+            </div>
+
+            <!-- Beautiful large readout of answer -->
+            <div class="bg-slate-900 text-white rounded-xl p-7 text-center shadow-md relative overflow-hidden">
+              <div class="absolute right-0 bottom-0 opacity-10 translate-x-12 translate-y-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-36 w-36" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <p class="text-xs uppercase font-extrabold tracking-wider text-indigo-400" id="sandbox-outcome-label">Calculated Ramp Base Length</p>
+              <p id="sandbox-numeric-base" class="text-5xl font-extrabold mt-2 text-white">27.5 feet</p>
+              <p id="sandbox-calculation-breakdown" class="text-sm text-slate-400 mt-2">
+                Using $\tan(20^\circ) \approx 0.3640$
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script>
+    // Localization Dictionaries
+    const i18n = {
+      en: {
+        tabGuided: "Guided Walkthrough",
+        tabSandbox: "Interactive Sandbox",
+        badgeProblem: "Problem Model",
+        badgeSandbox: "Sandbox Simulation",
+        labelInteractive: "Interactive View",
+        statOpp: "Opposite Side",
+        statAngle: "Angle ($\\theta$)",
+        statAdj: "Adjacent (Base)",
+        unitFt: "ft",
+        unitFeet: "feet",
+        rampSurface: "Ramp Surface",
+        baseLabelDefault: "base = ?",
+        baseLabelSolved: "base = x",
+        solveFirst: "Solve first",
+        attemptsLabel: "Attempts",
+        revealSetup: "Here is the correct equation setup: ",
+        revealAnswer: "Here is the correct calculated value: ",
+        
+        probTitle: "Lenora's Bike Ramp Problem",
+        probDesc: "Lenora wants to build a backyard bike ramp. She knows the height needs to be <strong class='text-slate-900'>10 feet</strong> to clear safety specifications, and the slope requires an angle of elevation of <strong class='text-slate-900'>20°</strong>. How long should the base of the ramp be?",
+        
+        step1Title: "Step 1: Choose the Right Trigonometric Function",
+        step1Subtitle: "Look at our triangle. Relative to our angle of elevation ($20^\\circ$):",
+        step1OppVal: "Opposite Side = 10 ft",
+        step1AdjVal: "Adjacent Side = Unknown (base)",
+        step1Question: "Which formula connects <span class='text-pink-600'>Opposite</span> and <span class='text-indigo-600'>Adjacent</span>?",
+        
+        step2Title: "Step 2: Set up the Equation",
+        step2Desc: "Correct! We use the **tangent** ratio because it directly compares the height (Opposite) with the base (Adjacent). Let's plug in our known values into the template:",
+        step2Instructions: "Fill the fraction setup below: <strong class='inline-block mt-1'>$\\tan(20^\\circ) = \\frac{\\text{Numerator}}{\\text{Denominator}}$</strong>",
+        btnVerify: "Verify Setup",
+        
+        step3Title: "Step 3: Solve for the Base variable ($x$)",
+        step3Desc: "Our equation currently stands as:",
+        step3Instructions: "We need to isolate $x$. If we multiply both sides by $x$ and then divide by $\\tan(20^\\circ)$, which rewritten statement represents the correct solved form of $x$?",
+        isoLabel1: "Multiplied incorrectly",
+        isoLabel2: "Correct Isolation",
+        isoLabel3: "Inverted ratio",
+        
+        step4Title: "Step 4: Calculate the Final Length",
+        step4Desc: "Now calculate the numerical value of $x$. <br><em>Tip: Look up or calculate $\\tan(20^\\circ)$ using degrees mode!</em>",
+        calcRefTitle: "Math Reference:",
+        labelFinalAnswer: "Enter final length (rounded to nearest tenth):",
+        btnSubmitAnswer: "Submit Answer",
+        btnBack: "Back",
+        btnNext: "Next Step",
+        
+        feedbackStep1Success: "Perfect!",
+        feedbackStep1SuccessDesc: "The Tangent function is exactly what we need because it relates the Opposite side (Height = 10 ft) to the Adjacent side (Base = unknown). Move on to Step 2!",
+        feedbackStep1Error: "Not quite...",
+        feedbackStep1ErrorDesc: "That formula requires the hypotenuse (the surface of the ramp). We do not know the hypotenuse length and we do not need to find it right now. Try looking for the ratio that links Opposite and Adjacent.",
+        
+        feedbackStep2Success: "Equation is set up correctly!",
+        feedbackStep2SuccessDesc: "Fantastic! Plugging the values directly gives us: tan(20°) = 10 / x. Let's rearrange it in Step 3 to solve for our missing variable.",
+        feedbackStep2Error: "Check your fraction values",
+        feedbackStep2ErrorDesc: "Remember, tan(angle) = Opposite / Adjacent. What is the value of the Opposite side? (This goes on top). What is the label of the Adjacent side? (This goes on the bottom).",
+        
+        feedbackStep3Success: "Superb isolation work!",
+        feedbackStep3SuccessDesc: "Exactly! To isolate x, you can multiply both sides by x to get x * tan(20°) = 10, then divide both sides by tan(20°) to get x = 10 / tan(20°). Head over to Step 4 to complete the calculation.",
+        feedbackStep3ErrorMul: "Algebra error",
+        feedbackStep3ErrorMulDesc: "If you multiply both sides by x, you get x * tan(20°) = 10. To get x alone, you must divide by tan(20°), not multiply. Try again!",
+        feedbackStep3ErrorInv: "Ratio is upside down",
+        feedbackStep3ErrorInvDesc: "You have the reciprocal of the correct solution. Remember that x moves from the denominator of the right side to the numerator of the left side. Try again!",
+        
+        feedbackStep4Success: "Correct! You've solved it!",
+        feedbackStep4SuccessDesc: "Lenora needs the base of the ramp to be 27.5 feet long. That will satisfy safe slope criteria for the 10 ft vertical climb! You completed the guided walk. Want to test other designs? Switch over to the Sandbox Tab!",
+        feedbackStep4Error: "Incorrect numerical answer",
+        feedbackStep4ErrorDesc: "Double check your calculation. Divide 10 by tan(20°) (which is approximately 0.3640). Make sure your calculator is set to DEGREES mode instead of radians.",
+        feedbackStep4Nan: "Please enter a numeric answer",
+        feedbackStep4NanDesc: "Use the calculation help or your scientific calculator to evaluate 10 divided by tan(20°).",
+        
+        sandboxTitle: "Trigonometric Explorer Sandbox",
+        sandboxSubtitle: "Change parameters and observe the mathematics recalculate in real-time.",
+        sliderHeight: "Ramp Height (Opposite Side)",
+        heightRangeMin: "3 ft (Kid's Curb Ramp)",
+        heightRangeMax: "25 ft (Monster Half-pipe)",
+        sliderAngle: "Angle of Elevation ($\\theta$)",
+        angleRangeMin: "5° (Very Gentle)",
+        angleRangeMax: "60° (Super Steep / Extreme)",
+        sandboxCalc: "Formula Calculations",
+        sandboxSetupHeader: "Equation Setup",
+        sandboxSolvedHeader: "Solved Equation",
+        sandboxOutcome: "Calculated Ramp Base Length",
+        sandboxBreakdown: "Using $\\tan({angle}^\\circ) \\approx {tanVal}$"
+      },
+      zh: {
+        tabGuided: "引导式练习",
+        tabSandbox: "互动沙盒",
+        badgeProblem: "问题模型",
+        badgeSandbox: "沙盒模拟",
+        labelInteractive: "交互式三维透视",
+        statOpp: "对边 (Opposite)",
+        statAngle: "夹角 ($\\theta$)",
+        statAdj: "邻边 / 底座 (Adjacent)",
+        unitFt: "英尺",
+        unitFeet: "英尺",
+        rampSurface: "坡道表面",
+        baseLabelDefault: "底座 = ?",
+        baseLabelSolved: "底座 = x",
+        solveFirst: "请先解答",
+        attemptsLabel: "尝试次数",
+        revealSetup: "正确的方程公式如下：",
+        revealAnswer: "正确的解答数值如下：",
+        
+        probTitle: "莉诺拉的自行车坡道问题",
+        probDesc: "莉诺拉想在后院建造一个自行车坡道。她知道坡道高度需要是 <strong class='text-slate-900'>10 英尺</strong> 以符合安全标准，且斜坡需要有 <strong class='text-slate-900'>20°</strong> 的仰角。坡道的底座应该多长？",
+        
+        step1Title: "步骤 1：选择正确的三角函数",
+        step1Subtitle: "观察三角形。相对于已知的 20° 仰角：",
+        step1OppVal: "对边 (高度) = 10 英尺",
+        step1AdjVal: "邻边 (底座) = 未知 (base)",
+        step1Question: "哪个三角函数公式把 <span class='text-pink-600'>对边</span> 和 <span class='text-indigo-600'>邻边</span> 关联起来？",
+        
+        step2Title: "步骤 2：列出方程",
+        step2Desc: "完全正确！我们使用 **正切 (tangent)** 比值，因为它直接比较了高度（对边）与底座（邻边）。让我们把已知的数值代入公式模板：",
+        step2Instructions: "请在下方填入分子 and 分母完成方程：<strong class='inline-block mt-1'>$\\tan(20^\\circ) = \\frac{\\text{分子 (Numerator)}}{\\text{分母 (Denominator)}}$</strong>",
+        btnVerify: "验证方程",
+        
+        step3Title: "步骤 3：求解底座变量 ($x$)",
+        step3Desc: "我们当前的方程是：",
+        step3Instructions: "我们需要把 $x$ 孤立出来。如果我们两边同乘以 $x$，然后同除以 $\\tan(20^\\circ)$，哪个选项代表了正确的求解形式？",
+        isoLabel1: "乘法变形错误",
+        isoLabel2: "正确移项求解",
+        isoLabel3: "比值颠倒错误",
+        
+        step4Title: "步骤 4：计算最终长度",
+        step4Desc: "现在计算出 $x$ 的具体数值。 <br><em>提示：使用计算器的“角度(Degrees)”模式求出 $\\tan(20^\\circ)$！</em>",
+        calcRefTitle: "数学参考信息：",
+        labelFinalAnswer: "输入最终长度（保留到小数点后一位）：",
+        btnSubmitAnswer: "提交答案",
+        btnBack: "上一步",
+        btnNext: "下一步",
+        
+        feedbackStep1Success: "太棒了！",
+        feedbackStep1SuccessDesc: "正切函数正是我们需要的，因为它把对边（高度 = 10英尺）与邻边（底座 = 未知数）连接在一起。请继续进行步骤 2！",
+        feedbackStep1Error: "不对哦...",
+        feedbackStep1ErrorDesc: "该公式需要用到斜边（坡道斜面）。我们现在既不知道斜边的长度，也不需要求它。尝试寻找能直接关联对边和邻边的比例函数。",
+        
+        feedbackStep2Success: "方程列式正确！",
+        feedbackStep2SuccessDesc: "太好了！代入数值后我们得到：tan(20°) = 10 / x。让我们在步骤 3 中将其变形，求出未知数的值。",
+        feedbackStep2Error: "检查一下分数项",
+        feedbackStep2ErrorDesc: "记住，tan(夹角) = 对边 / 邻边。对边的值是多少？（填在上方）。邻边的代数代号是什么？（填在下方）。",
+        
+        feedbackStep3Success: "移项推导非常完美！",
+        feedbackStep3SuccessDesc: "没错！为了孤立求出 x，你可以两边同乘以 x 得到 x * tan(20°) = 10，然后两边同除以 tan(20°) 得到 x = 10 / tan(20°)。让我们在步骤 4 进行最终计算。",
+        feedbackStep3ErrorMul: "代数运算错误",
+        feedbackStep3ErrorMulDesc: "如果两边同乘以 x，会得到 x * tan(20°) = 10。要单独求出 x，必须除以 tan(20°)，而不是乘法。再试一次！",
+        feedbackStep3ErrorInv: "比值上下颠倒",
+        feedbackStep3ErrorInvDesc: "这个表达式是正确答案的倒数。记住 x 从右边分母移项后到左边分子。请再试一下！",
+        
+        feedbackStep4Success: "完全正确！你成功解决它了！",
+        feedbackStep4SuccessDesc: "莉诺拉需要坡道的底座长度为 27.5 英尺。这样在垂直爬升 10 英尺的情况下，斜坡角度刚好能完美维持在 20° 的安全标准。你已完成了引导练习。想尝试其他的设计组合？点击头部的“互动沙盒”栏目吧！",
+        feedbackStep4Error: "数值计算不太对",
+        feedbackStep4ErrorDesc: "请重新核算你的计算。用 10 除以 tan(20°)（大约是 0.3640）。确保你的计算器设定在“角度(DEGREES)”模式而非“弧度(radians)”。",
+        feedbackStep4Nan: "请输入一个数字答案",
+        feedbackStep4NanDesc: "参考数学小卡片，或者使用科学计算器计算出 10 除以 tan(20°) 的值。",
+        
+        sandboxTitle: "三角几何探索沙盒",
+        sandboxSubtitle: "任意调节高度与角度参数，系统将实时为您呈现最直观 of 数学公式推导。",
+        sliderHeight: "坡道高度 (对边 - Opposite)",
+        heightRangeMin: "3 英尺 (儿童路沿坡道)",
+        heightRangeMax: "25 英尺 (极限大U池)",
+        sliderAngle: "坡道仰角 (夹角 - $\\theta$)",
+        angleRangeMin: "5° (极为平缓)",
+        angleRangeMax: "60° (极限陡峭 / 极速坠落)",
+        sandboxCalc: "公式推导计算详情",
+        sandboxSetupHeader: "方程列式",
+        sandboxSolvedHeader: "移项求解方程",
+        sandboxOutcome: "实时计算底座长度为",
+        sandboxBreakdown: "代入 $\\tan({angle}^\\circ) \\approx {tanVal}$ 进行计算："
+      }
+    };
+
+    // App State
+    let currentLang = 'en';
+    let currentStep = 1;
+    let selectedTrigRatio = null;
+    let selectedIsolateChoice = null;
+    let activeTab = 'guided';
+
+    // Interactive attempts limiters
+    let step2Attempts = 0;
+    let step4Attempts = 0;
+
+    // Sandbox state variables
+    let sandboxHeight = 10;
+    let sandboxAngle = 20;
+
+    // Elements
+    const stepBtn1 = document.getElementById('step-btn-1');
+    const stepBtn2 = document.getElementById('step-btn-2');
+    const stepBtn3 = document.getElementById('step-btn-3');
+    const stepBtn4 = document.getElementById('step-btn-4');
+    const stepLineProgress = document.getElementById('step-line-progress');
+
+    // Init UI on load
+    window.onload = function() {
+      setLanguage('en');
+      goToStep(1);
+    };
+
+    // Toggle and update language strings
+    function setLanguage(lang) {
+      currentLang = lang;
+      
+      // Update toggle buttons design
+      const btnEn = document.getElementById('lang-en');
+      const btnZh = document.getElementById('lang-zh');
+      if (lang === 'en') {
+        btnEn.className = "px-4 py-1.5 text-sm font-bold rounded-lg transition-all duration-150 bg-white text-indigo-600 shadow-sm";
+        btnZh.className = "px-4 py-1.5 text-sm font-semibold rounded-lg transition-all duration-150 text-slate-600 hover:text-slate-900";
+      } else {
+        btnZh.className = "px-4 py-1.5 text-sm font-bold rounded-lg transition-all duration-150 bg-white text-indigo-600 shadow-sm";
+        btnEn.className = "px-4 py-1.5 text-sm font-semibold rounded-lg transition-all duration-150 text-slate-600 hover:text-slate-900";
+      }
+
+      const dict = i18n[lang];
+
+      // Update Header Text Elements
+      document.getElementById('tab-guided').innerText = dict.tabGuided;
+      document.getElementById('tab-sandbox').innerText = dict.tabSandbox;
+      document.getElementById('badge').innerText = (activeTab === 'guided') ? dict.badgeProblem : dict.badgeSandbox;
+      document.getElementById('label-interactive-view').innerText = dict.labelInteractive;
+
+      // Update Quick Stats indicators
+      document.getElementById('stat-opp-label').innerHTML = dict.statOpp;
+      document.getElementById('stat-angle-label').innerHTML = dict.statAngle;
+      document.getElementById('stat-adj-label').innerHTML = dict.statAdj;
+
+      // Update Guided Text Elements
+      document.getElementById('prob-title').innerHTML = dict.probTitle;
+      document.getElementById('prob-desc').innerHTML = dict.probDesc;
+
+      // Step 1
+      document.getElementById('step1-title').innerHTML = dict.step1Title;
+      document.getElementById('step1-subtitle').innerHTML = dict.step1Subtitle;
+      document.getElementById('step1-opp-val').innerText = dict.step1OppVal;
+      document.getElementById('step1-adj-val').innerText = dict.step1AdjVal;
+      document.getElementById('step1-question').innerHTML = dict.step1Question;
+
+      // Step 2
+      document.getElementById('step2-title').innerHTML = dict.step2Title;
+      document.getElementById('step2-desc').innerHTML = dict.step2Desc;
+      document.getElementById('step2-instructions').innerHTML = dict.step2Instructions;
+      document.getElementById('btn-verify').innerText = dict.btnVerify;
+
+      // Step 3
+      document.getElementById('step3-title').innerHTML = dict.step3Title;
+      document.getElementById('step3-desc').innerHTML = dict.step3Desc;
+      document.getElementById('step3-instructions').innerHTML = dict.step3Instructions;
+      document.getElementById('iso-label-1').innerText = dict.isoLabel1;
+      document.getElementById('iso-label-2').innerText = dict.isoLabel2;
+      document.getElementById('iso-label-3').innerText = dict.isoLabel3;
+
+      // Step 4
+      document.getElementById('step4-title').innerHTML = dict.step4Title;
+      document.getElementById('step4-desc').innerHTML = dict.step4Desc;
+      document.getElementById('calc-ref-title').innerText = dict.calcRefTitle;
+      document.getElementById('label-final-answer').innerText = dict.labelFinalAnswer;
+      document.getElementById('unit-text-guided').innerText = dict.unitFeet;
+      document.getElementById('btn-submit-answer').innerText = dict.btnSubmitAnswer;
+
+      // Back & Next Buttons
+      document.getElementById('btn-back-text').innerText = dict.btnBack;
+      document.getElementById('btn-next-text').innerText = dict.btnNext;
+
+      // Sandbox Texts
+      document.getElementById('sandbox-title').innerText = dict.sandboxTitle;
+      document.getElementById('sandbox-subtitle').innerText = dict.sandboxSubtitle;
+      document.getElementById('slider-height-label').innerText = dict.sliderHeight;
+      document.getElementById('height-range-min-label').innerText = dict.heightRangeMin;
+      document.getElementById('height-range-max-label').innerText = dict.heightRangeMax;
+      document.getElementById('slider-angle-label').innerHTML = dict.sliderAngle;
+      document.getElementById('angle-range-min-label').innerText = dict.angleRangeMin;
+      document.getElementById('angle-range-max-label').innerText = dict.angleRangeMax;
+      document.getElementById('sandbox-calc-title').innerText = dict.sandboxCalc;
+      document.getElementById('sandbox-setup-header').innerText = dict.sandboxSetupHeader;
+      document.getElementById('sandbox-solved-header').innerText = dict.sandboxSolvedHeader;
+      document.getElementById('sandbox-outcome-label').innerText = dict.sandboxOutcome;
+
+      // Render Math and SVG Elements depending on Mode
+      if (activeTab === 'guided') {
+        updateRampVisuals(10, 20, false);
+      } else {
+        updateSandboxValues();
+      }
+
+      // Refresh MathJax rendering
+      triggerMathJax();
+    }
+
+    // Trigger MathJax typeset safely
+    function triggerMathJax() {
+      if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
+        MathJax.typesetPromise().catch((err) => console.log('MathJax error: ', err.message));
+      }
+    }
+
+    // Navigation and tabs control
+    function switchTab(tab) {
+      activeTab = tab;
+      const tabGuided = document.getElementById('tab-guided');
+      const tabSandbox = document.getElementById('tab-sandbox');
+      const panelGuided = document.getElementById('panel-guided');
+      const panelSandbox = document.getElementById('panel-sandbox');
+      const badge = document.getElementById('badge');
+      const dict = i18n[currentLang];
+
+      if (tab === 'guided') {
+        tabGuided.classList.add('bg-white', 'text-indigo-600', 'shadow-sm');
+        tabGuided.classList.remove('text-slate-600');
+        tabSandbox.classList.remove('bg-white', 'text-indigo-600', 'shadow-sm');
+        tabSandbox.classList.add('text-slate-600');
+        panelGuided.classList.remove('hidden');
+        panelSandbox.classList.add('hidden');
+        badge.innerText = dict.badgeProblem;
+        badge.className = "bg-indigo-50 text-indigo-700 text-sm font-bold px-4 py-1.5 rounded-full uppercase tracking-wider";
+        updateRampVisuals(10, 20, false);
+      } else {
+        tabSandbox.classList.add('bg-white', 'text-indigo-600', 'shadow-sm');
+        tabSandbox.classList.remove('text-slate-600');
+        tabGuided.classList.remove('bg-white', 'text-indigo-600', 'shadow-sm');
+        tabGuided.classList.add('text-slate-600');
+        panelSandbox.classList.remove('hidden');
+        panelGuided.classList.add('hidden');
+        badge.innerText = dict.badgeSandbox;
+        badge.className = "bg-emerald-50 text-emerald-700 text-sm font-bold px-4 py-1.5 rounded-full uppercase tracking-wider";
+        updateSandboxValues();
+      }
+      triggerMathJax();
+    }
+
+    // Step management
+    function goToStep(step) {
+      if (step < 1 || step > 4) return;
+      currentStep = step;
+
+      // Reset step-specific attempt thresholds on entering them
+      if (step === 2) step2Attempts = 0;
+      if (step === 4) step4Attempts = 0;
+
+      // Update contents display
+      document.querySelectorAll('.step-pane').forEach((el, index) => {
+        if (index === step - 1) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      });
+
+      // Update timeline step visual state
+      const steps = [stepBtn1, stepBtn2, stepBtn3, stepBtn4];
+      steps.forEach((btn, idx) => {
+        const stepNum = idx + 1;
+        if (stepNum < currentStep) {
+          btn.className = "relative z-10 w-10 h-10 rounded-full flex items-center justify-center font-bold text-base bg-emerald-500 text-white transition-all duration-300 shadow shadow-emerald-100";
+          btn.innerHTML = `
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+            </svg>
+          `;
+        } else if (stepNum === currentStep) {
+          btn.className = "relative z-10 w-10 h-10 rounded-full flex items-center justify-center font-bold text-base bg-indigo-600 text-white transition-all duration-300 shadow shadow-indigo-100";
+          btn.innerHTML = stepNum;
+        } else {
+          btn.className = "relative z-10 w-10 h-10 rounded-full flex items-center justify-center font-bold text-base bg-slate-100 text-slate-400 transition-all duration-300";
+          btn.innerHTML = stepNum;
+        }
+      });
+
+      // Update line progress length
+      const percentage = ((currentStep - 1) / 3) * 100;
+      stepLineProgress.style.width = `${percentage}%`;
+
+      // Enable/Disable back-next navigation keys
+      document.getElementById('prev-btn').disabled = (currentStep === 1);
+      document.getElementById('prev-btn').style.opacity = (currentStep === 1) ? "0.4" : "1";
+
+      hideFeedback();
+      triggerMathJax();
+    }
+
+    function nextStep() {
+      if (currentStep < 4) {
+        goToStep(currentStep + 1);
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        goToStep(currentStep - 1);
+      }
+    }
+
+    // Step-by-Step validation logic
+    function showFeedback(type, title, desc) {
+      const box = document.getElementById('feedback-box');
+      const icon = document.getElementById('feedback-icon');
+      const titleEl = document.getElementById('feedback-title');
+      const descEl = document.getElementById('feedback-desc');
+
+      box.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-100', 'text-emerald-800', 'bg-rose-50', 'border-rose-100', 'text-rose-800');
+      
+      if (type === 'success') {
+        box.classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-900');
+        icon.className = "p-1.5 rounded-full bg-emerald-500 text-white mt-0.5";
+        icon.innerHTML = `<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>`;
+      } else {
+        box.classList.add('bg-rose-50', 'border-rose-200', 'text-rose-900');
+        icon.className = "p-1.5 rounded-full bg-rose-500 text-white mt-0.5";
+        icon.innerHTML = `<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>`;
+      }
+
+      titleEl.innerText = title;
+      descEl.innerText = desc;
+      box.classList.remove('hidden');
+    }
+
+    function hideFeedback() {
+      document.getElementById('feedback-box').classList.add('hidden');
+    }
+
+    // Step 1 check
+    function selectTrig(ratio) {
+      selectedTrigRatio = ratio;
+      const dict = i18n[currentLang];
+      
+      document.getElementById('trig-sin').className = "p-5 border rounded-xl text-left transition flex flex-col justify-between " + (ratio === 'sin' ? 'border-indigo-600 bg-indigo-50/20' : 'border-slate-100 bg-white');
+      document.getElementById('trig-cos').className = "p-5 border rounded-xl text-left transition flex flex-col justify-between " + (ratio === 'cos' ? 'border-indigo-600 bg-indigo-50/20' : 'border-slate-100 bg-white');
+      document.getElementById('trig-tan').className = "p-5 border rounded-xl text-left transition flex flex-col justify-between " + (ratio === 'tan' ? 'border-indigo-600 bg-indigo-50/20' : 'border-slate-100 bg-white');
+
+      if (ratio === 'tan') {
+        showFeedback('success', dict.feedbackStep1Success, dict.feedbackStep1SuccessDesc);
+      } else {
+        showFeedback('error', dict.feedbackStep1Error, dict.feedbackStep1ErrorDesc);
+      }
+    }
+
+    // Step 2 check (Contains auto-completion limit on 3 failures)
+    function checkStep2() {
+      const num = document.getElementById('eq-num').value.trim();
+      const den = document.getElementById('eq-den').value.trim().toLowerCase();
+      const dict = i18n[currentLang];
+
+      if (num === '10' && (den === 'x' || den === 'base' || den === '底座')) {
+        step2Attempts = 0;
+        showFeedback('success', dict.feedbackStep2Success, dict.feedbackStep2SuccessDesc);
+      } else {
+        step2Attempts++;
+        if (step2Attempts >= 3) {
+          // Fill in values automatically
+          document.getElementById('eq-num').value = '10';
+          document.getElementById('eq-den').value = 'x';
+          step2Attempts = 0;
+          showFeedback('success', dict.feedbackStep2Success, dict.revealSetup + " tan(20°) = 10 / x. " + dict.feedbackStep2SuccessDesc);
+        } else {
+          const attemptsText = ` (${dict.attemptsLabel}: ${step2Attempts}/3)`;
+          showFeedback('error', dict.feedbackStep2Error, dict.feedbackStep2ErrorDesc + attemptsText);
+        }
+      }
+    }
+
+    // Step 3 check
+    function selectIsolate(choice) {
+      selectedIsolateChoice = choice;
+      const dict = i18n[currentLang];
+
+      document.getElementById('iso-option-1').className = "p-4.5 border rounded-xl text-left transition flex justify-between items-center " + (choice === 'incorrect-mul' ? 'border-indigo-600 bg-indigo-50/20' : 'border-slate-100 bg-white');
+      document.getElementById('iso-option-2').className = "p-4.5 border rounded-xl text-left transition flex justify-between items-center " + (choice === 'correct' ? 'border-indigo-600 bg-indigo-50/20' : 'border-slate-100 bg-white');
+      document.getElementById('iso-option-3').className = "p-4.5 border rounded-xl text-left transition flex justify-between items-center " + (choice === 'incorrect-inv' ? 'border-indigo-600 bg-indigo-50/20' : 'border-slate-100 bg-white');
+
+      if (choice === 'correct') {
+        showFeedback('success', dict.feedbackStep3Success, dict.feedbackStep3SuccessDesc);
+      } else if (choice === 'incorrect-mul') {
+        showFeedback('error', dict.feedbackStep3ErrorMul, dict.feedbackStep3ErrorMulDesc);
+      } else {
+        showFeedback('error', dict.feedbackStep3ErrorInv, dict.feedbackStep3ErrorInvDesc);
+      }
+    }
+
+    // Step 4 check (Contains auto-completion limit on 3 failures)
+    function checkFinalAnswer() {
+      const ans = parseFloat(document.getElementById('final-answer').value);
+      const dict = i18n[currentLang];
+
+      if (isNaN(ans)) {
+        showFeedback('error', dict.feedbackStep4Nan, dict.feedbackStep4NanDesc);
+        return;
+      }
+
+      if (ans >= 27.3 && ans <= 27.7) {
+        step4Attempts = 0;
+        showFeedback('success', dict.feedbackStep4Success, dict.feedbackStep4SuccessDesc);
+        updateRampVisuals(10, 20, true, `27.5 ${dict.unitFt}`);
+      } else {
+        step4Attempts++;
+        if (step4Attempts >= 3) {
+          // Fill in correct final evaluation automatically
+          document.getElementById('final-answer').value = 27.5;
+          step4Attempts = 0;
+          showFeedback('success', dict.feedbackStep4Success, dict.revealAnswer + " 27.5. " + dict.feedbackStep4SuccessDesc);
+          updateRampVisuals(10, 20, true, `27.5 ${dict.unitFt}`);
+        } else {
+          const attemptsText = ` (${dict.attemptsLabel}: ${step4Attempts}/3)`;
+          showFeedback('error', dict.feedbackStep4Error, dict.feedbackStep4ErrorDesc + attemptsText);
+        }
+      }
+    }
+
+    // Dynamic Visual Renderer (Drives the SVG Triangle representation)
+    function updateRampVisuals(heightFt, angleDeg, solved = false, customBaseText = null) {
+      const rightCornerX = 340;
+      const rightCornerY = 260;
+      const dict = i18n[currentLang];
+
+      const visualHeight = Math.min(200, Math.max(50, heightFt * 10)); 
+      const angleRad = (angleDeg * Math.PI) / 180;
+      const computedBaseFt = heightFt / Math.tan(angleRad);
+      
+      const visualBaseWidth = Math.min(280, Math.max(60, visualHeight / Math.tan(angleRad)));
+      const leftCornerX = rightCornerX - visualBaseWidth;
+
+      // 1. Update the Triangle points
+      const triPoly = document.getElementById('triangle-poly');
+      triPoly.setAttribute('points', `${leftCornerX},260 ${rightCornerX},${rightCornerY - visualHeight} ${rightCornerX},260`);
+
+      // 2. Update Right Angle Square location
+      const raPath = document.getElementById('right-angle');
+      raPath.setAttribute('d', `M ${rightCornerX - 15},${rightCornerY} L ${rightCornerX - 15},${rightCornerY - 15} L ${rightCornerX},${rightCornerY - 15}`);
+
+      // 3. Update Height text label position & string value
+      const heightLabelG = document.getElementById('height-label');
+      heightLabelG.setAttribute('transform', `translate(${rightCornerX + 25}, ${rightCornerY - (visualHeight/2)})`);
+      document.getElementById('height-text').textContent = `${heightFt} ${dict.unitFt}`;
+      
+      const arrowLine = heightLabelG.querySelector('line');
+      arrowLine.setAttribute('y1', `-${(visualHeight/2) - 10}`);
+      arrowLine.setAttribute('y2', `${(visualHeight/2) - 10}`);
+      heightLabelG.querySelectorAll('polygon')[0].setAttribute('points', `0,-${(visualHeight/2) - 10} -4,-${(visualHeight/2) - 18} 4,-${(visualHeight/2) - 18}`);
+      heightLabelG.querySelectorAll('polygon')[1].setAttribute('points', `0,${(visualHeight/2) - 10} -4,${(visualHeight/2) - 18} 4,${(visualHeight/2) - 18}`);
+
+      // 4. Update Angle Arc & Angle Label position
+      const angleArc = document.getElementById('angle-arc');
+      const arcRadius = Math.min(45, visualBaseWidth * 0.4);
+      const arcEndX = leftCornerX + arcRadius * Math.cos(angleRad);
+      const arcEndY = rightCornerY - arcRadius * Math.sin(angleRad);
+      angleArc.setAttribute('d', `M ${leftCornerX + arcRadius},260 A ${arcRadius},${arcRadius} 0 0,0 ${arcEndX},${arcEndY}`);
+      
+      const angleText = document.getElementById('angle-text');
+      angleText.setAttribute('x', `${leftCornerX + arcRadius + 12}`);
+      angleText.setAttribute('y', `${rightCornerY - 10}`);
+      angleText.textContent = `${angleDeg}°`;
+
+      // 5. Update Base label position and contents
+      const baseLabelG = document.getElementById('base-label');
+      baseLabelG.setAttribute('transform', `translate(${leftCornerX + (visualBaseWidth/2)}, 285)`);
+      
+      const baseText = document.getElementById('base-text');
+      if (customBaseText) {
+        baseText.textContent = customBaseText;
+      } else if (solved) {
+        baseText.textContent = `${computedBaseFt.toFixed(1)} ${dict.unitFt}`;
+      } else {
+        baseText.textContent = dict.baseLabelSolved;
+      }
+
+      // 6. Hypotenuse Label Update
+      document.getElementById('hyp-text').textContent = dict.rampSurface;
+
+      // 7. Move the bike icon decor onto the center of the hypotenuse
+      const bikeGroup = document.getElementById('bike-icon-group');
+      const hypotenuseCenterX = leftCornerX + (visualBaseWidth / 2);
+      const hypotenuseCenterY = rightCornerY - (visualHeight / 2);
+      const rampSlopeAngleRad = -Math.atan(visualHeight / visualBaseWidth);
+      const rampSlopeAngleDeg = (rampSlopeAngleRad * 180) / Math.PI;
+
+      bikeGroup.setAttribute('transform', `translate(${hypotenuseCenterX}, ${hypotenuseCenterY - 14}) rotate(${rampSlopeAngleDeg})`);
+
+      // Update indicators below visual
+      document.getElementById('opp-indicator').innerText = `${heightFt} ${dict.unitFt}`;
+      document.getElementById('angle-indicator').innerText = `${angleDeg}°`;
+      document.getElementById('adj-indicator').innerText = solved ? `${computedBaseFt.toFixed(1)} ${dict.unitFt}` : dict.solveFirst;
+    }
+
+    // Sandbox Exploratory Mechanics
+    function updateSandboxValues() {
+      sandboxHeight = parseFloat(document.getElementById('height-range').value);
+      sandboxAngle = parseInt(document.getElementById('angle-range').value);
+      const dict = i18n[currentLang];
+
+      // Reflect in UI sliders label
+      document.getElementById('slider-height-val').innerText = `${sandboxHeight} ${dict.unitFt}`;
+      document.getElementById('slider-angle-val').innerText = `${sandboxAngle}°`;
+
+      // Perform math
+      const angleRad = (sandboxAngle * Math.PI) / 180;
+      const tanVal = Math.tan(angleRad);
+      const calculatedBase = sandboxHeight / tanVal;
+
+      // Update Math Render templates dynamically
+      document.getElementById('sandbox-setup-render').innerHTML = `$$\\tan(${sandboxAngle}^\\circ) = \\frac{${sandboxHeight}}{\\text{base}}$$`;
+      document.getElementById('sandbox-solved-render').innerHTML = `$$\\text{base} = \\frac{${sandboxHeight}}{\\tan(${sandboxAngle}^\\circ)}$$`;
+      
+      // Update output box
+      document.getElementById('sandbox-numeric-base').innerText = `${calculatedBase.toFixed(1)} ${dict.unitFeet}`;
+      
+      const breakdownTpl = dict.sandboxBreakdown;
+      const parsedBreakdown = breakdownTpl.replace("{angle}", sandboxAngle).replace("{tanVal}", tanVal.toFixed(4));
+      document.getElementById('sandbox-calculation-breakdown').innerHTML = `${parsedBreakdown} <span class="block mt-1 font-mono">${sandboxHeight} \\div ${tanVal.toFixed(4)} = ${calculatedBase.toFixed(3)}</span>`;
+
+      triggerMathJax();
+
+      // Sync SVG display live!
+      updateRampVisuals(sandboxHeight, sandboxAngle, true);
+    }
+
+    // Reset default sandbox values
+    function resetSandbox() {
+      document.getElementById('height-range').value = 10;
+      document.getElementById('angle-range').value = 20;
+      updateSandboxValues();
+    }
+  </script>
+</body>
+</html>
