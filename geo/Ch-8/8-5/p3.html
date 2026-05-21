@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modeling Problem Solution</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .diagram-box {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background: #fcfbf8;
+            border-bottom: 4px solid #d4b483;
+        }
+        .line-sight {
+            stroke: #991b1b;
+            stroke-width: 2;
+            fill: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto bg-white p-6 md:p-10 rounded-2xl shadow-lg">
+        <h1 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-4">Modeling: Disco Ball Height</h1>
+        
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+            <!-- Updated Diagram Visual -->
+            <div class="diagram-box shadow-inner rounded-lg overflow-hidden border border-gray-200">
+                <svg viewBox="0 0 400 350" class="w-full h-full">
+                    <!-- Ground -->
+                    <line x1="0" y1="340" x2="400" y2="340" stroke="#d4b483" stroke-width="4" />
+                    <!-- Height line x -->
+                    <line x1="350" y1="340" x2="350" y2="60" stroke="#991b1b" stroke-width="2" />
+                    <!-- Disco Ball -->
+                    <circle cx="350" cy="50" r="10" fill="#94a3b8" />
+                    <circle cx="350" cy="50" r="10" fill="url(#ballGradient)" />
+                    <defs>
+                        <radialGradient id="ballGradient" cx="30%" cy="30%" r="70%">
+                            <stop offset="0%" stop-color="#f8fafc" />
+                            <stop offset="100%" stop-color="#475569" />
+                        </radialGradient>
+                    </defs>
+                    
+                    <!-- Sight lines -->
+                    <path d="M 50 340 L 350 50 L 150 340" class="line-sight" />
+                    
+                    <!-- People -->
+                    <!-- Annabelle (Pink) -->
+                    <g transform="translate(40, 290)">
+                        <circle cx="10" cy="10" r="8" fill="#ec4899" />
+                        <rect x="7" y="18" width="6" height="30" fill="#ec4899" />
+                    </g>
+                    <!-- Rich -->
+                    <g transform="translate(140, 290)">
+                        <circle cx="10" cy="10" r="8" fill="#1e3a8a" />
+                        <rect x="7" y="18" width="6" height="30" fill="#1e3a8a" />
+                    </g>
+
+                    <!-- Right angle symbol -->
+                    <path d="M 335 340 L 335 325 L 350 325" stroke="#333" fill="none" />
+                    
+                    <!-- Labels -->
+                    <text x="360" y="200" font-size="20" font-weight="bold" fill="#991b1b">x</text>
+                    <text x="85" y="315" font-size="14" font-weight="bold">40°</text>
+                    <text x="180" y="315" font-size="14" font-weight="bold">50°</text>
+                    
+                    <!-- Measurement Indicator -->
+                    <line x1="50" y1="350" x2="150" y2="350" stroke="#333" stroke-width="1" />
+                    <text x="90" y="370" font-size="12" font-weight="bold">5 ft</text>
+                </svg>
+            </div>
+
+            <!-- Problem Text -->
+            <div class="text-gray-700">
+                <p class="mb-4"><strong>Problem:</strong> Annabelle and Rich are setting up decorations. Rich is standing 5 feet directly in front of Annabelle under a disco ball. The angle of elevation from Annabelle is 40°, and from Rich is 50°. How high is the disco ball?</p>
+            </div>
+        </div>
+
+        <!-- Solution -->
+        <div class="mt-8 bg-blue-50 p-6 rounded-xl border border-blue-100">
+            <h2 class="text-xl font-semibold mb-4 text-blue-900">Step-by-Step Solution</h2>
+            <div class="space-y-4 text-gray-800">
+                <p>1. <strong>Define variables:</strong> Let <em>x</em> be the height of the ball, <em>d</em> be the distance from Rich to the point directly under the ball.</p>
+                <p>2. <strong>Set up equations using trigonometry:</strong></p>
+                <ul class="list-disc ml-6 space-y-2">
+                    <li>For Rich: <code class="bg-white px-2 py-1 rounded border">tan(50°) = x / d</code> &rarr; <em>d = x / tan(50°)</em></li>
+                    <li>For Annabelle: <code class="bg-white px-2 py-1 rounded border">tan(40°) = x / (d + 5)</code></li>
+                </ul>
+                <p>3. <strong>Substitute and Solve:</strong></p>
+                <div class="bg-white p-4 rounded shadow-sm overflow-x-auto text-sm font-mono">
+                    <code>tan(40°) = x / ( (x / tan(50°)) + 5 )</code><br>
+                    <code>x ≈ 11.95 feet</code>
+                </div>
+                <p class="mt-4 font-bold text-blue-800">The disco ball is approximately 11.95 feet high.</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

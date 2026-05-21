@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trigonometry Problem: Gateway Arch</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 p-4 md:p-8">
+    <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-6 md:p-10 border border-gray-200">
+        <h1 class="text-3xl font-bold mb-6 text-indigo-900">11. RIVERS: Gateway Arch Trigonometry</h1>
+        
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+            <div class="space-y-4">
+                <p class="text-lg leading-relaxed">
+                    Hugo is standing in the top of St. Louis' Gateway Arch, looking down on the Mississippi River. 
+                    The angle of depression to the closer bank is <span class="font-bold text-indigo-700">45°</span> 
+                    and the angle of depression to the farther bank is <span class="font-bold text-indigo-700">18°</span>. 
+                    The arch is <span class="font-bold text-indigo-700">630 feet</span> tall. 
+                    Estimate the width of the river at that point.
+                </p>
+            </div>
+            <div class="bg-indigo-50 rounded-lg p-4 flex items-center justify-center border border-indigo-200">
+                <svg viewBox="0 0 400 200" class="w-full h-auto">
+                    <!-- River surface -->
+                    <rect x="0" y="150" width="400" height="50" fill="#bfdbfe" />
+                    <!-- Arch -->
+                    <path d="M50 150 Q 50 20 100 20 T 150 150" fill="none" stroke="#6366f1" stroke-width="4" />
+                    <line x1="100" y1="20" x2="100" y2="150" stroke="#374151" stroke-dasharray="4" />
+                    <!-- Lines of sight -->
+                    <line x1="100" y1="20" x2="150" y2="150" stroke="#b91c1c" stroke-width="2" />
+                    <line x1="100" y1="20" x2="350" y2="150" stroke="#b91c1c" stroke-width="2" />
+                    <line x1="100" y1="20" x2="350" y2="20" stroke="#374151" stroke-dasharray="2" />
+                    <!-- Labels -->
+                    <text x="80" y="90" font-size="12" font-weight="bold">630ft</text>
+                    <!-- Moved 45° label to the left -->
+                    <text x="120" y="70" font-size="12">45°</text>
+                    <text x="220" y="40" font-size="12">18°</text>
+                </svg>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-200 pt-8">
+            <h2 class="text-2xl font-semibold mb-6 text-indigo-800">Step-by-Step Solution</h2>
+            
+            <div class="space-y-6 text-gray-800">
+                <div class="bg-indigo-50 p-4 rounded-lg">
+                    <h3 class="font-bold text-lg mb-2">1. Identify the Geometry</h3>
+                    <p>Let <span class="font-mono">h = 630 ft</span> be the height of the arch. The distance to the closer bank 
+                    (<span class="font-mono">d<sub>1</sub></span>) and the farther bank (<span class="font-mono">d<sub>2</sub></span>) 
+                    can be found using the tangent function, where <span class="font-mono">tan(θ) = opposite / adjacent</span>.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="border p-4 rounded shadow-sm">
+                        <h3 class="font-bold mb-2">Closer Bank (45°)</h3>
+                        <p>tan(45°) = 630 / d<sub>1</sub></p>
+                        <p>d<sub>1</sub> = 630 / tan(45°)</p>
+                        <p class="font-bold text-indigo-600">d<sub>1</sub> = 630 / 1 = 630 ft</p>
+                    </div>
+                    <div class="border p-4 rounded shadow-sm">
+                        <h3 class="font-bold mb-2">Farther Bank (18°)</h3>
+                        <p>tan(18°) = 630 / d<sub>2</sub></p>
+                        <p>d<sub>2</sub> = 630 / tan(18°)</p>
+                        <p class="font-bold text-indigo-600">d<sub>2</sub> ≈ 630 / 0.3249 ≈ 1938.9 ft</p>
+                    </div>
+                </div>
+
+                <div class="bg-green-50 p-6 rounded-lg border border-green-200">
+                    <h3 class="font-bold text-xl mb-2 text-green-900">2. Calculate River Width</h3>
+                    <p class="text-lg">Width = d<sub>2</sub> - d<sub>1</sub></p>
+                    <p class="text-lg">Width = 1938.9 - 630</p>
+                    <p class="text-2xl font-bold text-green-700 mt-2">Width ≈ 1308.9 feet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
