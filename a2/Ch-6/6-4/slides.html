@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 6-4: Logarithms and Logarithmic Functions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body { background-color: #cbd5e1; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; font-family: 'Lato', sans-serif; padding: 40px; }
+        
+        .slide-container {
+            width: 100%; max-width: 1000px; min-height: 600px; background: white; padding: 60px;
+            margin-bottom: 40px; border-top: 15px solid #003366; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: none; flex-direction: column; position: relative;
+        }
+        .slide-container.active { display: flex; }
+
+        h2 { color: #003366; font-size: 36px; margin-bottom: 25px; border-left: 8px solid #D4AF37; padding-left: 20px; font-family: 'Poppins', sans-serif; }
+        p { font-size: 24px; color: #1e293b; margin: 12px 0; }
+        
+        .hidden-step { display: none; margin-top: 20px; padding: 15px; background: #f8fafc; border-left: 5px solid #003366; }
+        .reveal-btn { cursor: pointer; background: #003366; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 20px; font-weight: bold; margin-top: 15px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 15px; text-align: left; border: 1px solid #e2e8f0; font-size: 20px; }
+        th { background-color: #003366; color: #fff; }
+
+        .nav-wrapper { margin-top: 40px; display: flex; justify-content: center; gap: 20px; }
+        .nav-btn { cursor: pointer; background: #003366; color: white; padding: 12px 30px; border: none; border-radius: 6px; font-size: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="slide-container active" id="s0">
+    <h2>Lesson 6-4: Logarithms</h2>
+    <p>For <math><mi>b</mi><mo>&gt;</mo><mn>0</mn><mo>,</mo><mi>b</mi><mo>&ne;</mo><mn>1</mn></math>, and <math><mi>x</mi><mo>&gt;</mo><mn>0</mn></math>:</p>
+    <p style="font-weight: bold; font-size: 32px; text-align: center; margin: 30px 0;">log<sub>b</sub> x = y &harr; b<sup>y</sup> = x</p>
+    <p>The variable <i>y</i> is called the logarithm of <i>x</i>.</p>
+    <div class="nav-wrapper">
+        <button class="nav-btn" onclick="prevSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+</div>
+
+<div class="slide-container" id="s1">
+    <h2>Example 1: Log to Exponential</h2>
+    <p>a. log<sub>2</sub> 8 = 3 &rarr; 2<sup>3</sup> = 8</p>
+    <p>b. log<sub>4</sub> (1/256) = -4 &rarr; 4<sup>-4</sup> = 1/256</p>
+    <div class="nav-wrapper">
+        <button class="nav-btn" onclick="prevSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+</div>
+
+<div class="slide-container" id="s2">
+    <h2>Example 2: Exponential to Log</h2>
+    <p>a. 15<sup>3</sup> = 3375 &rarr; log<sub>15</sub> 3375 = 3</p>
+    <p>b. 4<sup>1/2</sup> = 2 &rarr; log<sub>4</sub> 2 = 1/2</p>
+    <div class="nav-wrapper">
+        <button class="nav-btn" onclick="prevSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+</div>
+
+<div class="slide-container" id="s3">
+    <h2>Example 3: Evaluating log<sub>16</sub> 4</h2>
+    <p><strong>Step 1:</strong> Set to y: log<sub>16</sub> 4 = y</p>
+    <button class="reveal-btn" onclick="document.getElementById('step2').style.display='block'; this.style.display='none';">Show Next Step</button>
+    <div id="step2" class="hidden-step">
+        <p><strong>Step 2:</strong> Exponential: 4 = 16<sup>y</sup></p>
+        <button class="reveal-btn" onclick="document.getElementById('step3').style.display='block'; this.style.display='none';">Show Next Step</button>
+    </div>
+    <div id="step3" class="hidden-step">
+        <p><strong>Step 3:</strong> Solve: 4<sup>1</sup> = (4<sup>2</sup>)<sup>y</sup> &rarr; y = 1/2</p>
+    </div>
+    <div class="nav-wrapper">
+        <button class="nav-btn" onclick="prevSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+</div>
+
+<script>
+    let current = 0;
+    const slides = document.querySelectorAll('.slide-container');
+    function nextSlide() {
+        slides[current].classList.remove('active');
+        current = (current + 1) % slides.length;
+        slides[current].classList.add('active');
+    }
+    function prevSlide() {
+        slides[current].classList.remove('active');
+        current = (current - 1 + slides.length) % slides.length;
+        slides[current].classList.add('active');
+    }
+</script>
+
+</body>
+</html>
