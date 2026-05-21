@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Angle of Elevation Slide</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Load Inter font for sleek typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6;
+    }
+    .math-font {
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+    }
+    .textbook-banner {
+      background-color: #e2e8f0;
+    }
+    .highlight-green {
+      background-color: #90cd24;
+      color: #000;
+    }
+    .highlight-blue {
+      color: #1d4ed8;
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 md:p-8">
+
+  <!-- Main Slide Container -->
+  <div class="w-full max-w-5xl bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden flex flex-col">
+    
+    <!-- Top Textbook-style Header Banner -->
+    <div class="flex flex-row items-stretch border-b border-gray-300 text-sm md:text-base font-bold">
+      <div class="highlight-green px-6 py-3 flex items-center justify-center gap-1">
+        <span>Example 1</span>
+      </div>
+      <div class="bg-gray-100 flex-1 px-6 py-3 flex items-center text-gray-800">
+        Angle of Elevation
+      </div>
+      <!-- Decorative textbook page icons -->
+      <div class="bg-gray-100 px-4 py-3 flex items-center gap-1 text-gray-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-current text-purple-600" viewBox="0 0 24 24">
+          <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-current text-green-600" viewBox="0 0 24 24">
+          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Slide Content Area -->
+    <div class="p-6 md:p-10 flex-1 flex flex-col justify-between space-y-8">
+      
+      <!-- Top Section: Word Problem and Interactive Sketch -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left Side: Problem Statement -->
+        <div class="lg:col-span-6 space-y-6">
+          <p class="text-lg md:text-xl text-gray-800 leading-relaxed font-normal">
+            <span class="highlight-blue tracking-wider text-blue-700">VACATION</span> Leah wants to see a castle in an amusement park. She sights the top of the castle at an angle of elevation of <span class="font-semibold">38°</span>. She knows that the castle is <span class="font-semibold">190 feet</span> tall. If Leah is <span class="font-semibold">5.5 feet</span> tall, how far is she from the castle to the nearest foot?
+          </p>
+          
+          <div class="pt-2 border-t border-dashed border-gray-200">
+            <h3 class="text-base md:text-lg font-semibold text-gray-500 mb-1">Step 1:</h3>
+            <p class="text-lg text-gray-700 font-medium">Make a sketch to represent the situation.</p>
+          </div>
+        </div>
+
+        <!-- Right Side: Graphic/Sketch Rendering -->
+        <div class="lg:col-span-6">
+          <div class="relative bg-gradient-to-b from-sky-100 via-sky-50 to-emerald-50 rounded-lg p-3 shadow-inner border border-sky-100 overflow-hidden">
+            
+            <!-- SVG Amusement Park Sketch Design -->
+            <svg viewBox="0 0 500 230" class="w-full h-auto drop-shadow-md" xmlns="http://www.w3.org/2000/svg">
+              <!-- Sky Elements -->
+              <path d="M 30 40 Q 45 30 60 40 Q 75 30 90 40" fill="none" stroke="#bae6fd" stroke-width="2" />
+              <path d="M 400 30 Q 415 20 430 30 Q 445 20 460 30" fill="none" stroke="#bae6fd" stroke-width="2" />
+
+              <!-- Distant Hills/Background -->
+              <path d="M -10 180 Q 120 150 250 180 T 510 180 L 510 230 L -10 230 Z" fill="#86efac" opacity="0.6"/>
+              
+              <!-- Ferris Wheel Background -->
+              <!-- Wheel structure -->
+              <circle cx="230" cy="120" r="40" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="2,2" />
+              <circle cx="230" cy="120" r="38" fill="none" stroke="#cbd5e1" stroke-width="1.5" />
+              <!-- Spokes -->
+              <line x1="230" y1="80" x2="230" y2="160" stroke="#cbd5e1" stroke-width="1" />
+              <line x1="190" y1="120" x2="270" y2="120" stroke="#cbd5e1" stroke-width="1" />
+              <line x1="201.7" y1="91.7" x2="258.3" y2="148.3" stroke="#cbd5e1" stroke-width="1" />
+              <line x1="201.7" y1="148.3" x2="258.3" y2="91.7" stroke="#cbd5e1" stroke-width="1" />
+              <!-- Support Legs -->
+              <line x1="230" y1="120" x2="215" y2="180" stroke="#64748b" stroke-width="2.5" />
+              <line x1="230" y1="120" x2="245" y2="180" stroke="#64748b" stroke-width="2.5" />
+              <!-- Center Hub -->
+              <circle cx="230" cy="120" r="4" fill="#475569" />
+
+              <!-- Tiny park decorative houses & carousel -->
+              <rect x="155" y="155" width="20" height="25" fill="#f87171" rx="1"/>
+              <polygon points="150,155 165,142 180,155" fill="#b91c1c" />
+              
+              <rect x="180" y="160" width="15" height="20" fill="#fbbf24" rx="1"/>
+              <polygon points="177,160 187.5,150 198,160" fill="#d97706" />
+
+              <path d="M 110 170 L 140 170 L 135 180 L 115 180 Z" fill="#60a5fa" />
+              <polygon points="110,170 125,158 140,170" fill="#2563eb" />
+
+              <!-- Green Grass Foreground Base -->
+              <rect x="0" y="180" width="510" height="50" fill="#22c55e" />
+              <path d="M 0 180 Q 250 170 500 180 L 500 230 L 0 230 Z" fill="#15803d" />
+              <!-- Pathway strip -->
+              <path d="M 0 215 Q 260 200 500 212 L 500 225 Q 260 212 0 225 Z" fill="#e2e8f0" opacity="0.8" />
+
+              <!-- Castle Rendering -->
+              <!-- Left Tower turret -->
+              <rect x="315" y="125" width="25" height="55" fill="#cbd5e1" stroke="#94a3b8" stroke-width="0.7" />
+              <polygon points="310,125 327.5,95 345,125" fill="#78716c" />
+              <!-- Main Central Wall -->
+              <rect x="340" y="135" width="50" height="45" fill="#94a3b8" stroke="#475569" stroke-width="0.7" />
+              <!-- Main Castle Tower (Tower B-C) -->
+              <rect x="390" y="95" width="30" height="85" fill="#cbd5e1" stroke="#64748b" stroke-width="1" />
+              <!-- Tower Cap / Roof -->
+              <polygon points="385,95 405,65 425,95" fill="#78716c" />
+              <!-- Additional Far-Right Castle element -->
+              <rect x="445" y="115" width="22" height="65" fill="#94a3b8" stroke="#475569" stroke-width="0.7" />
+              <polygon points="441,115 456,100 471,115" fill="#475569" />
+
+              <!-- Triangle of trigonometry: Leah's view A to Castle Tower B-C -->
+              <!-- Horizontal leg (AC) -->
+              <line x1="280" y1="172.5" x2="390" y2="172.5" stroke="#ec4899" stroke-width="2.5" stroke-dasharray="1,1" />
+              <!-- Vertical leg (BC) - Only the portion from Leah's eye level to top -->
+              <line x1="390" y1="172.5" x2="390" y2="95" stroke="#ec4899" stroke-width="2.5" stroke-dasharray="1,1" />
+              <!-- Hypotenuse (AB) -->
+              <line x1="280" y1="172.5" x2="390" y2="95" stroke="#ec4899" stroke-width="3" />
+
+              <!-- Vertex Label: A (Leah's point of observation) -->
+              <circle cx="280" cy="172.5" r="3" fill="#ec4899" />
+              <text x="260" y="172" font-family="'Times New Roman', serif" font-style="italic" font-weight="bold" font-size="16" fill="#1e293b">A</text>
+
+              <!-- Vertex Label: B (Top of the castle) -->
+              <circle cx="390" cy="95" r="3.5" fill="#ec4899" />
+              <text x="395" y="93" font-family="'Times New Roman', serif" font-style="italic" font-weight="bold" font-size="16" fill="#1e293b">B</text>
+
+              <!-- Vertex Label: C (Intersection level at tower) -->
+              <circle cx="390" cy="172.5" r="3" fill="#ec4899" />
+              <text x="395" y="188" font-family="'Times New Roman', serif" font-style="italic" font-weight="bold" font-size="16" fill="#1e293b">C</text>
+
+              <!-- Right-angle symbol at C -->
+              <path d="M 382 172.5 L 382 165 L 390 165" fill="none" stroke="#ec4899" stroke-width="1.5" />
+
+              <!-- Angle of elevation marker and label "38°" -->
+              <path d="M 298 172.5 A 18 18 0 0 0 293 162.5" fill="none" stroke="#1e293b" stroke-width="1.5" />
+              <text x="303" y="167" font-family="sans-serif" font-weight="bold" font-size="13" fill="#1e293b">38°</text>
+
+              <!-- Dimension label "5.5 ft" (Leah's height / elevation level) -->
+              <!-- Indicator lines under Leah's sight level down to ground -->
+              <line x1="280" y1="172.5" x2="280" y2="192" stroke="#1e293b" stroke-width="1" />
+              <text x="245" y="187" font-family="sans-serif" font-weight="bold" font-size="12" fill="#1e293b">5.5 ft</text>
+
+              <!-- Dimension label: "x" (representing the distance AC) -->
+              <text x="330" y="165" font-family="'Times New Roman', serif" font-style="italic" font-weight="bold" font-size="15" fill="#1e293b">x</text>
+
+              <!-- Dimension marker: Whole castle height (190 ft) -->
+              <!-- Side vertical arrows spanning 190 ft -->
+              <line x1="422" y1="95" x2="422" y2="180" stroke="#000" stroke-width="1" />
+              <!-- Top T bar -->
+              <line x1="417" y1="95" x2="427" y2="95" stroke="#000" stroke-width="1.5" />
+              <!-- Bottom T bar -->
+              <line x1="417" y1="180" x2="427" y2="180" stroke="#000" stroke-width="1.5" />
+              <!-- Height text -->
+              <rect x="408" y="128" width="36" height="15" fill="#bae6fd" rx="2"/>
+              <text x="410" y="140" font-family="sans-serif" font-weight="bold" font-size="10.5" fill="#000">190 ft</text>
+            </svg>
+            
+          </div>
+        </div>
+        
+      </div>
+
+      <!-- Bottom Section: Step-by-Step Mathematical Explanation -->
+      <div class="border-t border-gray-200 pt-8 space-y-6">
+        
+        <!-- Context Clue / Geometry Reasoning sentence -->
+        <p class="text-gray-800 text-lg">
+          Because Leah is <span class="font-semibold">5.5 feet</span> tall, 
+          <span class="math-font text-xl font-medium">BC = 190 &minus; 5.5</span> or 
+          <span class="math-font text-xl font-bold text-pink-600">184.5 feet</span>. Let 
+          <span class="math-font text-xl font-bold">x</span> represent the distance from Leah to the castle, 
+          <span class="math-font text-xl font-bold">AC</span>.
+        </p>
+
+        <!-- Trignometric Formulation Layout -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-6 rounded-lg border border-slate-200">
+          
+          <!-- Column A: Hard Mathematics Steps -->
+          <div class="space-y-6 flex flex-col justify-center">
+            
+            <!-- Step 1 Equation -->
+            <div class="flex items-center space-x-4">
+              <div class="w-24 text-right text-gray-500 font-mono text-xs uppercase tracking-wider">Formula:</div>
+              <div class="flex items-center text-xl md:text-2xl font-semibold math-font text-gray-800">
+                <span>tan A = </span>
+                <div class="flex flex-col items-center ml-2 border-l border-transparent px-1">
+                  <span class="border-b border-gray-800 pb-0.5 text-center px-2">BC</span>
+                  <span class="pt-0.5 text-center px-2">AC</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2 Substitution -->
+            <div class="flex items-center space-x-4">
+              <div class="w-24 text-right text-gray-500 font-mono text-xs uppercase tracking-wider">Substitute:</div>
+              <div class="flex items-center text-xl md:text-2xl font-semibold math-font text-gray-800">
+                <span>tan 38° = </span>
+                <div class="flex flex-col items-center ml-2">
+                  <span class="border-b border-gray-800 pb-0.5 text-center px-2 text-pink-600">184.5</span>
+                  <span class="pt-0.5 text-center px-2">x</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3 Solve for x -->
+            <div class="flex items-center space-x-4">
+              <div class="w-24 text-right text-gray-500 font-mono text-xs uppercase tracking-wider">Rearrange:</div>
+              <div class="flex items-center text-xl md:text-2xl font-semibold math-font text-gray-800">
+                <span class="mr-2">x = </span>
+                <div class="flex flex-col items-center">
+                  <span class="border-b border-gray-800 pb-0.5 text-center px-2">184.5</span>
+                  <span class="pt-0.5 text-center px-2">tan 38°</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 4 Approximate -->
+            <div class="flex items-center space-x-4">
+              <div class="w-24 text-right text-gray-500 font-mono text-xs uppercase tracking-wider">Calculate:</div>
+              <div class="flex items-center text-xl md:text-2xl font-bold math-font text-blue-700">
+                <span>x &asymp; 236.1</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Column B: Concept explanations & labels matching the textbook notes -->
+          <div class="border-l-0 md:border-l-2 border-slate-200 pl-0 md:pl-8 flex flex-col justify-center space-y-5 text-gray-600">
+            
+            <div class="flex items-start space-x-2">
+              <span class="text-pink-600 font-bold mr-1">&rarr;</span>
+              <div>
+                <span class="font-bold text-gray-700">Trig Ratio:</span> 
+                <span class="math-font text-lg text-gray-800">tan = </span>
+                <span class="inline-block align-middle ml-1 text-center text-xs border-l pl-2">
+                  <span class="block border-b border-gray-400 pb-0.5">opposite</span>
+                  <span class="block pt-0.5">adjacent</span>
+                </span>
+              </div>
+            </div>
+
+            <div class="flex items-start space-x-2">
+              <span class="text-pink-600 font-bold mr-1">&rarr;</span>
+              <div>
+                <span class="font-bold text-gray-700">Substitute knowns:</span>
+                <p class="math-font text-gray-800 mt-1 text-base">
+                  m&ang;A = 38, BC = 184.5, AC = x
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start space-x-2">
+              <span class="text-pink-600 font-bold mr-1">&rarr;</span>
+              <div>
+                <span class="font-bold text-gray-700">Solve for x:</span>
+                <p class="text-gray-600 text-sm mt-1">Cross-multiply and isolate the unknown variable.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start space-x-2">
+              <span class="text-pink-600 font-bold mr-1">&rarr;</span>
+              <div>
+                <span class="font-bold text-gray-700">Use a calculator:</span>
+                <p class="text-gray-600 text-sm mt-1">Ensure your scientific or graphing calculator is set to <span class="bg-amber-100 text-amber-800 font-semibold px-1 rounded">Degree</span> mode.</p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Final Answer Callout -->
+      <div class="bg-emerald-50 border-l-4 border-emerald-500 p-5 rounded-r-lg mt-6">
+        <p class="text-xl md:text-2xl font-semibold text-emerald-900 leading-normal">
+          Leah is about <span class="underline decoration-emerald-500 decoration-3 underline-offset-4 text-emerald-600 font-extrabold">236 feet</span> from the castle.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>
