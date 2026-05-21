@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angle of Depression - Math Slide</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .math-font {
+            font-family: 'Crimson Pro', Georgia, serif;
+        }
+        
+        /* Keyframe rotor animation for a premium touch */
+        @keyframes rotor-spin {
+            from { transform: rotateX(75deg) rotateY(0deg) rotate(0deg); }
+            to { transform: rotateX(75deg) rotateY(0deg) rotate(360deg); }
+        }
+        .main-rotor {
+            transform-origin: 125px 56px;
+            animation: rotor-spin 0.4s linear infinite;
+        }
+        @keyframes tail-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .tail-rotor {
+            transform-origin: 47px 70px;
+            animation: tail-spin 0.2s linear infinite;
+        }
+
+        /* Interactive highlight transitions */
+        .interactive-highlight {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
+
+    <!-- Slide Container -->
+    <div class="bg-white w-full max-w-5xl rounded-lg shadow-2xl border border-slate-200 overflow-hidden flex flex-col justify-between">
+        
+        <!-- Header Banner Area -->
+        <div class="w-full">
+            <div class="flex items-center bg-[#b4d49d] px-6 py-3 border-b border-[#a3c38c]">
+                <!-- Example 2 Badge -->
+                <div class="bg-[#2E5A27] text-white font-bold px-4 py-1.5 rounded-full text-sm mr-4 tracking-wide shadow-sm">
+                    Example 2
+                </div>
+                <!-- Title -->
+                <h1 class="text-[#203D1B] font-bold text-lg md:text-xl tracking-tight">
+                    Angle of Depression
+                </h1>
+            </div>
+        </div>
+
+        <!-- Main Slide Body -->
+        <div class="p-6 md:p-8 flex-grow">
+            <!-- Problem Statement Section -->
+            <div class="mb-6">
+                <p class="text-slate-800 leading-relaxed text-[15px] md:text-[16px]">
+                    <span class="text-[#0D5B8C] font-extrabold uppercase tracking-wide mr-1 text-[14px]">EMERGENCY</span> 
+                    A search and rescue team is airlifting people from the scene of a boating accident when they observe another person in need of help. If the angle of depression to this other person is 42° and the helicopter is 18 feet above the water, what is the horizontal distance from the rescuers to this person to the nearest foot?
+                </p>
+            </div>
+
+            <!-- Layout Split Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Left Column: Math Explanation (7 cols) -->
+                <div class="lg:col-span-7 space-y-5">
+                    
+                    <div class="border-l-4 border-[#8EB173] pl-3 py-1 bg-slate-50 rounded-r">
+                        <p class="text-sm font-semibold text-slate-500 uppercase tracking-wider">Step-by-step Solution</p>
+                        <p class="text-slate-700 italic text-sm mt-0.5">Make a sketch of the situation.</p>
+                    </div>
+
+                    <!-- Intro Geometric Logic -->
+                    <div class="space-y-3 text-slate-800 text-[14px] md:text-[15px]">
+                        <p class="leading-relaxed">
+                            Because <span class="math-font font-semibold text-[16px] italic">AB</span> and <span class="math-font font-semibold text-[16px] italic">DC</span> are parallel, 
+                            <span class="math-font italic text-[16px]">m∠BAC = m∠ACD</span> by the 
+                            <span class="font-semibold text-slate-700">Alternate Interior Angles Theorem</span>.
+                        </p>
+                        <p class="leading-relaxed">
+                            Let <span class="math-font italic text-[16px] font-semibold">x</span> represent the horizontal distance from the rescuers to the person 
+                            <span class="math-font italic text-[16px] font-semibold text-[#0D5B8C]">DC</span>.
+                        </p>
+                    </div>
+
+                    <!-- Steps Panel (Interactive Elements) -->
+                    <div class="bg-slate-50 p-4 md:p-5 rounded-xl border border-slate-200/80 space-y-4">
+                        <p class="text-[11px] text-slate-400 uppercase font-bold tracking-widest mb-1">
+                            Hover over any step below to highlight on the diagram:
+                        </p>
+
+                        <!-- Step 1 -->
+                        <div id="step-1" class="group flex items-center justify-between p-2 rounded-lg hover:bg-emerald-50 transition cursor-pointer border border-transparent hover:border-emerald-200">
+                            <!-- Left: Math Formula -->
+                            <div class="w-1/2 flex justify-end pr-6 border-r border-slate-200">
+                                <div class="math-font text-lg md:text-xl flex items-center gap-1.5">
+                                    <span>tan C =</span>
+                                    <div class="inline-flex flex-col items-center justify-center text-sm md:text-base">
+                                        <span class="border-b border-slate-800 px-1 font-bold">AD</span>
+                                        <span class="font-bold">DC</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Right: Explanation/Reasoning -->
+                            <div class="w-1/2 pl-6 flex items-center gap-1.5">
+                                <span class="text-[#517693] text-sm group-hover:text-emerald-700 font-medium">tan =</span>
+                                <div class="inline-flex flex-col items-center justify-center text-[10px] md:text-[11px] text-[#517693] group-hover:text-emerald-700 font-bold">
+                                    <span class="border-b border-slate-400">opposite</span>
+                                    <span>adjacent</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div id="step-2" class="group flex items-center justify-between p-2 rounded-lg hover:bg-emerald-50 transition cursor-pointer border border-transparent hover:border-emerald-200">
+                            <!-- Left: Math Formula -->
+                            <div class="w-1/2 flex justify-end pr-6 border-r border-slate-200">
+                                <div class="math-font text-lg md:text-xl flex items-center gap-1.5">
+                                    <span>tan 42° =</span>
+                                    <div class="inline-flex flex-col items-center justify-center text-sm md:text-base">
+                                        <span class="border-b border-slate-800 px-1 font-bold">18</span>
+                                        <span class="italic font-bold">x</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Right: Explanation/Reasoning -->
+                            <div class="w-1/2 pl-6 text-[#517693] text-sm group-hover:text-emerald-700 font-medium">
+                                <span class="math-font italic font-semibold text-base">C</span> = 42, 
+                                <span class="math-font italic font-semibold text-base">AD</span> = 18, and 
+                                <span class="math-font italic font-semibold text-base">DC = x</span>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div id="step-3" class="group flex items-center justify-between p-2 rounded-lg hover:bg-emerald-50 transition cursor-pointer border border-transparent hover:border-emerald-200">
+                            <!-- Left: Math Formula -->
+                            <div class="w-1/2 flex justify-end pr-6 border-r border-slate-200">
+                                <div class="math-font text-lg md:text-xl font-semibold">
+                                    <span class="italic">x</span> tan 42° = 18
+                                </div>
+                            </div>
+                            <!-- Right: Explanation/Reasoning -->
+                            <div class="w-1/2 pl-6 text-[#517693] text-sm group-hover:text-emerald-700 font-medium">
+                                Multiply each side by <span class="math-font italic font-semibold text-base">x</span>.
+                            </div>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div id="step-4" class="group flex items-center justify-between p-2 rounded-lg hover:bg-emerald-50 transition cursor-pointer border border-transparent hover:border-emerald-200">
+                            <!-- Left: Math Formula -->
+                            <div class="w-1/2 flex justify-end pr-6 border-r border-slate-200">
+                                <div class="math-font text-lg md:text-xl flex items-center gap-1.5">
+                                    <span class="italic">x</span> =
+                                    <div class="inline-flex flex-col items-center justify-center text-sm md:text-base">
+                                        <span class="border-b border-slate-800 px-1 font-bold">18</span>
+                                        <span>tan 42°</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Right: Explanation/Reasoning -->
+                            <div class="w-1/2 pl-6 text-[#517693] text-sm group-hover:text-emerald-700 font-medium">
+                                Divide each side by tan 42°.
+                            </div>
+                        </div>
+
+                        <!-- Step 5 -->
+                        <div id="step-5" class="group flex items-center justify-between p-2 rounded-lg hover:bg-emerald-50 transition cursor-pointer border border-transparent hover:border-emerald-200">
+                            <!-- Left: Math Formula -->
+                            <div class="w-1/2 flex justify-end pr-6 border-r border-slate-200">
+                                <div class="math-font text-lg md:text-xl font-semibold">
+                                    <span class="italic">x</span> ≈ 20.0
+                                </div>
+                            </div>
+                            <!-- Right: Explanation/Reasoning -->
+                            <div class="w-1/2 pl-6 text-[#517693] text-sm group-hover:text-emerald-700 font-medium">
+                                Use a calculator.
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Right Column: Interactive Diagram (5 cols) -->
+                <div class="lg:col-span-5 flex flex-col items-center">
+                    <div class="w-full bg-slate-50 p-4 rounded-xl border border-slate-200/80 shadow-inner">
+                        
+                        <!-- SVG Visual Construction -->
+                        <svg viewBox="0 0 450 350" class="w-full h-auto bg-gradient-to-b from-sky-100 to-sky-200 rounded-lg overflow-hidden border border-slate-200">
+                            
+                            <!-- Sky subtle clouds -->
+                            <path d="M 50,40 Q 65,30 80,40 Q 95,30 110,40 L 110,50 L 50,50 Z" fill="#ffffff" opacity="0.6"/>
+                            <path d="M 320,60 Q 335,50 350,60 Q 365,50 380,60 L 380,70 L 320,70 Z" fill="#ffffff" opacity="0.6"/>
+
+                            <!-- Water Backdrop -->
+                            <rect x="0" y="270" width="450" height="80" fill="#3a708c" />
+                            <rect x="0" y="270" width="450" height="4" fill="#2d5b75" />
+
+                            <!-- Parallel Line indicators (Arrows) -->
+                            <!-- Arrow near B -->
+                            <path d="M 335,110 L 345,110 L 340,106 M 345,110 L 340,114" fill="none" stroke="#DC2626" stroke-width="2" />
+                            <!-- Arrow near C on water -->
+                            <path d="M 335,270 L 345,270 L 340,266 M 345,270 L 340,274" fill="none" stroke="#DC2626" stroke-width="2" />
+
+                            <!-- Geometric Overlay Lines -->
+                            <!-- Parallel line top (AB) -->
+                            <line id="line-ab" x1="125" y1="110" x2="350" y2="110" stroke="#DC2626" stroke-width="2" stroke-dasharray="5,5" class="interactive-highlight" />
+                            
+                            <!-- Altitude line (AD) -->
+                            <line id="line-ad" x1="125" y1="110" x2="125" y2="270" stroke="#DC2626" stroke-width="2" class="interactive-highlight" />
+
+                            <!-- Diagonal Line of sight (AC) -->
+                            <line id="line-ac" x1="125" y1="110" x2="355" y2="270" stroke="#E11D48" stroke-width="2.5" class="interactive-highlight" />
+
+                            <!-- Water line segment (DC) -->
+                            <line id="line-dc" x1="125" y1="270" x2="355" y2="270" stroke="#047857" stroke-width="3.5" class="interactive-highlight" />
+
+                            <!-- Right Angle Indicator at D -->
+                            <rect id="angle-d" x="125" y="255" width="15" height="15" fill="none" stroke="#475569" stroke-width="1.5" class="interactive-highlight" />
+
+                            <!-- Angle Arcs -->
+                            <!-- Angle of depression BAC -->
+                            <path id="arc-bac" d="M 175,110 A 50,50 0 0,1 162,136" fill="none" stroke="#E11D48" stroke-width="2" class="interactive-highlight" />
+                            <!-- Alternate Interior Angle ACD -->
+                            <path id="arc-acd" d="M 315,270 A 40,40 0 0,0 327,251" fill="none" stroke="#047857" stroke-width="2" class="interactive-highlight" />
+
+                            <!-- Labels & Text Elements -->
+                            <!-- Rescuer point A -->
+                            <text x="105" y="115" font-family="'Crimson Pro', serif" font-style="italic" font-weight="bold" font-size="19" fill="#0F172A">A</text>
+                            
+                            <!-- Dashed Line target point B -->
+                            <text x="325" y="100" font-family="'Crimson Pro', serif" font-style="italic" font-weight="bold" font-size="19" fill="#0F172A">B</text>
+                            
+                            <!-- Water intersection point D -->
+                            <text x="105" y="285" font-family="'Crimson Pro', serif" font-style="italic" font-weight="bold" font-size="19" fill="#0F172A">D</text>
+                            
+                            <!-- Person point C -->
+                            <text x="355" y="295" font-family="'Crimson Pro', serif" font-style="italic" font-weight="bold" font-size="19" fill="#0F172A">C</text>
+
+                            <!-- Helicopter (Beautiful Vector Drawing) -->
+                            <g transform="translate(0, 0)">
+                                <!-- Tail Rotor -->
+                                <circle cx="47" cy="70" r="1.5" fill="#1e293b" />
+                                <line x1="47" y1="70" x2="47" y2="90" stroke="#334155" stroke-width="1.5" class="tail-rotor" />
+                                <line x1="47" y1="70" x2="47" y2="50" stroke="#334155" stroke-width="1.5" class="tail-rotor" />
+                                
+                                <!-- Tail Boom -->
+                                <path d="M 47,70 C 70,68 95,65 110,65 L 110,75 C 95,74 70,72 47,70 Z" fill="#FBBF24" stroke="#D97706" stroke-width="1" />
+                                
+                                <!-- Main Body Cabin -->
+                                <path d="M 100,75 C 100,53 145,52 155,70 C 160,80 150,95 130,95 C 110,95 100,88 100,75 Z" fill="#FBBF24" stroke="#D97706" stroke-width="1.5" />
+                                
+                                <!-- Cockpit Window -->
+                                <path d="M 138,58 C 145,58 152,66 153,74 L 140,74 Z" fill="#1e293b" />
+                                
+                                <!-- Landing skids -->
+                                <line x1="105" y1="95" x2="110" y2="103" stroke="#475569" stroke-width="2" />
+                                <line x1="135" y1="95" x2="130" y2="103" stroke="#475569" stroke-width="2" />
+                                <line x1="98" y1="103" x2="142" y2="103" stroke="#1e293b" stroke-width="3" stroke-linecap="round" />
+
+                                <!-- Main Rotor Shaft & Rotors -->
+                                <line x1="125" y1="58" x2="125" y2="51" stroke="#334155" stroke-width="3.5" />
+                                <g class="main-rotor">
+                                    <ellipse cx="125" cy="56" rx="60" ry="4" fill="#334155" opacity="0.8" />
+                                </g>
+                            </g>
+
+                            <!-- Person Airlift / Rescue Climber -->
+                            <g transform="translate(125, 170)">
+                                <!-- Cable -->
+                                <line x1="0" y1="-67" x2="0" y2="60" stroke="#475569" stroke-width="1" />
+                                <!-- Little rescue human figure -->
+                                <circle cx="0" cy="0" r="5" fill="#ea580c" />
+                                <line x1="0" y1="5" x2="0" y2="20" stroke="#ea580c" stroke-width="2.5" />
+                                <line x1="-5" y1="9" x2="5" y2="9" stroke="#ea580c" stroke-width="2" />
+                                <line x1="0" y1="20" x2="-4" y2="32" stroke="#ea580c" stroke-width="2" />
+                                <line x1="0" y1="20" x2="4" y2="32" stroke="#ea580c" stroke-width="2" />
+                            </g>
+
+                            <!-- Dimension Labels in Diagram -->
+                            <!-- "18 ft" altitude -->
+                            <rect id="lbl-18ft" x="78" y="170" width="40" height="24" rx="4" fill="white" fill-opacity="0.9" class="interactive-highlight" />
+                            <text id="txt-18ft" x="84" y="187" font-family="'Inter', sans-serif" font-weight="600" font-size="13" fill="#0F172A" class="interactive-highlight">18 ft</text>
+
+                            <!-- "42° angle of depression" -->
+                            <rect id="lbl-dep" x="180" y="125" width="160" height="24" rx="4" fill="white" fill-opacity="0.9" class="interactive-highlight" />
+                            <text id="txt-dep" x="186" y="142" font-family="'Inter', sans-serif" font-weight="600" font-size="12" fill="#E11D48" class="interactive-highlight">42° angle of depression</text>
+
+                            <!-- "42°" alternate interior angle -->
+                            <rect id="lbl-elev" x="295" y="235" width="40" height="24" rx="4" fill="white" fill-opacity="0.9" class="interactive-highlight" />
+                            <text id="txt-elev" x="303" y="252" font-family="'Inter', sans-serif" font-weight="600" font-size="13" fill="#047857" class="interactive-highlight">42°</text>
+
+                            <!-- "x" water distance -->
+                            <rect id="lbl-x" x="230" y="278" width="22" height="22" rx="4" fill="white" fill-opacity="0.9" class="interactive-highlight" />
+                            <text id="txt-x" x="237" y="294" font-family="'Crimson Pro', serif" font-style="italic" font-weight="bold" font-size="16" fill="#047857" class="interactive-highlight">x</text>
+
+                            <!-- Person in Water representation -->
+                            <circle cx="355" cy="270" r="4" fill="#ef4444" />
+                            <!-- Tiny boat sketch -->
+                            <path d="M 345,270 L 365,270 L 360,277 L 350,277 Z" fill="#b91c1c" />
+
+                        </svg>
+
+                        <!-- Diagram Note Footer -->
+                        <div class="mt-2 text-right">
+                            <span class="text-[11px] text-slate-400 italic">Note: Art not drawn to scale.</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Slide Footer with Final Conclusion -->
+        <div class="bg-slate-50 border-t border-slate-200 px-6 py-5 rounded-b-lg flex flex-col md:flex-row justify-between items-center gap-3">
+            <p class="text-slate-800 font-semibold text-center md:text-left text-[15px] md:text-[16px] leading-relaxed">
+                The horizontal distance from the rescuers to the person is <span class="text-[#0D5B8C] font-extrabold text-lg">20.0 feet</span>.
+            </p>
+            <div class="text-xs text-slate-400 font-medium">
+                Topic: Right Triangle Trigonometry
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Interactive Highlight Script -->
+    <script>
+        // DOM Elements
+        const steps = {
+            1: document.getElementById('step-1'),
+            2: document.getElementById('step-2'),
+            3: document.getElementById('step-3'),
+            4: document.getElementById('step-4'),
+            5: document.getElementById('step-5')
+        };
+
+        const diagramElements = {
+            'line-ad': document.getElementById('line-ad'),
+            'line-dc': document.getElementById('line-dc'),
+            'line-ac': document.getElementById('line-ac'),
+            'line-ab': document.getElementById('line-ab'),
+            'arc-bac': document.getElementById('arc-bac'),
+            'arc-acd': document.getElementById('arc-acd'),
+            'lbl-18ft': document.getElementById('lbl-18ft'),
+            'txt-18ft': document.getElementById('txt-18ft'),
+            'lbl-dep': document.getElementById('lbl-dep'),
+            'txt-dep': document.getElementById('txt-dep'),
+            'lbl-elev': document.getElementById('lbl-elev'),
+            'txt-elev': document.getElementById('txt-elev'),
+            'lbl-x': document.getElementById('lbl-x'),
+            'txt-x': document.getElementById('txt-x'),
+            'angle-d': document.getElementById('angle-d')
+        };
+
+        // Reset all custom styling overrides
+        function resetHighlights() {
+            Object.values(diagramElements).forEach(el => {
+                if (el) {
+                    el.style.stroke = '';
+                    el.style.strokeWidth = '';
+                    el.style.fill = '';
+                    el.style.opacity = '';
+                }
+            });
+        }
+
+        // Apply highlights based on active step
+        function highlightStep(stepNum) {
+            resetHighlights();
+            
+            switch(stepNum) {
+                case 1:
+                    // Highlight AD and DC segments to show tangent components
+                    diagramElements['line-ad'].style.stroke = '#10B981';
+                    diagramElements['line-ad'].style.strokeWidth = '4';
+                    diagramElements['line-dc'].style.stroke = '#10B981';
+                    diagramElements['line-dc'].style.strokeWidth = '5';
+                    diagramElements['angle-d'].style.stroke = '#10B981';
+                    diagramElements['angle-d'].style.strokeWidth = '2.5';
+                    break;
+                case 2:
+                    // Highlight the values: Angle C (42°), altitude AD (18ft), and base DC (x)
+                    diagramElements['arc-acd'].style.stroke = '#10B981';
+                    diagramElements['arc-acd'].style.strokeWidth = '4';
+                    diagramElements['lbl-elev'].style.fill = '#D1FAE5';
+                    diagramElements['txt-elev'].style.fill = '#065F46';
+                    
+                    diagramElements['line-ad'].style.stroke = '#10B981';
+                    diagramElements['line-ad'].style.strokeWidth = '4';
+                    diagramElements['lbl-18ft'].style.fill = '#D1FAE5';
+                    diagramElements['txt-18ft'].style.fill = '#065F46';
+
+                    diagramElements['line-dc'].style.stroke = '#10B981';
+                    diagramElements['line-dc'].style.strokeWidth = '5';
+                    diagramElements['lbl-x'].style.fill = '#D1FAE5';
+                    diagramElements['txt-x'].style.fill = '#065F46';
+                    break;
+                case 3:
+                case 4:
+                case 5:
+                    // Emphasize the target variable 'x' on the base line
+                    diagramElements['line-dc'].style.stroke = '#10B981';
+                    diagramElements['line-dc'].style.strokeWidth = '5';
+                    diagramElements['lbl-x'].style.fill = '#D1FAE5';
+                    diagramElements['txt-x'].style.fill = '#065F46';
+                    break;
+            }
+        }
+
+        // Attach Event Listeners to Step elements
+        Object.keys(steps).forEach(stepNum => {
+            const num = parseInt(stepNum);
+            steps[num].addEventListener('mouseenter', () => highlightStep(num));
+            steps[num].addEventListener('mouseleave', resetHighlights);
+        });
+    </script>
+</body>
+</html>
