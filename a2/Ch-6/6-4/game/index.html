@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Logarithmic Galaxy</title>
+    <style>
+        body {
+            margin: 0; height: 100vh; overflow: hidden;
+            background: #05070a;
+            display: flex; flex-direction: column; align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        #score-board { margin-top: 20px; font-size: 1.5em; color: #ffd700; font-weight: bold; }
+
+        #starfield { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .star { fill: white; animation: twinkle 4s infinite ease-in-out; }
+        @keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.7; } }
+
+        .ufo { position: absolute; top: 10%; left: -50px; font-size: 30px; animation: flyUfo 25s linear infinite; }
+        .ship { position: absolute; bottom: 15%; right: -50px; font-size: 30px; animation: flyShip 15s linear infinite; }
+        .planet { position: absolute; top: 20%; right: 10%; width: 50px; height: 50px; background: radial-gradient(circle at 30% 30%, #4facfe, #00f2fe); border-radius: 50%; }
+        
+        @keyframes flyUfo { 0% { transform: translateX(0); } 100% { transform: translateX(110vw); } }
+        @keyframes flyShip { 0% { transform: translateX(0); } 100% { transform: translateX(-110vw); } }
+
+        .card {
+            background: rgba(30, 42, 62, 0.7);
+            padding: 40px; border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center; color: white; width: 90%; max-width: 500px;
+            margin-top: 20px;
+        }
+        .equation { font-size: 2.5em; margin: 20px 0; color: #ffd700; font-weight: bold; }
+        
+        button {
+            display: block; width: 100%; margin: 12px 0; padding: 20px;
+            background: rgba(255, 255, 255, 0.08); border: 2px solid #4a90e2;
+            color: white; border-radius: 10px; cursor: pointer;
+            font-size: 1.5em; font-weight: 600;
+        }
+        button:hover { background: #4a90e2; }
+        #feedback { font-size: 1.2em; height: 30px; margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div id="score-board">Stellar Points: <span id="score">0</span></div>
+
+<svg id="starfield"></svg>
+<div class="ufo">🛸</div>
+<div class="planet"></div>
+<div class="ship">🚀</div>
+
+<div class="card">
+    <div id="question" class="equation"></div>
+    <div id="options"></div>
+    <div id="feedback"></div>
+</div>
+
+<script>
+    const svg = document.getElementById('starfield');
+    for(let i=0; i<120; i++) {
+        const star = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        star.setAttribute("class", "star");
+        star.setAttribute("cx", Math.random() * 100 + "%");
+        star.setAttribute("cy", Math.random() * 100 + "%");
+        star.setAttribute("r", Math.random() * 1.5);
+        star.style.animationDelay = Math.random() * 4 + "s";
+        svg.appendChild(star);
+    }
+
+    let score = 0;
+    const problems = [
+        { q: "log₂ 8 = 3", options: ["2³ = 8", "3² = 8", "8² = 3", "2⁸ = 3"], a: "2³ = 8" },
+        { q: "5² = 25", options: ["log₅ 2 = 25", "log₂₅ 5 = 2", "log₅ 25 = 2", "log₂ 25 = 5"], a: "log₅ 25 = 2" },
+        { q: "log₄ 16 = 2", options: ["4² = 16", "2⁴ = 16", "16² = 4", "4¹⁶ = 2"], a: "4² = 16" }
+    ];
+
+    function loadQuestion() {
+        const p = problems[Math.floor(Math.random() * problems.length)];
+        document.getElementById('question').innerText = p.q;
+        const optionsDiv = document.getElementById('options');
+        optionsDiv.innerHTML = '';
+        p.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(opt, p.a);
+            optionsDiv.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selected, correct) {
+        const fb = document.getElementById('feedback');
+        if(selected === correct) {
+            score += 10;
+            document.getElementById('score').innerText = score;
+            fb.style.color = "#00ff00";
+            fb.innerText = "Correct!";
+        } else {
+            fb.style.color = "#ff4500";
+            fb.innerText = "Try again.";
+        }
+        setTimeout(loadQuestion, 1200);
+    }
+    loadQuestion();
+</script>
+</body>
+</html>
