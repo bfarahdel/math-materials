@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triangle Area Example</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .triangle-svg {
+            fill: #d1e7f3;
+            stroke: #2c5282;
+            stroke-width: 2;
+        }
+        .hidden-step {
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+        .visible-step {
+            opacity: 1;
+        }
+        .highlight-green {
+            background-color: #90cd24;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 md:p-12 font-sans text-2xl">
+
+    <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
+        
+        <!-- Textbook-style Header -->
+        <div class="flex items-stretch border-b border-gray-300 font-bold text-xl">
+            <div class="highlight-green px-10 py-6 flex items-center">
+                Example 1
+            </div>
+            <div class="bg-gray-100 flex-1 px-10 py-6 flex items-center text-gray-900 text-3xl">
+                Find the Area of a Triangle
+            </div>
+        </div>
+
+        <div class="p-12 md:flex gap-16 items-start">
+            
+            <!-- Content -->
+            <div class="flex-1">
+                <p class="mb-8 leading-relaxed">Find the area of <span class="font-serif italic text-3xl">△ABC</span> to the nearest tenth.</p>
+                <p class="mb-12 leading-relaxed">In <span class="font-serif italic text-3xl">△ABC</span>, <span class="text-red-700 font-bold">a = 8</span>, <span class="text-blue-700 font-bold">b = 9</span>, and <span class="text-green-800 font-bold">C = 104°</span>.</p>
+                
+                <div id="stepsContainer" class="space-y-8 font-mono text-3xl bg-gray-50 p-10 rounded-lg border border-gray-200 min-h-[280px]">
+                    <p id="step1" class="hidden-step">Area = <span class="text-gray-500">1/2</span> <span class="text-red-700">a</span><span class="text-blue-700">b</span> sin <span class="text-green-800">C</span></p>
+                    <p id="step2" class="hidden-step pl-24">= <span class="text-gray-500">1/2</span>(<span class="text-red-700">8</span>)(<span class="text-blue-700">9</span>) sin <span class="text-green-800">104°</span></p>
+                    <p id="step3" class="hidden-step pl-24 font-bold">≈ 34.9 cm²</p>
+                </div>
+            </div>
+
+            <!-- SVG Diagram -->
+            <div class="w-full md:w-2/5 mt-10 md:mt-0 flex flex-col items-center">
+                <svg viewBox="-20 -10 240 160" class="w-full h-auto drop-shadow-md">
+                    <path d="M 20 110 L 160 110 L 180 30 Z" class="triangle-svg" />
+                    <text x="5" y="130" font-size="22" font-weight="bold">A</text>
+                    <text x="175" y="130" font-size="22" font-weight="bold">C</text>
+                    <text x="180" y="25" font-size="22" font-weight="bold">B</text>
+                    
+                    <!-- Color-coded dimensions -->
+                    <text x="70" y="135" font-size="20" class="text-blue-700 font-bold" fill="#1d4ed8">9 cm</text>
+                    <text x="172" y="70" font-size="20" class="text-red-700 font-bold" fill="#b91c1c">8 cm</text>
+                    <text x="120" y="105" font-size="18" class="text-green-800 font-bold" fill="#166534">104°</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Footer with Next Step Button -->
+        <div class="bg-gray-100 p-10 border-t border-gray-200 flex justify-end">
+            <button id="nextStepBtn" class="bg-blue-600 hover:bg-blue-700 text-white text-xl font-bold py-3 px-8 rounded-lg shadow transition-colors">
+                Next Step →
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const steps = ['step1', 'step2', 'step3'];
+        
+        document.getElementById('nextStepBtn').addEventListener('click', function() {
+            if (currentStep < steps.length) {
+                document.getElementById(steps[currentStep]).classList.add('visible-step');
+                currentStep++;
+            }
+            if (currentStep === steps.length) {
+                this.textContent = 'Finished';
+                this.disabled = true;
+                this.classList.add('bg-gray-400', 'cursor-not-allowed');
+                this.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            }
+        });
+    </script>
+</body>
+</html>
