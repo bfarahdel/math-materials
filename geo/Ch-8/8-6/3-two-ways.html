@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solving a Triangle Slide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="bg-gray-100 p-6 md:p-12">
+
+    <div class="max-w-5xl mx-auto bg-white p-12 rounded-lg shadow-lg">
+        <h1 class="text-4xl font-bold mb-8 text-gray-800">Solving a Triangle</h1>
+        
+        <p class="text-xl text-gray-700 mb-10">
+            Using given measures to find all unknown side lengths and angle measures of a triangle is called <span class="bg-yellow-200 px-2 font-bold italic rounded">solving a triangle</span>.
+        </p>
+
+        <div class="border-2 border-gray-300 rounded-lg overflow-hidden">
+            <div class="bg-gray-200 px-6 py-3 font-bold text-gray-800 text-lg">
+                Using the Law of Sines
+            </div>
+            
+            <div class="p-8 space-y-10">
+                <p class="text-xl text-gray-700">
+                    You can use the Law of Sines to solve a triangle if you know either of the following:
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <!-- AAS/ASA Section -->
+                    <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                        <h3 class="font-bold text-blue-800 text-lg mb-2">AAS or ASA</h3>
+                        <p class="text-gray-700">The measures of two angles and any side.</p>
+                    </div>
+                    <svg width="250" height="150" viewBox="0 0 250 150" class="mx-auto border bg-white">
+                        <path d="M 20 130 L 230 130 L 125 30 Z" fill="none" stroke="black" stroke-width="2" />
+                        <text x="115" y="25" font-size="20" font-weight="bold">B</text>
+                        <text x="60" y="80" font-size="20" font-style="italic">c</text>
+                        <text x="190" y="80" font-size="20" font-style="italic">a</text>
+                    </svg>
+
+                    <!-- SSA Section -->
+                    <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
+                        <h3 class="font-bold text-blue-800 text-lg mb-2">SSA</h3>
+                        <p class="text-gray-700">The measures of two sides and the angle opposite one of the sides.</p>
+                    </div>
+                    <!-- Corrected SSA SVG -->
+                    <svg width="250" height="150" viewBox="0 0 250 150" class="mx-auto border bg-white">
+                        <path d="M 20 130 L 230 130 L 235 40 Z" fill="none" stroke="black" stroke-width="2" />
+                        <!-- Side c is above the slanted side -->
+                        <text x="110" y="70" font-size="20" font-style="italic">c</text>
+                        <!-- Side b -->
+                        <text x="240" y="85" font-size="20" font-style="italic">b</text>
+                        <!-- Angle C is outside the vertex -->
+                        <text x="235" y="145" font-size="20" font-weight="bold">C</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

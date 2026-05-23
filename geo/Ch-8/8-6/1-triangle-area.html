@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Area of a Triangle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .triangle-svg {
+            width: 320px;
+            height: 200px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen p-4 md:p-8 flex flex-col items-center text-lg">
+
+    <div class="max-w-5xl w-full bg-white shadow-xl rounded-2xl p-6 md:p-12 border border-gray-200">
+        
+        <!-- Section Title -->
+        <h1 class="text-4xl font-bold text-gray-800 mb-8">Find the Area of a Triangle</h1>
+        
+        <div class="grid md:grid-cols-2 gap-16 items-start">
+            <div class="space-y-6 text-gray-700">
+                <p>In the triangle at the right,</p>
+                <div class="space-y-2">
+                    <p><span class="font-mono bg-gray-100 px-1 rounded text-blue-600 font-bold">sin A = h/c</span></p>
+                    <p><span class="font-mono bg-gray-100 px-1 rounded text-blue-600 font-bold">h = c sin A</span></p>
+                </div>
+                <div class="font-mono text-xl space-y-3 pt-4">
+                    <p>Area = <span class="text-red-600">1/2</span><span class="text-green-600">b</span><span class="text-purple-600">h</span> <span class="text-gray-400 text-sm italic ml-2">Formula for area of a triangle</span></p>
+                    <p>Area = <span class="text-red-600">1/2</span><span class="text-green-600">b</span>(<span class="text-purple-600">c sin A</span>) <span class="text-gray-400 text-sm italic ml-2">Replace h with c sin A</span></p>
+                    <p>Area = <span class="text-red-600">1/2</span><span class="text-green-600">b</span><span class="text-purple-600">c sin A</span> <span class="text-gray-400 text-sm italic ml-2">Simplify</span></p>
+                </div>
+            </div>
+            
+            <!-- Roomier container for the diagram -->
+            <div class="flex justify-center p-8 bg-gray-50 rounded-xl border border-gray-100">
+                <svg class="triangle-svg" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="20,100 180,100 120,20" fill="#bfdbfe" stroke="#1e40af" stroke-width="2"/>
+                    <line x1="120" y1="20" x2="120" y2="100" stroke="#1e40af" stroke-dasharray="4" stroke-width="1"/>
+                    <text x="15" y="115" font-family="sans-serif" font-size="14" font-weight="bold">A</text>
+                    <text x="117" y="15" font-family="sans-serif" font-size="14" font-weight="bold">B</text>
+                    <text x="185" y="115" font-family="sans-serif" font-size="14" font-weight="bold">C</text>
+                    <text x="55" y="60" font-family="sans-serif" font-size="14" italic>c</text>
+                    <text x="160" y="60" font-family="sans-serif" font-size="14" italic>a</text>
+                    <text x="100" y="115" font-family="sans-serif" font-size="14" italic>b</text>
+                    <text x="125" y="60" font-family="sans-serif" font-size="14" italic>h</text>
+                    <rect x="120" y="90" width="10" height="10" fill="none" stroke="#1e40af"/>
+                </svg>
+            </div>
+        </div>
+
+        <p class="mt-8 text-gray-600 italic">You can use this formula or two other formulas to find the area of a triangle if you know the lengths of two sides and the measure of the included angle.</p>
+
+        <!-- Key Concept -->
+        <div class="mt-10 bg-blue-50 border-l-4 border-blue-500 p-8 rounded-r-lg">
+            <h2 class="text-2xl font-bold text-blue-900 mb-4 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Key Concept: Area of a Triangle
+            </h2>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="font-bold text-gray-700">Words</h3>
+                    <p class="text-gray-600">The area of a triangle is one half the product of the lengths of two sides and the sine of their included angle.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-700">Symbols</h3>
+                    <div class="bg-white p-8 rounded shadow-sm border border-blue-100 flex flex-wrap gap-8 justify-center items-center font-mono text-2xl text-blue-900">
+                        <span>Area = 1/2 bc sin A</span>
+                        <span class="text-gray-300">=</span>
+                        <span>1/2 ac sin B</span>
+                        <span class="text-gray-300">=</span>
+                        <span>1/2 ab sin C</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
