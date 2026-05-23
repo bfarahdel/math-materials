@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Law of Sines Slide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: sans-serif; }
+    </style>
+    <!-- Configure MathJax for better stability -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="bg-gray-100 p-6 md:p-12">
+
+    <div class="max-w-5xl mx-auto bg-white p-12 rounded-lg shadow-lg">
+        <!-- Title Section -->
+        <h1 class="text-4xl font-bold mb-8">Use the Law of Sines to Solve Triangles</h1>
+        
+        <p class="text-xl text-gray-700 mb-8 italic">
+            You can use the area formulas to derive the <span class="bg-yellow-200 px-1 font-semibold">Law of Sines</span>, which shows the relationships between side lengths of a triangle and the sines of the angles opposite them.
+        </p>
+
+        <!-- Derivation Steps -->
+        <div class="grid grid-cols-[1fr,auto] gap-x-12 gap-y-8 text-2xl mb-12 items-center font-sans bg-gray-50 p-8 rounded">
+            <div class="text-black">
+                $\text{Area} = \frac{1}{2}\color{teal}{b}\color{purple}{c} \color{black}{\sin} \color{red}{A} = \frac{1}{2}\color{orange}{a}\color{purple}{c} \color{black}{\sin} \color{blue}{B} = \frac{1}{2}\color{orange}{a}\color{teal}{b} \color{black}{\sin} \color{green}{C}$
+            </div>
+            <div class="text-gray-600 text-lg">Set the area formulas equal to each other.</div>
+
+            <div class="text-black">
+                $\color{teal}{b}\color{purple}{c} \color{black}{\sin} \color{red}{A} = \color{orange}{a}\color{purple}{c} \color{black}{\sin} \color{blue}{B} = \color{orange}{a}\color{teal}{b} \color{black}{\sin} \color{green}{C}$
+            </div>
+            <div class="text-gray-600 text-lg">Multiply each expression by 2.</div>
+
+            <div class="text-black">
+                $\frac{\color{teal}{b}\color{purple}{c} \color{black}{\sin} \color{red}{A}}{\color{orange}{a}\color{teal}{b}\color{purple}{c}} = \frac{\color{orange}{a}\color{purple}{c} \color{black}{\sin} \color{blue}{B}}{\color{orange}{a}\color{teal}{b}\color{purple}{c}} = \frac{\color{orange}{a}\color{teal}{b} \color{black}{\sin} \color{green}{C}}{\color{orange}{a}\color{teal}{b}\color{purple}{c}}$
+            </div>
+            <div class="text-gray-600 text-lg">Divide each expression by $abc$.</div>
+
+            <div class="text-black font-bold border-t border-gray-300 pt-6">
+                $\frac{\color{black}{\sin} \color{red}{A}}{\color{orange}{a}} = \frac{\color{black}{\sin} \color{blue}{B}}{\color{teal}{b}} = \frac{\color{black}{\sin} \color{green}{C}}{\color{purple}{c}}$
+            </div>
+            <div class="text-gray-600 border-t border-gray-300 pt-6 text-lg">Simplify.</div>
+        </div>
+
+        <!-- Key Concept Section -->
+        <div class="border-2 border-gray-300 rounded-lg overflow-hidden">
+            <div class="bg-gray-200 px-6 py-3 font-bold text-gray-800 text-lg flex items-center">
+                <span class="text-blue-600 mr-2 text-2xl">🧩</span> Key Concept: Law of Sines
+            </div>
+            <div class="p-8 flex flex-col md:flex-row items-center gap-12">
+                <p class="text-xl text-gray-700 leading-relaxed">
+                    In $\triangle ABC$, if sides with lengths $\color{orange}{a}$, $\color{teal}{b}$, and $\color{purple}{c}$ have opposite angles with measures $\color{red}{A}$, $\color{blue}{B}$, and $\color{green}{C}$, respectively, then the following is true.
+                    <br><br>
+                    <span class="text-4xl font-bold text-black">$\frac{\color{black}{\sin} \color{red}{A}}{\color{orange}{a}} = \frac{\color{black}{\sin} \color{blue}{B}}{\color{teal}{b}} = \frac{\color{black}{\sin} \color{green}{C}}{\color{purple}{c}}$</span>
+                </p>
+                
+                <!-- Triangle SVG -->
+                <svg width="350" height="250" viewBox="0 0 350 250" class="flex-shrink-0 bg-gray-50 rounded-xl p-4">
+                    <polygon points="50,200 300,200 175,50" fill="none" stroke="black" stroke-width="3" />
+                    <text x="30" y="220" font-size="28" font-style="italic" fill="red">A</text>
+                    <text x="310" y="220" font-size="28" font-style="italic" fill="green">C</text>
+                    <text x="165" y="40" font-size="28" font-style="italic" fill="blue">B</text>
+                    <text x="90" y="135" font-size="28" font-style="italic" fill="purple">c</text>
+                    <text x="250" y="135" font-size="28" font-style="italic" fill="orange">a</text>
+                    <text x="170" y="235" font-size="28" font-style="italic" fill="teal">b</text>
+                </svg>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
