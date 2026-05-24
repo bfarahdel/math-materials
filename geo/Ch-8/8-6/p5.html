@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometry Problem Solution: Problem 5</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white shadow-lg rounded-2xl p-8 max-w-2xl w-full">
+        <h1 class="text-2xl font-bold text-gray-800 mb-8 border-b pb-4">
+            Solve each triangle. Round side lengths to the nearest tenth and angle measures to the nearest degree.
+        </h1>
+
+        <!-- Problem 5 -->
+        <div class="border rounded-xl p-6 bg-yellow-50">
+            <h2 class="text-xl font-semibold mb-4">5.</h2>
+            <!-- Triangle SVG Representation -->
+            <div class="flex justify-center mb-6">
+                <svg viewBox="0 0 200 120" class="w-64 h-auto">
+                    <polygon points="20,100 180,100 130,20" fill="none" stroke="#92400e" stroke-width="2"/>
+                    <text x="135" y="15" font-size="16" font-weight="bold">D</text>
+                    <text x="185" y="105" font-size="16" font-weight="bold">E</text>
+                    <text x="10" y="105" font-size="16" font-weight="bold">F</text>
+                    <!-- Side 12 -->
+                    <text x="60" y="55" font-size="14">12</text>
+                    <!-- Side f -->
+                    <text x="160" y="60" font-size="14">f</text>
+                    <!-- Side d -->
+                    <text x="100" y="115" font-size="14">d</text>
+                    <!-- Angle 39 -->
+                    <text x="110" y="45" font-size="12">39°</text>
+                    <!-- Angle 34 -->
+                    <text x="45" y="90" font-size="12">34°</text>
+                </svg>
+            </div>
+            
+            <div class="mt-4 bg-white p-6 rounded-lg shadow-inner">
+                <h3 class="font-bold text-blue-800 text-lg">Solution:</h3>
+                <p class="text-md text-gray-700 mt-2">
+                    In ΔDEF, we are given: ∠D = 39°, ∠F = 34°, and side FD = 12.
+                </p>
+                <div class="my-4 space-y-4 text-md">
+                    <p><strong>1. Find ∠E:</strong></p>
+                    <p>∠E = 180° - (39° + 34°) = 180° - 73° = <strong>107°</strong></p>
+                    
+                    <p><strong>2. Find side f (opposite ∠F=34°):</strong></p>
+                    <p>Using Law of Sines:</p>
+                    <div class="flex items-center gap-4">
+                        <div class="flex flex-col items-center">
+                            <span class="border-b border-black px-1">sin(E)</span>
+                            <span>FD</span>
+                        </div>
+                        <span>=</span>
+                        <div class="flex flex-col items-center">
+                            <span class="border-b border-black px-1">sin(D)</span>
+                            <span>f</span>
+                        </div>
+                    </div>
+                    <p class="mt-2">sin(107°) / 12 = sin(39°) / f</p>
+                    <p>f = (12 × sin(39°)) / sin(107°) ≈ <strong>7.9</strong></p>
+                    
+                    <p><strong>3. Find side d (opposite ∠D=39°):</strong></p>
+                    <p>Using Law of Sines:</p>
+                    <div class="flex items-center gap-4">
+                        <div class="flex flex-col items-center">
+                            <span class="border-b border-black px-1">sin(E)</span>
+                            <span>FD</span>
+                        </div>
+                        <span>=</span>
+                        <div class="flex flex-col items-center">
+                            <span class="border-b border-black px-1">sin(F)</span>
+                            <span>d</span>
+                        </div>
+                    </div>
+                    <p class="mt-2">sin(107°) / 12 = sin(34°) / d</p>
+                    <p>d = (12 × sin(34°)) / sin(107°) ≈ <strong>7.0</strong></p>
+                </div>
+                <div class="border-t pt-4 mt-2">
+                    <p class="font-bold text-blue-900 text-lg">Results:</p>
+                    <p>∠E = 107°, f ≈ 7.9, d ≈ 7.0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
