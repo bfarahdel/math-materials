@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematics Question</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- MathJax for high-quality LaTeX rendering -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-6 font-sans text-slate-900">
+
+    <main id="quiz-container" class="bg-white p-12 rounded-xl shadow-sm border border-slate-200 w-full max-w-2xl">
+        
+        <div id="question-box">
+            <p class="text-3xl font-medium text-slate-800 mb-10 leading-snug">Which expression is equivalent to $\log_3 (7 \times 8)$?</p>
+            
+            <div id="options" class="space-y-4">
+                <button onclick="checkAnswer(false)" class="w-full p-6 text-2xl text-left border border-slate-300 rounded-lg hover:border-slate-500 hover:bg-slate-50 transition duration-150">
+                    $\log_3 7 \times \log_3 8$
+                </button>
+                <button onclick="checkAnswer(true)" class="w-full p-6 text-2xl text-left border border-slate-300 rounded-lg hover:border-slate-500 hover:bg-slate-50 transition duration-150">
+                    $\log_3 7 + \log_3 8$
+                </button>
+                <button onclick="checkAnswer(false)" class="w-full p-6 text-2xl text-left border border-slate-300 rounded-lg hover:border-slate-500 hover:bg-slate-50 transition duration-150">
+                    $\log_3 56$
+                </button>
+                <button onclick="checkAnswer(false)" class="w-full p-6 text-2xl text-left border border-slate-300 rounded-lg hover:border-slate-500 hover:bg-slate-50 transition duration-150">
+                    $\log_3 7 - \log_3 8$
+                </button>
+            </div>
+        </div>
+
+        <div id="feedback" class="hidden p-6 rounded-lg font-medium text-lg text-center mt-8 border"></div>
+        
+        <button id="restart" onclick="location.reload()" class="hidden w-full mt-8 bg-slate-900 text-white py-4 text-lg font-semibold rounded-lg hover:bg-slate-800 transition shadow-sm">
+            Reset
+        </button>
+    </main>
+
+    <script>
+        function checkAnswer(isCorrect) {
+            const feedback = document.getElementById('feedback');
+            const options = document.getElementById('options');
+            const restart = document.getElementById('restart');
+            
+            options.classList.add('pointer-events-none', 'opacity-70');
+            feedback.classList.remove('hidden');
+
+            if (isCorrect) {
+                feedback.innerHTML = "Correct.";
+                feedback.classList.add('bg-emerald-50', 'text-emerald-800', 'border-emerald-200');
+            } else {
+                feedback.innerHTML = "Incorrect. Recall the identity: $\\log_x (ab) = \\log_x a + \\log_x b$";
+                feedback.classList.add('bg-rose-50', 'text-rose-800', 'border-rose-200');
+            }
+            restart.classList.remove('hidden');
+            
+            if (window.MathJax) {
+                MathJax.typesetPromise([feedback]);
+            }
+        }
+    </script>
+</body>
+</html>
