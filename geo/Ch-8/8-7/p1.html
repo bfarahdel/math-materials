@@ -21,55 +21,65 @@
   <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-10">
     <!-- Header -->
     <header class="mb-8 border-b pb-4">
-      <h1 class="text-3xl font-bold text-blue-800">Problem 1</h1>
-      <p class="text-gray-600 mt-2">Using trigonometric ratios to find unknown side lengths.</p>
+      <h1 class="text-4xl font-bold text-blue-800">Problem 1</h1>
+      <p class="text-xl text-gray-600 mt-2">Solving a triangle with $SAS$ (Side-Angle-Side) using the Law of Cosines and Law of Sines.</p>
     </header>
 
-    <!-- Main Content Grid -->
-    <div class="grid md:grid-cols-2 gap-8">
+    <!-- Content Stack -->
+    <div class="space-y-10">
       
-      <!-- Left Column: Problem Setup -->
-      <section class="space-y-4">
-        <h2 class="text-xl font-semibold text-gray-700">The Problem</h2>
-        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-          <p class="text-gray-700">
-            Given a right-angled triangle with an angle of <span class="font-bold text-blue-600">30°</span> and an opposite side of <span class="font-bold text-blue-600">5 meters</span>, find the length of the adjacent side.
+      <!-- Problem Setup -->
+      <section class="space-y-6">
+        <h2 class="text-2xl font-semibold text-gray-700">The Problem</h2>
+        <div class="bg-blue-50 p-6 rounded-lg border border-blue-100">
+          <p class="text-xl text-gray-700">
+            Given a triangle with sides $a = 3$, $c = 4$, and an included angle $B = 92^\circ$, find the measures of the third side $b$ and the remaining angles $A$ and $C$.
           </p>
         </div>
         <div class="flex justify-center p-4">
-          <!-- Geometric Representation (SVG with increased internal padding) -->
-          <svg width="240" height="180" viewBox="0 0 240 180" class="border rounded bg-white">
-            <!-- Increased coordinate spread to create more "frame" around the triangle -->
-            <polygon points="40,150 200,150 40,40" fill="none" stroke="#2563eb" stroke-width="2"/>
-            <text x="120" y="170" font-size="14">Adjacent</text>
-            <text x="15" y="100" font-size="14" transform="rotate(-90 15 100)">5m</text>
-            <text x="55" y="140" font-size="16">30°</text>
+          <svg width="300" height="200" viewBox="0 0 300 200" class="border rounded bg-white">
+            <!-- Triangle vertices: A(50, 150), B(200, 50), C(250, 150) -->
+            <polygon points="50,150 200,50 250,150" fill="none" stroke="#2563eb" stroke-width="3"/>
+            <!-- Labels -->
+            <text x="110" y="90" font-size="18" fill="#1e40af" font-weight="bold">4</text>
+            <text x="235" y="110" font-size="18" fill="#1e40af" font-weight="bold">3</text>
+            <text x="150" y="175" font-size="18" fill="#1e40af" font-weight="bold">b</text>
+            <text x="200" y="40" font-size="16" font-weight="bold">B</text>
+            <text x="35" y="165" font-size="16" font-weight="bold">A</text>
+            <text x="260" y="165" font-size="16" font-weight="bold">C</text>
+            <text x="185" y="75" font-size="14" font-weight="bold">92°</text>
           </svg>
         </div>
       </section>
 
-      <!-- Right Column: Calculation -->
-      <section class="space-y-4">
-        <h2 class="text-xl font-semibold text-gray-700">Calculation</h2>
-        <div class="bg-gray-50 p-4 rounded-lg border">
-          <p class="mb-4">Using the tangent ratio:</p>
-          <div id="math-render" class="text-center overflow-x-auto">
-            $$\tan(30^\circ) = \frac{\text{Opposite}}{\text{Adjacent}}$$
-            $$\tan(30^\circ) = \frac{5}{x}$$
-            $$x = \frac{5}{\tan(30^\circ)}$$
+      <!-- Calculation -->
+      <section class="space-y-6">
+        <h2 class="text-2xl font-semibold text-gray-700">Calculation</h2>
+        <div class="bg-gray-50 p-6 rounded-lg border">
+          <p class="mb-6 text-xl">1. Find side $b$ using the Law of Cosines: $b^2 = a^2 + c^2 - 2ac \cdot \cos(B)$</p>
+          <div id="math-render" class="text-center overflow-x-auto text-lg space-y-8">
+            $$b^2 = 3^2 + 4^2 - 2(3)(4) \cdot \cos(92^\circ)$$
+            $$b^2 = 9 + 16 - 24 \cdot (-0.0349)$$
+            $$b^2 = 25.8376$$
+            $$b = \sqrt{25.8376} \approx \mathbf{5.1}$$
+            
+            <p class="text-left font-semibold pt-4">2. Find angle $A$ using the Law of Sines: $\frac{\sin A}{a} = \frac{\sin B}{b}$</p>
+            $$\sin A = \frac{3 \cdot \sin(92^\circ)}{5.083} \approx 0.5902$$
+            $$A = \arcsin(0.5902) \approx 36.16^\circ \rightarrow \mathbf{36^\circ}$$
+            
+            <p class="text-left font-semibold pt-4">3. Find angle $C$ using the angle sum property:</p>
+            $$C = 180^\circ - (92^\circ + 36.16^\circ) = 51.84^\circ \rightarrow \mathbf{52^\circ}$$
           </div>
           
-          <div class="mt-6 pt-4 border-t border-gray-200">
-            <p class="font-bold text-gray-800">Result:</p>
-            <p class="text-2xl font-mono text-blue-600">
-              \( x \approx 8.66 \text{ meters} \)
+          <div class="mt-10 pt-6 border-t border-gray-200">
+            <p class="font-bold text-2xl text-gray-800">Final Results:</p>
+            <p class="text-2xl text-blue-600 mt-3">
+              $b \approx 5.1, \quad A \approx 36^\circ, \quad C \approx 52^\circ$
             </p>
           </div>
         </div>
       </section>
-
     </div>
   </div>
-
 </body>
 </html>
