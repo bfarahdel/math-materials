@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solve a Triangle Given Three Sides</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2d3748;
+            border-bottom: 3px solid #77bb41;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+        }
+        .triangle-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        .step {
+            margin-bottom: 30px;
+            padding-left: 15px;
+            border-left: 4px solid #77bb41;
+        }
+        .step-header {
+            background-color: #77bb41;
+            color: white;
+            padding: 4px 12px;
+            display: inline-block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+        /* Increased font size for explanation text */
+        .step p {
+            font-size: 1.15rem;
+            margin-bottom: 10px;
+        }
+        .equation {
+            font-family: 'Times New Roman', serif;
+            font-size: 1.3rem;
+            text-align: center;
+            margin: 15px 0;
+            color: #c53030;
+            background: #fff5f5;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        .work-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .work-table td {
+            padding: 8px;
+            vertical-align: middle;
+            font-size: 1.05rem; /* Slightly larger table content */
+        }
+        .work-table td:last-child {
+            color: #666;
+            font-size: 0.95rem;
+            text-align: right;
+            font-style: italic;
+        }
+        .result {
+            font-weight: bold;
+            background: #edf2f7;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Example 2: Solve a Triangle Given Three Sides</h1>
+    
+    <div class="triangle-container">
+        <svg width="300" height="200" viewBox="0 0 300 200">
+            <!-- Triangle vertices -->
+            <polygon points="50,150 250,150 120,50" style="fill:none;stroke:black;stroke-width:2" />
+            <!-- Labels -->
+            <text x="120" y="40" font-family="Arial" font-size="20">A</text>
+            <text x="255" y="160" font-family="Arial" font-size="20">B</text>
+            <text x="30" y="160" font-family="Arial" font-size="20">C</text>
+            <!-- Side lengths -->
+            <text x="170" y="180" font-family="Arial" font-size="16" fill="blue">16</text>
+            <text x="60" y="90" font-family="Arial" font-size="16" fill="blue">9</text>
+            <text x="190" y="90" font-family="Arial" font-size="16" fill="blue">10</text>
+        </svg>
+    </div>
+
+    <p><strong>Solve ΔABC.</strong></p>
+
+    <div class="step">
+        <div class="step-header">Step 1</div>
+        <p>Use the Law of Cosines to find the measure of the largest angle, ∠A.</p>
+        <div class="equation">a² = b² + c² - 2bc cos A</div>
+        <table class="work-table">
+            <tr>
+                <td>16² = 9² + 10² - 2(9)(10) cos A</td>
+                <td>a=16, b=9, c=10</td>
+            </tr>
+            <tr>
+                <td>16² - 9² - 10² = -2(9)(10) cos A</td>
+                <td>Subtract 9² and 10²</td>
+            </tr>
+            <tr>
+                <td>(16² - 9² - 10²) / -2(9)(10) = cos A</td>
+                <td>Divide by -2(9)(10)</td>
+            </tr>
+            <tr>
+                <td>-0.4167 ≈ cos A</td>
+                <td>Simplify</td>
+            </tr>
+            <tr>
+                <td>115° ≈ A</td>
+                <td>Use cos⁻¹</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="step">
+        <div class="step-header">Step 2</div>
+        <p>Use the Law of Sines to find the measure of ∠B.</p>
+        <div class="equation">(sin B) / 9 ≈ (sin 115°) / 16</div>
+        <table class="work-table">
+            <tr>
+                <td>sin B ≈ (9 sin 115°) / 16</td>
+                <td>Multiply by 9</td>
+            </tr>
+            <tr>
+                <td>sin B ≈ 0.5098</td>
+                <td>Calculate</td>
+            </tr>
+            <tr>
+                <td>B ≈ 31°</td>
+                <td>Use sin⁻¹</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="step">
+        <div class="step-header">Step 3</div>
+        <p>Find the measure of ∠C.</p>
+        <p>m∠C ≈ 180° - (115° + 31°) or about 34°</p>
+        <div class="result">
+            So, A ≈ 115°, B ≈ 31°, and C ≈ 34°.
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

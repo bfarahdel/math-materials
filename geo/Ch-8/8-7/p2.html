@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Problem 2: Trigonometry Solution</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen p-4 md:p-8">
+
+  <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-10">
+    <!-- Header -->
+    <header class="mb-8 border-b pb-4">
+      <h1 class="text-4xl font-bold text-blue-800">Problem 2</h1>
+      <p class="text-xl text-gray-600 mt-2">Solving a triangle with three known sides using the Law of Cosines.</p>
+    </header>
+
+    <!-- Content Stack -->
+    <div class="space-y-10">
+      
+      <!-- Problem Setup -->
+      <section class="space-y-6">
+        <h2 class="text-2xl font-semibold text-gray-700">The Problem</h2>
+        <div class="bg-blue-50 p-6 rounded-lg border border-blue-100">
+          <p class="text-xl text-gray-700">
+            Given a triangle with sides <span class="font-bold text-blue-600">a = 14</span>, <span class="font-bold text-blue-600">b = 10</span>, and <span class="font-bold text-blue-600">c = 20</span>, find the measures of the interior angles.
+          </p>
+        </div>
+        <div class="flex justify-center p-4">
+          <svg width="240" height="180" viewBox="0 0 240 180" class="border rounded bg-white">
+            <polygon points="50,150 210,120 100,30" fill="none" stroke="#2563eb" stroke-width="2"/>
+            <!-- Adjusted label "14" to the left -->
+            <text x="160" y="70" font-size="16" fill="#1e40af">14</text>
+            <text x="60" y="90" font-size="16" fill="#1e40af">20</text>
+            <text x="130" y="155" font-size="16" fill="#1e40af">10</text>
+            <text x="35" y="165" font-size="14" font-weight="bold">C</text>
+            <text x="215" y="125" font-size="14" font-weight="bold">B</text>
+            <text x="95" y="25" font-size="14" font-weight="bold">A</text>
+          </svg>
+        </div>
+      </section>
+
+      <!-- Calculation -->
+      <section class="space-y-6">
+        <h2 class="text-2xl font-semibold text-gray-700">Calculation</h2>
+        <div class="bg-gray-50 p-6 rounded-lg border">
+          <p class="mb-6 text-xl">Using the Law of Cosines: \( \cos(A) = \frac{b^2 + c^2 - a^2}{2bc} \)</p>
+          <div id="math-render" class="text-center overflow-x-auto text-lg space-y-8">
+            $$\cos(A) = \frac{10^2 + 20^2 - 14^2}{2(10)(20)} = \frac{100 + 400 - 196}{400} = \frac{304}{400} = 0.76$$
+            $$A = \cos^{-1}(0.76) \approx 40.5^\circ \rightarrow \mathbf{41^\circ}$$
+            
+            $$\cos(B) = \frac{14^2 + 20^2 - 10^2}{2(14)(20)} = \frac{196 + 400 - 100}{560} = \frac{496}{560} \approx 0.886$$
+            $$B = \cos^{-1}(0.886) \approx 27.6^\circ \rightarrow \mathbf{28^\circ}$$
+          </div>
+          
+          <div class="mt-10 pt-6 border-t border-gray-200">
+            <p class="font-bold text-2xl text-gray-800">Final Angles:</p>
+            <p class="text-2xl text-blue-600 mt-3">
+              \( A \approx 41^\circ, \quad B \approx 28^\circ \)
+            </p>
+            <p class="text-2xl text-blue-600 mt-2">
+              \( C = 180^\circ - (41^\circ + 28^\circ) = 111^\circ \)
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Problem 5: Trigonometry Solution</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen p-4 md:p-8">
+
+  <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-10">
+    <!-- Header -->
+    <header class="mb-8 border-b pb-4">
+      <h1 class="text-4xl font-bold text-blue-800">Problem 5</h1>
+      <p class="text-xl text-gray-600 mt-2">Solving a triangle using the Law of Cosines and the Law of Sines.</p>
+    </header>
+
+    <!-- Content Stack -->
+    <div class="space-y-10">
+      
+      <!-- Problem Setup -->
+      <section class="space-y-6">
+        <h2 class="text-2xl font-semibold text-gray-700">The Problem</h2>
+        <div class="bg-blue-50 p-6 rounded-lg border border-blue-100">
+          <p class="text-xl text-gray-700">
+            Given a triangle with sides <span class="font-bold text-blue-600">b = 12</span>, <span class="font-bold text-blue-600">a = 8</span>, and included angle <span class="font-bold text-blue-600">A = 107&deg;</span> (where <span class="font-bold text-blue-600">A</span> is actually the angle between sides <span class="font-bold text-blue-600">c</span> and <span class="font-bold text-blue-600">b</span>, let's designate the unknown side opposite 107&deg; as <span class="italic">a'</span>).
+          </p>
+        </div>
+      </section>
+
+      <!-- Calculation -->
+      <section class="space-y-6">
+        <h2 class="text-2xl font-semibold text-gray-700">Calculation</h2>
+        <div class="bg-gray-50 p-6 rounded-lg border">
+          <p class="mb-6 text-xl">1. Find side <span class="font-bold">a</span> (opposite the 107&deg; angle) using the Law of Cosines: \( a^2 = b^2 + c^2 - 2bc \cdot \cos(A) \)</p>
+          <div id="math-render" class="text-center overflow-x-auto text-lg space-y-8">
+            $$a^2 = 12^2 + 8^2 - 2(12)(8) \cdot \cos(107^{\circ})$$
+            $$a^2 = 144 + 64 - 192 \cdot (-0.2924)$$
+            $$a^2 = 208 + 56.14 = 264.14$$
+            $$a = \sqrt{264.14} \approx 16.25$$
+            
+            <p class="text-left mt-6">2. Use Law of Sines to find angle <span class="font-bold">B</span>:</p>
+            $$\frac{\sin(B)}{12} = \frac{\sin(107^{\circ})}{16.25}$$
+            $$\sin(B) = \frac{12 \cdot 0.9563}{16.25} \approx 0.7065$$
+            $$B = \sin^{-1}(0.7065) \approx 44.95^{\circ} \approx 45^{\circ}$$
+            
+            <p class="text-left mt-6">3. Find angle <span class="font-bold">C</span>:</p>
+            $$C = 180^{\circ} - (107^{\circ} + 45^{\circ}) = 28^{\circ}$$
+          </div>
+          
+          <div class="mt-10 pt-6 border-t border-gray-200">
+            <p class="font-bold text-2xl text-gray-800">Final Results:</p>
+            <p class="text-2xl text-blue-600 mt-3">
+              \( a \approx 16.25, \quad B \approx 45^{\circ}, \quad C \approx 28^{\circ} \)
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

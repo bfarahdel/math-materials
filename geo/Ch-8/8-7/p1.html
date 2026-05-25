@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Problem 1: Trigonometry Solution</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen p-4 md:p-8">
+
+  <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-10">
+    <!-- Header -->
+    <header class="mb-8 border-b pb-4">
+      <h1 class="text-3xl font-bold text-blue-800">Problem 1</h1>
+      <p class="text-gray-600 mt-2">Using trigonometric ratios to find unknown side lengths.</p>
+    </header>
+
+    <!-- Main Content Grid -->
+    <div class="grid md:grid-cols-2 gap-8">
+      
+      <!-- Left Column: Problem Setup -->
+      <section class="space-y-4">
+        <h2 class="text-xl font-semibold text-gray-700">The Problem</h2>
+        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+          <p class="text-gray-700">
+            Given a right-angled triangle with an angle of <span class="font-bold text-blue-600">30°</span> and an opposite side of <span class="font-bold text-blue-600">5 meters</span>, find the length of the adjacent side.
+          </p>
+        </div>
+        <div class="flex justify-center p-4">
+          <!-- Geometric Representation (SVG with increased internal padding) -->
+          <svg width="240" height="180" viewBox="0 0 240 180" class="border rounded bg-white">
+            <!-- Increased coordinate spread to create more "frame" around the triangle -->
+            <polygon points="40,150 200,150 40,40" fill="none" stroke="#2563eb" stroke-width="2"/>
+            <text x="120" y="170" font-size="14">Adjacent</text>
+            <text x="15" y="100" font-size="14" transform="rotate(-90 15 100)">5m</text>
+            <text x="55" y="140" font-size="16">30°</text>
+          </svg>
+        </div>
+      </section>
+
+      <!-- Right Column: Calculation -->
+      <section class="space-y-4">
+        <h2 class="text-xl font-semibold text-gray-700">Calculation</h2>
+        <div class="bg-gray-50 p-4 rounded-lg border">
+          <p class="mb-4">Using the tangent ratio:</p>
+          <div id="math-render" class="text-center overflow-x-auto">
+            $$\tan(30^\circ) = \frac{\text{Opposite}}{\text{Adjacent}}$$
+            $$\tan(30^\circ) = \frac{5}{x}$$
+            $$x = \frac{5}{\tan(30^\circ)}$$
+          </div>
+          
+          <div class="mt-6 pt-4 border-t border-gray-200">
+            <p class="font-bold text-gray-800">Result:</p>
+            <p class="text-2xl font-mono text-blue-600">
+              \( x \approx 8.66 \text{ meters} \)
+            </p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+</body>
+</html>
