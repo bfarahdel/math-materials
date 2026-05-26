@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Example Slide</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            font-size: 18px;
+        }
+        .slide {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 900px;
+            width: 100%;
+        }
+        .header {
+            background-color: #d8e6d2;
+            padding: 15px 25px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        h2 { margin: 0; color: #333; font-size: 1.5em; }
+        .example-tag { font-weight: bold; font-size: 1.2em; }
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+        .step { margin-bottom: 25px; line-height: 1.6; }
+        .formula { color: #d35400; font-weight: bold; font-size: 1.1em; }
+        .divider {
+            border-left: 2px solid #ccc;
+            padding-left: 40px;
+        }
+        .note { color: #555; font-size: 0.85em; margin-top: 5px; display: block; }
+        
+        /* Vertical Fraction Styling */
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            text-align: center;
+            margin: 0 2px;
+        }
+        .numerator { border-bottom: 1px solid #d35400; padding: 0 2px; }
+        .denominator { padding: 0 2px; }
+    </style>
+</head>
+<body>
+
+<div class="slide">
+    <div class="header">
+        <span class="example-tag">Example 5</span>
+        <h2>Find Diameter and Radius</h2>
+    </div>
+
+    <p>Find the diameter and radius of a circle to the nearest hundredth if the circumference of the circle is 106.4 millimeters.</p>
+
+    <div class="content">
+        <!-- Left Side: Diameter -->
+        <div>
+            <div class="step">
+                <span class="formula">C = &pi;d</span><br>Circumference Formula
+            </div>
+            <div class="step">
+                <span class="formula">106.4 = &pi;d</span><br>Substitution
+            </div>
+            <div class="step">
+                <span class="formula">
+                    <div class="fraction">
+                        <span class="numerator">106.4</span>
+                        <span class="denominator">&pi;</span>
+                    </div> = d
+                </span><br>Divide each side by &pi;.
+            </div>
+            <div class="step">
+                <span class="formula">33.87 mm &approx; d</span><br>Use a calculator.
+            </div>
+        </div>
+
+        <!-- Right Side: Radius -->
+        <div class="divider">
+            <div class="step">
+                <span class="formula">r = 
+                    <div class="fraction">
+                        <span class="numerator">1</span>
+                        <span class="denominator">2</span>
+                    </div>d
+                </span><br>Radius Formula
+            </div>
+            <div class="step">
+                <span class="formula">&approx; 
+                    <div class="fraction">
+                        <span class="numerator">1</span>
+                        <span class="denominator">2</span>
+                    </div>(33.87)
+                </span><br><span class="note">d &approx; 33.87</span>
+            </div>
+            <div class="step">
+                <span class="formula">&approx; 16.94 mm</span><br>Use a calculator.
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
