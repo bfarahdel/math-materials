@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circumference of Circumscribed Polygons</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
+
+    <div class="max-w-3xl w-full bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+        <!-- Header -->
+        <div class="bg-[#7da98f] text-white p-6 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Example 6: Circumference of Circumscribed Polygons</h1>
+        </div>
+
+        <div class="p-8 space-y-6">
+            <!-- Content -->
+            <p class="text-lg text-gray-800">
+                A square with side length of <span class="font-bold">9 inches</span> is inscribed in \( \odot J \). Find the exact circumference of \( \odot J \).
+            </p>
+
+            <p class="text-gray-700">You need to find the diameter of the circle and use it to calculate the circumference.</p>
+
+            <p class="text-gray-700 italic border-l-4 border-[#7da98f] pl-4">
+                First, draw a diagram. The diagonal of the square is the diameter of the circle and the hypotenuse of a right triangle.
+            </p>
+
+            <!-- Math Steps -->
+            <div class="bg-gray-100 p-6 rounded-lg font-mono space-y-3">
+                <div class="flex items-center gap-4">
+                    <span>\(a^2 + b^2 = c^2\)</span>
+                    <span class="text-gray-500 text-sm ml-auto">Pythagorean Theorem</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span>\(9^2 + 9^2 = c^2\)</span>
+                    <span class="text-gray-500 text-sm ml-auto">Substitution</span>
+                </div>
+                <div class="flex items-center gap-4 text-xl">
+                    <span>\(162 = c^2\)</span>
+                    <span class="text-gray-500 text-sm ml-auto">Simplify</span>
+                </div>
+                <div class="flex items-center gap-4 text-xl">
+                    <span>\(9\sqrt{2} = c\)</span>
+                    <span class="text-gray-500 text-sm ml-auto">Take the positive square root of each side</span>
+                </div>
+            </div>
+
+            <p class="font-semibold text-lg text-gray-900">The diameter of the circle is \(9\sqrt{2}\) inches.</p>
+            <p class="text-gray-700">Find the circumference in terms of \(\pi\) by substituting \(9\sqrt{2}\) for \(d\) in \(C = \pi d\).</p>
+            <p class="font-bold text-xl text-[#5b8c6f]">The exact circumference is \(9\pi\sqrt{2}\) inches.</p>
+        </div>
+    </div>
+
+    <!-- LaTeX Math Rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Example Slide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: sans-serif;
+        }
+        .slide-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="slide-card">
+    <header class="mb-6 border-b-2 border-green-600 pb-2">
+        <h1 class="text-2xl font-bold text-green-700">Example 3: Find Measures in Intersecting Circles</h1>
+    </header>
+
+    <div class="space-y-4 text-lg text-gray-800">
+        <p>The diameter of $\odot S$ is $30$ units, the diameter of $\odot R$ is $20$ units, and $DS = 9$ units. Find $CD$.</p>
+        
+        <p>Because the diameter of $\odot S$ is $30$, $CS = 15$. $\overline{CD}$ is part of radius $\overline{CS}$.</p>
+    </div>
+
+    <div class="mt-8 grid grid-cols-2 gap-y-4 items-center bg-gray-50 p-6 rounded-lg font-mono">
+        <!-- Step 1 -->
+        <div class="text-xl font-bold">
+            $CD +$ <span class="text-red-600">$DS$</span> $= $ <span class="text-blue-600">$CS$</span>
+        </div>
+        <div class="text-gray-600">Segment Addition Postulate</div>
+
+        <!-- Step 2 -->
+        <div class="text-xl font-bold">
+            $CD + 9 = $ <span class="text-blue-600">$15$</span>
+        </div>
+        <div class="text-gray-600">Substitution</div>
+
+        <!-- Step 3 -->
+        <div class="text-xl font-bold">
+            $CD = 6$
+        </div>
+        <div class="text-gray-600">Subtract 9 from each side.</div>
+    </div>
+</div>
+
+</body>
+</html>
