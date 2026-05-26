@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exploration 23 Solution</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="bg-gray-100 p-8">
+
+    <div class="max-w-3xl mx-auto bg-white p-10 rounded-xl shadow-lg">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">Exploration 23</h1>
+        <p class="text-lg mb-8 text-gray-700">Find the distance between the ship and the shipwreck shown in the diagram. Round to the nearest tenth.</p>
+        
+        <div class="mb-10 flex justify-center">
+            <!-- Cleaned-up SVG: Repositioned label up -->
+            <svg viewBox="0 0 400 250" class="w-full max-w-sm">
+                <!-- Triangle -->
+                <polygon points="40,125 360,40 360,210" fill="none" stroke="#334155" stroke-width="4" stroke-linejoin="round"/>
+                
+                <!-- Side Labels -->
+                <text x="170" y="80" font-weight="bold" font-size="20" fill="#1e293b">520 m</text>
+                <text x="170" y="195" font-weight="bold" font-size="20" fill="#1e293b">338 m</text>
+                <text x="370" y="135" font-weight="bold" font-size="28" fill="#e11d48">?</text>
+                
+                <!-- Angle Label (Moved up slightly) -->
+                <text x="80" y="135" font-weight="bold" font-size="20" fill="#1e293b">70°</text>
+            </svg>
+        </div>
+
+        <div class="space-y-6 text-lg text-gray-800">
+            <p>To find the missing distance $x$, we use the <strong>Law of Cosines</strong>:</p>
+            
+            <div class="bg-slate-50 p-6 rounded-lg border border-slate-200 font-mono text-center shadow-inner">
+                $$x^2 = a^2 + b^2 - 2ab \cos(\theta)$$
+                $$x^2 = 520^2 + 338^2 - 2(520)(338) \cos(70^\circ)$$
+                $$x^2 = 270400 + 114244 - 351520(0.34202)$$
+                $$x^2 = 384644 - 120227.67$$
+                $$x^2 = 264416.33$$
+                $$x = \sqrt{264416.33} \approx 514.2 \text{ m}$$
+            </div>
+            
+            <p class="font-bold text-2xl pt-4 text-blue-900 border-t border-gray-100 mt-6">Final Answer: The distance is 514.2 m.</p>
+        </div>
+    </div>
+</body>
+</html>
