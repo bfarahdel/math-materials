@@ -2,37 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Problem 2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Problem 2: Trigonometry Solution</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] }
+    };
+  </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<body class="bg-gray-50 p-8">
-  <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-10">
-    <h1 class="text-3xl font-bold mb-6">Problem 2</h1>
-    
-    <div class="flex justify-center p-4 border rounded mb-8 bg-white">
-      <svg width="300" height="200" viewBox="0 0 300 200">
-        <polygon points="150,30 250,150 50,170" fill="none" stroke="black" stroke-width="2"/>
-        <text x="145" y="25" font-weight="bold">A</text>
-        <text x="255" y="155" font-weight="bold">B</text>
-        <text x="35" y="180" font-weight="bold">C</text>
-        <text x="75" y="100" font-weight="bold" fill="blue">14</text>
-        <text x="190" y="90" font-weight="bold" fill="blue">10</text>
-        <text x="140" y="190" font-weight="bold" fill="blue">20</text>
-      </svg>
-    </div>
+<body class="bg-gray-50 text-gray-900 min-h-screen p-4 md:p-8">
 
-    <div class="bg-gray-100 p-6 rounded-lg text-lg space-y-6">
-      <p><strong>Calculations based on image:</strong></p>
+  <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-10">
+    <header class="mb-8 border-b pb-4">
+      <h1 class="text-4xl font-bold text-blue-800">Problem 2</h1>
+      <p class="text-xl text-gray-600 mt-2">Solving a triangle with $SSS$ (Side-Side-Side) using the Law of Cosines.</p>
+    </header>
+
+    <div class="space-y-10">
       
-      <p><strong>1. Finding ∠A (opposite side BC=20):</strong></p>
-      $$\cos(A) = \frac{14^2 + 10^2 - 20^2}{2(14)(10)} = \frac{196 + 100 - 400}{280} = \frac{-104}{280} \approx -0.3714 \rightarrow A \approx 111.8^\circ$$
+      <section class="space-y-6">
+        <h2 class="text-2xl font-semibold text-gray-700">The Problem</h2>
+        <div class="bg-blue-50 p-6 rounded-lg border border-blue-100">
+          <p class="text-xl text-gray-700">
+            Given a triangle with sides $a = 20$ (side $BC$), $b = 14$ (side $AC$), and $c = 10$ (side $AB$), find the measures of the angles $A$, $B$, and $C$.
+          </p>
+        </div>
+        <div class="flex justify-center p-4">
+          <svg width="300" height="200" viewBox="0 0 300 200" class="border rounded bg-white">
+            <polygon points="150,30 250,150 50,170" fill="none" stroke="#2563eb" stroke-width="3"/>
+            <text x="145" y="20" font-size="16" font-weight="bold">A</text>
+            <text x="255" y="155" font-size="16" font-weight="bold">B</text>
+            <text x="35" y="185" font-size="16" font-weight="bold">C</text>
+            <text x="75" y="100" font-size="18" fill="#1e40af" font-weight="bold">14</text>
+            <text x="190" y="90" font-size="18" fill="#1e40af" font-weight="bold">10</text>
+            <text x="140" y="190" font-size="18" fill="#1e40af" font-weight="bold">20</text>
+          </svg>
+        </div>
+      </section>
 
-      <p><strong>2. Finding ∠B (opposite side AC=14):</strong></p>
-      $$\cos(B) = \frac{10^2 + 20^2 - 14^2}{2(10)(20)} = \frac{100 + 400 - 196}{400} = \frac{304}{400} = 0.76 \rightarrow B \approx 40.5^\circ$$
-
-      <p><strong>3. Finding ∠C (opposite side AB=10):</strong></p>
-      $$C = 180^\circ - (111.8^\circ + 40.5^\circ) = 27.7^\circ$$
+      <section class="space-y-6">
+        <h2 class="text-2xl font-semibold text-gray-700">Calculation</h2>
+        <div class="bg-gray-50 p-6 rounded-lg border">
+          <p class="mb-6 text-xl">1. Find angle $A$ using the Law of Cosines: $\cos(A) = \frac{b^2 + c^2 - a^2}{2bc}$</p>
+          <div id="math-render" class="text-center overflow-x-auto text-lg space-y-8">
+            $$\cos(A) = \frac{14^2 + 10^2 - 20^2}{2(14)(10)} = \frac{196 + 100 - 400}{280} = \frac{-104}{280} \approx -0.3714$$
+            $$A = \arccos(-0.3714) \approx \mathbf{111.8^\circ}$$
+            
+            <p class="text-left font-semibold pt-4">2. Find angle $B$ using the Law of Cosines: $\cos(B) = \frac{a^2 + c^2 - b^2}{2ac}$</p>
+            $$\cos(B) = \frac{20^2 + 10^2 - 14^2}{2(20)(10)} = \frac{400 + 100 - 196}{400} = \frac{304}{400} = 0.76$$
+            $$B = \arccos(0.76) \approx \mathbf{40.5^\circ}$$
+            
+            <p class="text-left font-semibold pt-4">3. Find angle $C$ using the angle sum property:</p>
+            $$C = 180^\circ - (111.8^\circ + 40.5^\circ) = \mathbf{27.7^\circ}$$
+          </div>
+          
+          <div class="mt-10 pt-6 border-t border-gray-200">
+            <p class="font-bold text-2xl text-gray-800">Final Results:</p>
+            <p class="text-2xl text-blue-600 mt-3">
+              $A \approx 111.8^\circ, \quad B \approx 40.5^\circ, \quad C \approx 27.7^\circ$
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </body>
