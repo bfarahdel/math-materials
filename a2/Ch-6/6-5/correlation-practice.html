@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Correlation Sorter</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+
+        :root { --pos-blue: #1fbad6; --neg-red: #e21b22; --none-gray: #555; --gold: #ffcc00; }
+        body { font-family: 'Arial Black', sans-serif; background-color: #f0f0f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: white; border: 8px solid #000; padding: 30px; box-shadow: 15px 15px 0px #000; text-align: center; width: 950px; }
+        .comic-heading { font-family: 'Bangers', cursive; text-transform: uppercase; }
+        .hidden { display: none !important; }
+        .example-grid { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+        .mini-card { border: 4px solid #000; padding: 5px; background: #fff; }
+        .btn { background: var(--gold); border: 5px solid #000; padding: 20px 50px; font-family: 'Bangers', cursive; font-size: 2.8rem; cursor: pointer; box-shadow: 8px 8px 0px #000; margin: 10px; }
+        #quiz-chart-container { width: 500px; height: 400px; margin: 0 auto; }
+        .flash-success { background-color: #d4edda !important; }
+        .flash-error { background-color: #f8d7da !important; }
+    </style>
+</head>
+<body id="bg">
+
+<div class="container">
+    <div id="start-screen">
+        <h1 class="comic-heading" style="font-size: 5rem; color: var(--neg-red);">CORRELATION SORTER</h1>
+        <div class="example-grid">
+            <div class="mini-card"><canvas id="posEx" width="220" height="170"></canvas><div class="comic-heading" style="font-size: 1.2rem; color: var(--pos-blue);">POSITIVE</div></div>
+            <div class="mini-card"><canvas id="negEx" width="220" height="170"></canvas><div class="comic-heading" style="font-size: 1.2rem; color: var(--neg-red);">NEGATIVE</div></div>
+            <div class="mini-card"><canvas id="noneEx" width="220" height="170"></canvas><div class="comic-heading" style="font-size: 1.2rem; color: var(--none-gray);">NONE</div></div>
+        </div>
+        <button class="btn" onclick="startGame()">START GAME</button>
+    </div>
+
+    <div id="game-screen" class="hidden">
+        <div class="comic-heading" style="font-size: 2.5rem; margin-bottom: 20px;">SCORE: <span id="score">0</span></div>
+        <div id="quiz-chart-container">
+            <canvas id="quizChart"></canvas>
+        </div>
+        <div style="margin-top: 20px;">
+            <button class="btn" onclick="checkAnswer('pos')">POSITIVE</button>
+            <button class="btn" onclick="checkAnswer('none')">NONE</button>
+            <button class="btn" onclick="checkAnswer('neg')">NEGATIVE</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let score = 0, currentType = "", mainChart;
+
+    function generateData(type) {
+        let data = [];
+        for(let i=1; i<=15; i++) {
+            let noise = (Math.random()*40 - 20);
+            let y = (type === 'pos') ? i*6 + 10 + noise : (type === 'neg') ? 90 - i*6 + noise : (Math.random() * 80 + 10);
+            data.push({x: i * 6.6, y: Math.max(5, Math.min(95, y))});
+        }
+        return data;
+    }
+
+    const axisOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            x: { min: 0, max: 100, ticks: { stepSize: 10 } },
+            y: { min: 0, max: 100, ticks: { stepSize: 10 } }
+        },
+        plugins: { legend: { display: false } }
+    };
+
+    window.onload = () => {
+        const miniOptions = { responsive: false, scales: { x: { display: false }, y: { display: false } }, plugins: { legend: { display: false } } };
+        new Chart(document.getElementById('posEx'), { type: 'scatter', data: { datasets: [{ data: generateData('pos'), backgroundColor: '#1fbad6', pointRadius: 4 }] }, options: miniOptions });
+        new Chart(document.getElementById('negEx'), { type: 'scatter', data: { datasets: [{ data: generateData('neg'), backgroundColor: '#e21b22', pointRadius: 4 }] }, options: miniOptions });
+        new Chart(document.getElementById('noneEx'), { type: 'scatter', data: { datasets: [{ data: generateData('none'), backgroundColor: '#555', pointRadius: 4 }] }, options: miniOptions });
+    };
+
+    function startGame() {
+        document.getElementById('start-screen').classList.add('hidden');
+        document.getElementById('game-screen').classList.remove('hidden');
+        nextQuestion();
+    }
+
+    function nextQuestion() {
+        const types = ['pos', 'neg', 'none'];
+        currentType = types[Math.floor(Math.random() * 3)];
+        const ctx = document.getElementById('quizChart').getContext('2d');
+        if (mainChart) mainChart.destroy();
+        mainChart = new Chart(ctx, {
+            type: 'scatter',
+            data: { datasets: [{ data: generateData(currentType), backgroundColor: '#000', pointRadius: 8 }] },
+            options: axisOptions
+        });
+    }
+
+    function checkAnswer(answer) {
+        if (answer === currentType) {
+            score++;
+            document.getElementById('score').innerText = score;
+            flashBg('flash-success');
+        } else {
+            flashBg('flash-error');
+        }
+        nextQuestion();
+    }
+
+    function flashBg(cls) {
+        document.getElementById('bg').classList.add(cls);
+        setTimeout(() => document.getElementById('bg').classList.remove(cls), 200);
+    }
+</script>
+</body>
+</html>
