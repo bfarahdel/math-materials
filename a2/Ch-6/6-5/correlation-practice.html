@@ -15,13 +15,13 @@
         .hidden { display: none !important; }
         .example-grid { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
         .mini-card { border: 4px solid #000; padding: 5px; background: #fff; }
-        .btn { background: var(--gold); border: 5px solid #000; padding: 20px 50px; font-family: 'Bangers', cursive; font-size: 2.8rem; cursor: pointer; box-shadow: 8px 8px 0px #000; margin: 10px; }
+        .btn { background: var(--gold); border: 5px solid #000; padding: 15px 30px; font-family: 'Bangers', cursive; font-size: 2rem; cursor: pointer; box-shadow: 8px 8px 0px #000; margin: 10px; }
+        .btn:disabled { background: #ccc; cursor: not-allowed; }
         #quiz-chart-container { width: 500px; height: 400px; margin: 0 auto; }
-        .flash-success { background-color: #d4edda !important; }
-        .flash-error { background-color: #f8d7da !important; }
+        #feedback { font-size: 3rem; margin: 10px 0; min-height: 4rem; }
     </style>
 </head>
-<body id="bg">
+<body>
 
 <div class="container">
     <div id="start-screen">
@@ -35,20 +35,23 @@
     </div>
 
     <div id="game-screen" class="hidden">
-        <div class="comic-heading" style="font-size: 2.5rem; margin-bottom: 20px;">SCORE: <span id="score">0</span></div>
-        <div id="quiz-chart-container">
-            <canvas id="quizChart"></canvas>
+        <div class="comic-heading" style="font-size: 2.5rem;">SCORE: <span id="score">0</span></div>
+        <div id="feedback" class="comic-heading"></div>
+        <div id="quiz-chart-container"><canvas id="quizChart"></canvas></div>
+        <div id="answer-buttons">
+            <button class="btn" onclick="checkAnswer('POSITIVE')">POSITIVE</button>
+            <button class="btn" onclick="checkAnswer('NONE')">NONE</button>
+            <button class="btn" onclick="checkAnswer('NEGATIVE')">NEGATIVE</button>
         </div>
-        <div style="margin-top: 20px;">
-            <button class="btn" onclick="checkAnswer('pos')">POSITIVE</button>
-            <button class="btn" onclick="checkAnswer('none')">NONE</button>
-            <button class="btn" onclick="checkAnswer('neg')">NEGATIVE</button>
-        </div>
+        <button id="next-btn" class="btn hidden" style="background: #aadaff;" onclick="nextQuestion()">NEXT QUESTION</button>
     </div>
 </div>
 
 <script>
     let score = 0, currentType = "", mainChart;
+    
+    // Mapping internal keys to full display names
+    const typeMap = { 'pos': 'POSITIVE', 'neg': 'NEGATIVE', 'none': 'NONE' };
 
     function generateData(type) {
         let data = [];
@@ -61,12 +64,8 @@
     }
 
     const axisOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            x: { min: 0, max: 100, ticks: { stepSize: 10 } },
-            y: { min: 0, max: 100, ticks: { stepSize: 10 } }
-        },
+        responsive: true, maintainAspectRatio: false,
+        scales: { x: { min: 0, max: 100 }, y: { min: 0, max: 100 } },
         plugins: { legend: { display: false } }
     };
 
@@ -84,11 +83,15 @@
     }
 
     function nextQuestion() {
+        document.getElementById('feedback').innerText = "";
+        document.getElementById('next-btn').classList.add('hidden');
+        const btns = document.querySelectorAll('#answer-buttons .btn');
+        btns.forEach(b => b.disabled = false);
+
         const types = ['pos', 'neg', 'none'];
         currentType = types[Math.floor(Math.random() * 3)];
-        const ctx = document.getElementById('quizChart').getContext('2d');
         if (mainChart) mainChart.destroy();
-        mainChart = new Chart(ctx, {
+        mainChart = new Chart(document.getElementById('quizChart').getContext('2d'), {
             type: 'scatter',
             data: { datasets: [{ data: generateData(currentType), backgroundColor: '#000', pointRadius: 8 }] },
             options: axisOptions
@@ -96,19 +99,17 @@
     }
 
     function checkAnswer(answer) {
-        if (answer === currentType) {
+        const btns = document.querySelectorAll('#answer-buttons .btn');
+        btns.forEach(b => b.disabled = true);
+        document.getElementById('next-btn').classList.remove('hidden');
+
+        if (answer === typeMap[currentType]) {
             score++;
             document.getElementById('score').innerText = score;
-            flashBg('flash-success');
+            document.getElementById('feedback').innerHTML = '<span style="color: green;">CORRECT!</span>';
         } else {
-            flashBg('flash-error');
+            document.getElementById('feedback').innerHTML = `<span style="color: red;">INCORRECT! It was ${typeMap[currentType]}</span>`;
         }
-        nextQuestion();
-    }
-
-    function flashBg(cls) {
-        document.getElementById('bg').classList.add(cls);
-        setTimeout(() => document.getElementById('bg').classList.remove(cls), 200);
     }
 </script>
 </body>
