@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-950 min-h-screen p-4 flex items-center justify-center">
+    <div class="bg-gray-900 p-8 rounded-2xl shadow-xl w-full max-w-6xl border border-gray-800">
+      <div id="loading" class="text-blue-400 text-center mb-4 italic">Loading resources...</div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+        <script>
+          const problems = [
+            { x: 1, y: 0 },
+            { x: 2, y: 1 },
+            { x: 4, y: 2 },
+            { x: 8, y: 3 },
+            { x: 16, y: 4 }
+          ];
+
+          problems.forEach((p, index) => {
+            document.write(`
+              <div id="prob-${index}" class="border border-gray-800 p-4 rounded-xl bg-gray-950 flex flex-col items-center">
+                <div class="flex justify-center items-center mb-4 text-white">
+                  <span class="text-3xl font-medium">log</span>
+                  <span class="relative top-2 text-xl text-blue-400 font-bold ml-0.5">2</span>
+                  <span class="text-2xl ml-1">(${p.x})</span>
+                  <span class="sol-text text-2xl font-bold text-green-400 ml-2 hidden">= ${p.y}</span>
+                </div>
+                <div class="visual-area grid grid-cols-4 gap-1 justify-items-center min-h-[80px] mb-4"></div>
+                <div class="flex gap-1 w-full mt-auto">
+                  <button onclick="handleShow('prob-${index}', ${p.y})" class="flex-1 px-2 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">Show</button>
+                  <button onclick="handleReset('prob-${index}')" class="flex-1 px-2 py-1 bg-gray-700 text-gray-200 rounded text-sm hover:bg-gray-600">Reset</button>
+                </div>
+              </div>
+            `);
+          });
+        </script>
+      </div>
+    </div>
+
+    <script>
+      let spriteUrl = null;
+
+      async function init() {
+        try {
+          const res = await fetch("https://pokeapi.co/api/v2/pokemon/marill");
+          const data = await res.json();
+          spriteUrl = data.sprites.front_default;
+          document.getElementById("loading").classList.add("hidden");
+        } catch (e) {
+          console.error("Failed to fetch resource", e);
+        }
+      }
+
+      function render(containerId, count) {
+        const container = document.querySelector(`#${containerId} .visual-area`);
+        container.innerHTML = "";
+        // If y=0, we display nothing, which is mathematically consistent
+        for (let i = 0; i < count; i++) {
+          const img = document.createElement("img");
+          img.src = spriteUrl;
+          img.className = "w-10 h-10 animate-pulse";
+          container.appendChild(img);
+        }
+      }
+
+      function handleShow(id, count) {
+        document.querySelector(`#${id} .sol-text`).classList.remove("hidden");
+        render(id, count);
+      }
+
+      function handleReset(id) {
+        document.querySelector(`#${id} .sol-text`).classList.add("hidden");
+        document.querySelector(`#${id} .visual-area`).innerHTML = "";
+      }
+
+      init();
+    </script>
+  </body>
+</html>
