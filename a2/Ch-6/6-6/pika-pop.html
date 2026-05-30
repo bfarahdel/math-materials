@@ -27,7 +27,7 @@
             </div>
 
             <div class="relative w-full h-96">
-                <canvas id="graphCanvas" class="w-full h-96 border-b-2 border-l-2 border-gray-600"></canvas>
+                <canvas id="graphCanvas" class="w-full h-96 border-b-2 border-l-2 border-gray-600 bg-gray-900"></canvas>
                 <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <div class="text-2xl text-white font-mono bg-gray-900/60 px-4 py-2 rounded border border-gray-600">
                         $f(x) = 2^x$
@@ -40,21 +40,47 @@
     </div>
 
     <script>
-        const canvas = document.getElementById('graphCanvas');
-        const ctx = canvas.getContext('2d');
-        const infoText = document.getElementById('info-text');
-        const popContainer = document.getElementById('population-count');
-        let pikachuSpriteUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png';
-        let selectedPointIndex = -1;
+        var canvas = document.getElementById('graphCanvas');
+        var ctx = canvas.getContext('2d');
+        var infoText = document.getElementById('info-text');
+        var popContainer = document.getElementById('population-count');
+        var pikachuSpriteUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png';
+        var selectedPointIndex = -1;
         
-        const points = [
+        var points = [
             { x: 0, y: 1 }, { x: 1, y: 2 }, { x: 2, y: 4 }, { x: 3, y: 8 }, { x: 4, y: 16 }
         ];
 
+        // Robust Fetch implementation with XMLHttpRequest fallback
+        function initSprite() {
+            var url = "https://pokeapi.co/api/v2/pokemon/pikachu";
+            
+            if (window.fetch) {
+                fetch(url)
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) { pikachuSpriteUrl = data.sprites.front_default; })
+                    .catch(function() { fallbackXHR(url); });
+            } else {
+                fallbackXHR(url);
+            }
+        }
+
+        function fallbackXHR(url) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    pikachuSpriteUrl = data.sprites.front_default;
+                }
+            };
+            xhr.send();
+        }
+
         function drawGraph() {
-            const w = canvas.width = canvas.offsetWidth;
-            const h = canvas.height = canvas.offsetHeight;
-            const padding = 60;
+            var w = canvas.width = canvas.offsetWidth;
+            var h = canvas.height = canvas.offsetHeight;
+            var padding = 60;
             ctx.clearRect(0, 0, w, h);
 
             ctx.fillStyle = "#9ca3af";
@@ -65,16 +91,16 @@
             ctx.beginPath();
             ctx.strokeStyle = '#fbbf24';
             ctx.lineWidth = 4;
-            for(let x = 0; x <= 4.1; x += 0.05) {
-                const px = padding + (x / 4) * (w - padding * 2);
-                const py = (h - padding) - ((Math.pow(2, x) / 16) * (h - padding * 2));
+            for(var x = 0; x <= 4.1; x += 0.05) {
+                var px = padding + (x / 4) * (w - padding * 2);
+                var py = (h - padding) - ((Math.pow(2, x) / 16) * (h - padding * 2));
                 x === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
             }
             ctx.stroke();
 
-            points.forEach((p, index) => {
-                const px = padding + (p.x / 4) * (w - padding * 2);
-                const py = (h - padding) - ((p.y / 16) * (h - padding * 2));
+            points.forEach(function(p, index) {
+                var px = padding + (p.x / 4) * (w - padding * 2);
+                var py = (h - padding) - ((p.y / 16) * (h - padding * 2));
                 ctx.fillStyle = (index === selectedPointIndex) ? '#22c55e' : '#ef4444';
                 ctx.beginPath();
                 ctx.arc(px, py, 10, 0, Math.PI * 2);
@@ -82,19 +108,18 @@
             });
         }
 
-        canvas.addEventListener('click', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            const mouseY = e.clientY - rect.top;
-            const padding = 60;
+        canvas.addEventListener('click', function(e) {
+            var rect = canvas.getBoundingClientRect();
+            var mouseX = e.clientX - rect.left;
+            var mouseY = e.clientY - rect.top;
+            var padding = 60;
 
-            points.forEach((p, index) => {
-                const px = padding + (p.x / 4) * (canvas.width - padding * 2);
-                const py = (canvas.height - padding) - ((p.y / 16) * (canvas.height - padding * 2));
+            points.forEach(function(p, index) {
+                var px = padding + (p.x / 4) * (canvas.width - padding * 2);
+                var py = (canvas.height - padding) - ((p.y / 16) * (canvas.height - padding * 2));
                 if (Math.hypot(mouseX - px, mouseY - py) < 20) {
                     selectedPointIndex = index;
-                    // Update info text and re-render MathJax
-                    infoText.innerHTML = `$f(${p.x}) = 2^{${p.x}} = ${p.y}$ Pikachu's`;
+                    infoText.innerHTML = '$f(' + p.x + ') = 2^{' + p.x + '} = ' + p.y + '$ Pikachu\'s';
                     MathJax.typesetPromise([infoText]);
                     renderPikachus(p.y);
                     drawGraph();
@@ -104,8 +129,8 @@
 
         function renderPikachus(count) {
             popContainer.innerHTML = '';
-            for (let i = 0; i < count; i++) {
-                const img = document.createElement('img');
+            for (var i = 0; i < count; i++) {
+                var img = document.createElement('img');
                 img.src = pikachuSpriteUrl;
                 img.className = 'w-12 h-12';
                 popContainer.appendChild(img);
@@ -113,6 +138,7 @@
         }
 
         window.addEventListener('resize', drawGraph);
+        initSprite();
         drawGraph();
     </script>
 </body>
