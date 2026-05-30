@@ -1,129 +1,120 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exponent Visualizer</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-950 min-h-screen p-4 flex items-center justify-center">
-
+  </head>
+  <body class="bg-gray-950 min-h-screen p-4 flex items-center justify-center">
     <div class="bg-gray-900 p-8 rounded-2xl shadow-xl w-full max-w-6xl border border-gray-800">
-        <div class="flex items-center justify-center gap-6 mb-8">
-            <img id="left-mon" class="w-20 h-20 animate-pulse hidden" alt="Marill">
-            <h1 class="text-3xl font-bold text-white text-center">Exponent Visualizations</h1>
-            <img id="right-mon" class="w-20 h-20 animate-pulse hidden" alt="Marill">
-        </div>
+      <div id="loading" class="text-blue-400 text-center mb-4 italic">Loading resources...</div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
         
-        <div id="loading" class="text-blue-400 text-center mb-4 italic">Loading resources...</div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-            <div id="prob-0" class="border border-gray-800 p-4 rounded-xl bg-gray-950 flex flex-col items-center">
-                <div class="flex justify-center items-center mb-4">
-                    <span class="text-4xl text-blue-400 font-bold">2</span>
-                    <span class="text-xl text-red-400 font-bold -mt-3">0</span>
-                    <span class="sol-text text-2xl font-bold text-green-400 ml-2 hidden">= 1</span>
-                </div>
-                <div class="visual-area flex flex-wrap justify-center items-center gap-1 min-h-[80px] mb-4"></div>
-                <div class="flex gap-1 w-full mt-auto">
-                    <button onclick="handleShow('prob-0', 1)" class="flex-1 px-2 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">Show</button>
-                    <button onclick="handleReset('prob-0')" class="flex-1 px-2 py-1 bg-gray-700 text-gray-200 rounded text-sm hover:bg-gray-600">Reset</button>
-                </div>
-            </div>
-
-            <div id="prob-1" class="border border-gray-800 p-4 rounded-xl bg-gray-950 flex flex-col items-center">
-                <div class="flex justify-center items-center mb-4">
-                    <span class="text-4xl text-blue-400 font-bold">2</span>
-                    <span class="text-xl text-red-400 font-bold -mt-3">1</span>
-                    <span class="sol-text text-2xl font-bold text-green-400 ml-2 hidden">= 2</span>
-                </div>
-                <div class="visual-area flex flex-wrap justify-center items-center gap-1 min-h-[80px] mb-4"></div>
-                <div class="flex gap-1 w-full mt-auto">
-                    <button onclick="handleShow('prob-1', 2)" class="flex-1 px-2 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">Show</button>
-                    <button onclick="handleReset('prob-1')" class="flex-1 px-2 py-1 bg-gray-700 text-gray-200 rounded text-sm hover:bg-gray-600">Reset</button>
-                </div>
-            </div>
-
-            <div id="prob-2" class="border border-gray-800 p-4 rounded-xl bg-gray-950 flex flex-col items-center">
-                <div class="flex justify-center items-center mb-4">
-                    <span class="text-4xl text-blue-400 font-bold">2</span>
-                    <span class="text-xl text-red-400 font-bold -mt-3">2</span>
-                    <span class="sol-text text-2xl font-bold text-green-400 ml-2 hidden">= 4</span>
-                </div>
-                <div class="visual-area flex flex-wrap justify-center items-center gap-1 min-h-[80px] mb-4"></div>
-                <div class="flex gap-1 w-full mt-auto">
-                    <button onclick="handleShow('prob-2', 4)" class="flex-1 px-2 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">Show</button>
-                    <button onclick="handleReset('prob-2')" class="flex-1 px-2 py-1 bg-gray-700 text-gray-200 rounded text-sm hover:bg-gray-600">Reset</button>
-                </div>
-            </div>
-
-            <div id="prob-3" class="border border-gray-800 p-4 rounded-xl bg-gray-950 flex flex-col items-center">
-                <div class="flex justify-center items-center mb-4">
-                    <span class="text-4xl text-blue-400 font-bold">2</span>
-                    <span class="text-xl text-red-400 font-bold -mt-3">3</span>
-                    <span class="sol-text text-2xl font-bold text-green-400 ml-2 hidden">= 8</span>
-                </div>
-                <div class="visual-area flex flex-wrap justify-center items-center gap-1 min-h-[80px] mb-4"></div>
-                <div class="flex gap-1 w-full mt-auto">
-                    <button onclick="handleShow('prob-3', 8)" class="flex-1 px-2 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">Show</button>
-                    <button onclick="handleReset('prob-3')" class="flex-1 px-2 py-1 bg-gray-700 text-gray-200 rounded text-sm hover:bg-gray-600">Reset</button>
-                </div>
-            </div>
-
-            <div id="prob-4" class="border border-gray-800 p-4 rounded-xl bg-gray-950 flex flex-col items-center">
-                <div class="flex justify-center items-center mb-4">
-                    <span class="text-4xl text-blue-400 font-bold">2</span>
-                    <span class="text-xl text-red-400 font-bold -mt-3">4</span>
-                    <span class="sol-text text-2xl font-bold text-green-400 ml-2 hidden">= 16</span>
-                </div>
-                <div class="visual-area flex flex-wrap justify-center items-center gap-1 min-h-[80px] mb-4"></div>
-                <div class="flex gap-1 w-full mt-auto">
-                    <button onclick="handleShow('prob-4', 16)" class="flex-1 px-2 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">Show</button>
-                    <button onclick="handleReset('prob-4')" class="flex-1 px-2 py-1 bg-gray-700 text-gray-200 rounded text-sm hover:bg-gray-600">Reset</button>
-                </div>
-            </div>
+        <div id="prob-0" class="border border-gray-800 p-4 rounded-xl bg-gray-950 flex flex-col items-center">
+          <div class="flex justify-center items-center mb-4">
+            <span class="text-4xl text-blue-400 font-bold">2</span>
+            <span class="text-xl text-red-400 font-bold -mt-3">0</span>
+            <span class="sol-text text-2xl font-bold text-green-400 ml-2 hidden">= 1</span>
+          </div>
+          <div class="visual-area grid grid-cols-4 gap-2 justify-items-center min-h-[80px] mb-4"></div>
+          <div class="flex gap-1 w-full mt-auto">
+            <button onclick="handleShow('prob-0', 1)" class="flex-1 px-2 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">Show</button>
+            <button onclick="handleReset('prob-0')" class="flex-1 px-2 py-1 bg-gray-700 text-gray-200 rounded text-sm hover:bg-gray-600">Reset</button>
+          </div>
         </div>
+
+        <div id="prob-1" class="border border-gray-800 p-4 rounded-xl bg-gray-950 flex flex-col items-center">
+          <div class="flex justify-center items-center mb-4">
+            <span class="text-4xl text-blue-400 font-bold">2</span>
+            <span class="text-xl text-red-400 font-bold -mt-3">1</span>
+            <span class="sol-text text-2xl font-bold text-green-400 ml-2 hidden">= 2</span>
+          </div>
+          <div class="visual-area grid grid-cols-4 gap-2 justify-items-center min-h-[80px] mb-4"></div>
+          <div class="flex gap-1 w-full mt-auto">
+            <button onclick="handleShow('prob-1', 2)" class="flex-1 px-2 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">Show</button>
+            <button onclick="handleReset('prob-1')" class="flex-1 px-2 py-1 bg-gray-700 text-gray-200 rounded text-sm hover:bg-gray-600">Reset</button>
+          </div>
+        </div>
+
+        <div id="prob-2" class="border border-gray-800 p-4 rounded-xl bg-gray-950 flex flex-col items-center">
+          <div class="flex justify-center items-center mb-4">
+            <span class="text-4xl text-blue-400 font-bold">2</span>
+            <span class="text-xl text-red-400 font-bold -mt-3">2</span>
+            <span class="sol-text text-2xl font-bold text-green-400 ml-2 hidden">= 4</span>
+          </div>
+          <div class="visual-area grid grid-cols-4 gap-2 justify-items-center min-h-[80px] mb-4"></div>
+          <div class="flex gap-1 w-full mt-auto">
+            <button onclick="handleShow('prob-2', 4)" class="flex-1 px-2 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">Show</button>
+            <button onclick="handleReset('prob-2')" class="flex-1 px-2 py-1 bg-gray-700 text-gray-200 rounded text-sm hover:bg-gray-600">Reset</button>
+          </div>
+        </div>
+
+        <div id="prob-3" class="border border-gray-800 p-4 rounded-xl bg-gray-950 flex flex-col items-center">
+          <div class="flex justify-center items-center mb-4">
+            <span class="text-4xl text-blue-400 font-bold">2</span>
+            <span class="text-xl text-red-400 font-bold -mt-3">3</span>
+            <span class="sol-text text-2xl font-bold text-green-400 ml-2 hidden">= 8</span>
+          </div>
+          <div class="visual-area grid grid-cols-4 gap-2 justify-items-center min-h-[80px] mb-4"></div>
+          <div class="flex gap-1 w-full mt-auto">
+            <button onclick="handleShow('prob-3', 8)" class="flex-1 px-2 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">Show</button>
+            <button onclick="handleReset('prob-3')" class="flex-1 px-2 py-1 bg-gray-700 text-gray-200 rounded text-sm hover:bg-gray-600">Reset</button>
+          </div>
+        </div>
+
+        <div id="prob-4" class="border border-gray-800 p-4 rounded-xl bg-gray-950 flex flex-col items-center">
+          <div class="flex justify-center items-center mb-4">
+            <span class="text-4xl text-blue-400 font-bold">2</span>
+            <span class="text-xl text-red-400 font-bold -mt-3">4</span>
+            <span class="sol-text text-2xl font-bold text-green-400 ml-2 hidden">= 16</span>
+          </div>
+          <div class="visual-area grid grid-cols-4 gap-2 justify-items-center min-h-[80px] mb-4"></div>
+          <div class="flex gap-1 w-full mt-auto">
+            <button onclick="handleShow('prob-4', 16)" class="flex-1 px-2 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700">Show</button>
+            <button onclick="handleReset('prob-4')" class="flex-1 px-2 py-1 bg-gray-700 text-gray-200 rounded text-sm hover:bg-gray-600">Reset</button>
+          </div>
+        </div>
+
+      </div>
     </div>
 
     <script>
-        let marillSpriteUrl = null;
+      let marillSpriteUrl = null;
 
-        async function init() {
-            try {
-                const res = await fetch('https://pokeapi.co/api/v2/pokemon/marill');
-                const data = await res.json();
-                marillSpriteUrl = data.sprites.front_default;
-                
-                document.getElementById('left-mon').src = marillSpriteUrl;
-                document.getElementById('right-mon').src = marillSpriteUrl;
-                document.getElementById('left-mon').classList.remove('hidden');
-                document.getElementById('right-mon').classList.remove('hidden');
-                document.getElementById('loading').classList.add('hidden');
-            } catch (e) { console.error("Failed to fetch Marill", e); }
+      async function init() {
+        try {
+          const res = await fetch("https://pokeapi.co/api/v2/pokemon/marill");
+          const data = await res.json();
+          marillSpriteUrl = data.sprites.front_default;
+          document.getElementById("loading").classList.add("hidden");
+        } catch (e) {
+          console.error("Failed to fetch Marill", e);
         }
+      }
 
-        function render(containerId, count) {
-            const container = document.querySelector(`#${containerId} .visual-area`);
-            container.innerHTML = "";
-            for (let i = 0; i < count; i++) {
-                const img = document.createElement('img');
-                img.src = marillSpriteUrl;
-                img.className = "w-10 h-10 animate-bounce";
-                container.appendChild(img);
-            }
+      function render(containerId, count) {
+        const container = document.querySelector(`#${containerId} .visual-area`);
+        container.innerHTML = "";
+        for (let i = 0; i < count; i++) {
+          const img = document.createElement("img");
+          img.src = marillSpriteUrl;
+          img.className = "w-10 h-10 animate-bounce";
+          container.appendChild(img);
         }
+      }
 
-        function handleShow(id, result) {
-            document.querySelector(`#${id} .sol-text`).classList.remove('hidden');
-            render(id, result);
-        }
+      function handleShow(id, result) {
+        document.querySelector(`#${id} .sol-text`).classList.remove("hidden");
+        render(id, result);
+      }
 
-        function handleReset(id) {
-            document.querySelector(`#${id} .sol-text`).classList.add('hidden');
-            document.querySelector(`#${id} .visual-area`).innerHTML = "";
-        }
+      function handleReset(id) {
+        document.querySelector(`#${id} .sol-text`).classList.add("hidden");
+        document.querySelector(`#${id} .visual-area`).innerHTML = "";
+      }
 
-        init();
+      init();
     </script>
-</body>
+  </body>
 </html>
