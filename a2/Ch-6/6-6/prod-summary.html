@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Property Summary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="bg-slate-950 min-h-screen flex items-center justify-center p-6 text-slate-100">
+
+    <main class="bg-slate-900 p-12 rounded-xl shadow-xl border border-slate-700 w-full max-w-4xl">
+        
+        <div id="quiz-area">
+            <p id="question-text" class="text-3xl font-semibold mb-8">Which expression represents the Product Property?</p>
+            
+            <div id="options" class="space-y-4">
+                <button onclick="check(false)" class="w-full p-6 text-xl border border-slate-700 rounded-lg hover:bg-slate-800 transition">$\log_x(a / b) = \log_x a - \log_x b$</button>
+                <button onclick="check(true)" class="w-full p-6 text-xl border border-slate-700 rounded-lg hover:bg-slate-800 transition">$\log_x(a \cdot b) = \log_x a + \log_x b$</button>
+                <button onclick="check(false)" class="w-full p-6 text-xl border border-slate-700 rounded-lg hover:bg-slate-800 transition">$\log_b(a^n) = n \cdot \log_b a$</button>
+            </div>
+        </div>
+
+        <div id="feedback" class="hidden p-6 rounded-lg font-medium text-lg text-center mt-8 border"></div>
+    </main>
+
+    <script>
+        function check(isCorrect) {
+            const feedback = document.getElementById('feedback');
+            const options = document.getElementById('options');
+            
+            options.classList.add('pointer-events-none', 'opacity-50');
+            feedback.classList.remove('hidden');
+
+            if (isCorrect) {
+                feedback.innerHTML = "Correct! The Product Property is $\\log_x(a \\cdot b) = \\log_x a + \\log_x b$.";
+                feedback.className = "p-6 rounded-lg font-medium text-lg text-center mt-8 border bg-emerald-950 text-emerald-300 border-emerald-800";
+            } else {
+                feedback.innerHTML = "Incorrect. Remember: $\\log_x(a \\cdot b) = \\log_x a + \\log_x b$.";
+                feedback.className = "p-6 rounded-lg font-medium text-lg text-center mt-8 border bg-rose-950 text-rose-300 border-rose-800";
+            }
+            MathJax.typeset();
+        }
+    </script>
+</body>
+</html>
