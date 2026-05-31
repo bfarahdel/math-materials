@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exponents</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-950 min-h-screen p-4 flex items-center justify-center">
@@ -10,7 +11,6 @@
       <div id="loading" class="text-blue-400 text-center mb-4 italic">Loading resources...</div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-        
         <div id="prob-0" class="border border-gray-800 p-4 rounded-xl bg-gray-950 flex flex-col items-center">
           <div class="flex justify-center items-center mb-4">
             <span class="text-4xl text-blue-400 font-bold">2</span>
@@ -75,27 +75,56 @@
             <button onclick="handleReset('prob-4')" class="flex-1 px-2 py-1 bg-gray-700 text-gray-200 rounded text-sm hover:bg-gray-600">Reset</button>
           </div>
         </div>
-
       </div>
     </div>
 
     <script>
       let marillSpriteUrl = null;
+      const POKE_URL = "https://pokeapi.co/api/v2/pokemon/marill";
 
-      async function init() {
-        try {
-          const res = await fetch("https://pokeapi.co/api/v2/pokemon/marill");
-          const data = await res.json();
-          marillSpriteUrl = data.sprites.front_default;
-          document.getElementById("loading").classList.add("hidden");
-        } catch (e) {
-          console.error("Failed to fetch Marill", e);
+      // Robust initialization with Fetch API and XHR fallback
+      function init() {
+        if (window.fetch) {
+          fetch(POKE_URL)
+            .then(function (res) {
+              if (!res.ok) throw new Error("Network response error");
+              return res.json();
+            })
+            .then(function (data) {
+              marillSpriteUrl = data.sprites.front_default;
+              document.getElementById("loading").classList.add("hidden");
+            })
+            .catch(function (err) {
+              console.warn("Fetch failed, falling back to XHR:", err);
+              fallbackXHR(POKE_URL);
+            });
+        } else {
+          fallbackXHR(POKE_URL);
         }
+      }
+
+      // Fallback function using XMLHttpRequest
+      function fallbackXHR(url) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              var data = JSON.parse(xhr.responseText);
+              marillSpriteUrl = data.sprites.front_default;
+              document.getElementById("loading").classList.add("hidden");
+            } else {
+              console.error("XHR failed to load data");
+            }
+          }
+        };
+        xhr.send();
       }
 
       function render(containerId, count) {
         const container = document.querySelector(`#${containerId} .visual-area`);
         container.innerHTML = "";
+        if (!marillSpriteUrl) return; 
         for (let i = 0; i < count; i++) {
           const img = document.createElement("img");
           img.src = marillSpriteUrl;
@@ -114,6 +143,7 @@
         document.querySelector(`#${id} .visual-area`).innerHTML = "";
       }
 
+      // Initialize the data load
       init();
     </script>
   </body>

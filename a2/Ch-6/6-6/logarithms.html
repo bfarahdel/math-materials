@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Logarithms</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-950 min-h-screen p-4 flex items-center justify-center">
@@ -42,22 +43,51 @@
 
     <script>
       let spriteUrl = null;
+      const POKE_URL = "https://pokeapi.co/api/v2/pokemon/marill";
 
-      async function init() {
-        try {
-          const res = await fetch("https://pokeapi.co/api/v2/pokemon/marill");
-          const data = await res.json();
-          spriteUrl = data.sprites.front_default;
-          document.getElementById("loading").classList.add("hidden");
-        } catch (e) {
-          console.error("Failed to fetch resource", e);
+      // Robust initialization with Fetch API and XHR fallback
+      function init() {
+        if (window.fetch) {
+          fetch(POKE_URL)
+            .then(function (res) {
+              if (!res.ok) throw new Error("Network response error");
+              return res.json();
+            })
+            .then(function (data) {
+              spriteUrl = data.sprites.front_default;
+              document.getElementById("loading").classList.add("hidden");
+            })
+            .catch(function (err) {
+              console.warn("Fetch failed, falling back to XHR:", err);
+              fallbackXHR(POKE_URL);
+            });
+        } else {
+          fallbackXHR(POKE_URL);
         }
+      }
+
+      // Fallback function using XMLHttpRequest
+      function fallbackXHR(url) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              var data = JSON.parse(xhr.responseText);
+              spriteUrl = data.sprites.front_default;
+              document.getElementById("loading").classList.add("hidden");
+            } else {
+              console.error("XHR failed to load data");
+            }
+          }
+        };
+        xhr.send();
       }
 
       function render(containerId, count) {
         const container = document.querySelector(`#${containerId} .visual-area`);
         container.innerHTML = "";
-        // If y=0, we display nothing, which is mathematically consistent
+        if (!spriteUrl) return;
         for (let i = 0; i < count; i++) {
           const img = document.createElement("img");
           img.src = spriteUrl;
@@ -76,6 +106,7 @@
         document.querySelector(`#${id} .visual-area`).innerHTML = "";
       }
 
+      // Start the loading process
       init();
     </script>
   </body>
