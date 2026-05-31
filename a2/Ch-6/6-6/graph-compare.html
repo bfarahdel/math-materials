@@ -7,7 +7,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       body { background-color: #111827; }
-      canvas { background-color: #030712; border-radius: 20px; cursor: crosshair; user-select: none; }
+      /* Added -webkit-user-select for Safari compatibility */
+      canvas { 
+        background-color: #030712; 
+        border-radius: 20px; 
+        cursor: crosshair; 
+        -webkit-user-select: none;
+        user-select: none; 
+      }
       
       .legend-container { position: absolute; top: 30px; right: 30px; width: 300px; }
       .legend { background: #1f2937; padding: 20px 25px; border-radius: 12px; color: #fff; border: 1px solid #374151; }
@@ -16,7 +23,6 @@
       .pos-sub { position: relative; top: 0.3em; font-size: 0.6em; margin-left: 1px; }
       .pos-sup { position: relative; top: -0.4em; font-size: 0.6em; }
       
-      /* Updated styling for larger font and no title */
       #calcBox { background: #1f2937; padding: 20px; border-radius: 12px; color: #e5e7eb; border: 1px solid #374151; margin-top: 15px; opacity: 0; transition: opacity 0.3s; }
       .math-text { font-family: 'Courier New', monospace; font-size: 1.5rem; margin: 12px 0; font-weight: bold; }
     </style>
@@ -76,6 +82,16 @@
         for (let i = 0; i <= 16; i++) { ctx.fillText(i * 2, centerX + i * gridSpacing, centerY + 20); }
         ctx.textAlign = "right";
         for (let i = 0; i <= 10; i++) { ctx.fillText(i * 2, centerX - 10, centerY - i * gridSpacing + 5); }
+
+        // Reflection Line y=x
+        ctx.strokeStyle = "#4b5563";
+        ctx.lineWidth = 2;
+        ctx.setLineDash([10, 10]);
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(centerX + toPx(16), centerY - toPx(16));
+        ctx.stroke();
+        ctx.setLineDash([]);
 
         // Curves
         ctx.lineWidth = 4;
