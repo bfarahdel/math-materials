@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logarithm Properties</title>
+    <style>
+        body {
+            margin: 0;
+            background: #0d0d0d;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .slide {
+            width: 900px;
+            background: #1a1a1a;
+            padding: 50px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .formula-wrapper {
+            margin-bottom: 40px;
+        }
+        .label {
+            color: #cccccc;
+            /* Increased font size from 1.2rem to 1.6rem */
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .formula {
+            font-size: 2.8rem;
+            text-align: center;
+            background: #000;
+            padding: 20px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .base { color: #00d4ff; }
+        .factor-a { color: #00ff88; }
+        .factor-b { color: #ff0077; }
+        .exponent { color: #ff0077; }
+    </style>
+</head>
+<body>
+
+<div class="slide">
+    <div class="formula-wrapper">
+        <div class="label">Product Property</div>
+        <div class="formula">
+            log<span class="base"><sub>x</sub></span>(<span class="factor-a">a</span> &sdot; <span class="factor-b">b</span>) = log<span class="base"><sub>x</sub></span><span class="factor-a">a</span> + log<span class="base"><sub>x</sub></span><span class="factor-b">b</span>
+        </div>
+    </div>
+
+    <div class="formula-wrapper">
+        <div class="label">Quotient Property</div>
+        <div class="formula">
+            log<span class="base"><sub>x</sub></span>(<span class="factor-a">a</span> / <span class="factor-b">b</span>) = log<span class="base"><sub>x</sub></span><span class="factor-a">a</span> - log<span class="base"><sub>x</sub></span><span class="factor-b">b</span>
+        </div>
+    </div>
+
+    <div class="formula-wrapper">
+        <div class="label">Power Property</div>
+        <div class="formula">
+            log<span class="base"><sub>b</sub></span>(a<span class="exponent"><sup>n</sup></span>) = <span class="exponent">n</span> &sdot; log<span class="base"><sub>b</sub></span>a
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
