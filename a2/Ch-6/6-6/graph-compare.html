@@ -1,120 +1,136 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inverse Functions Graph</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Exponential vs Logarithmic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { 
-            background-color: #0f1218; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-            font-family: sans-serif; 
-        }
-        #container { position: relative; }
-        canvas { 
-            background-color: #151921; 
-            border-radius: 20px; 
-            cursor: crosshair;
-            /* Compatibility fix from your screenshot */
-            -webkit-user-select: none; 
-            user-select: none; 
-        }
-        
-        .legend {
-            position: absolute; top: 30px; left: 30px; background: #1a1d24;
-            padding: 20px 25px; border-radius: 12px; color: #fff; border: 1px solid #333;
-        }
-        .legend-item { display: flex; align-items: center; margin: 12px 0; font-size: 24px; }
-        .swatch { width: 40px; height: 6px; margin-right: 20px; border-radius: 2px; }
-        
-        .pos-sub { position: relative; top: 0.3em; font-size: 0.6em; margin-left: 1px; }
-        .pos-sup { position: relative; top: -0.4em; font-size: 0.6em; }
+      body { background-color: #111827; }
+      canvas { background-color: #030712; border-radius: 20px; cursor: crosshair; user-select: none; }
+      
+      .legend-container { position: absolute; top: 30px; right: 30px; width: 300px; }
+      .legend { background: #1f2937; padding: 20px 25px; border-radius: 12px; color: #fff; border: 1px solid #374151; }
+      .legend-item { display: flex; align-items: center; margin: 12px 0; font-size: 20px; font-weight: bold; }
+      .swatch { width: 40px; height: 6px; margin-right: 20px; border-radius: 2px; }
+      .pos-sub { position: relative; top: 0.3em; font-size: 0.6em; margin-left: 1px; }
+      .pos-sup { position: relative; top: -0.4em; font-size: 0.6em; }
+      
+      /* Updated styling for larger font and no title */
+      #calcBox { background: #1f2937; padding: 20px; border-radius: 12px; color: #e5e7eb; border: 1px solid #374151; margin-top: 15px; opacity: 0; transition: opacity 0.3s; }
+      .math-text { font-family: 'Courier New', monospace; font-size: 1.5rem; margin: 12px 0; font-weight: bold; }
     </style>
-</head>
-<body>
-
-<div id="container">
-    <canvas id="graphCanvas" width="900" height="540"></canvas>
-    <div class="legend">
-        <div class="legend-item"><div class="swatch" style="background-color: #ff9800;"></div> y = b<span class="pos-sup">x</span></div>
-        <div class="legend-item"><div class="swatch" style="background-color: #ab47bc;"></div> y = log<span class="pos-sub">b</span>(x)</div>
+  </head>
+  <body class="flex justify-center items-center h-screen m-0">
+    <div id="container" class="relative">
+      <canvas id="graphCanvas" width="1000" height="600"></canvas>
+      
+      <div class="legend-container">
+        <div class="legend">
+          <div class="legend-item"><div class="swatch" style="background-color: #60a5fa"></div>y = 2<span class="pos-sup">x</span></div>
+          <div class="legend-item"><div class="swatch" style="background-color: #fb7185"></div>y = log<span class="pos-sub">2</span>(x)</div>
+        </div>
+        
+        <div id="calcBox">
+          <div id="mathContent"></div>
+        </div>
+      </div>
     </div>
-</div>
 
-<script>
-    const canvas = document.getElementById('graphCanvas');
-    const ctx = canvas.getContext('2d');
-    const scale = 60, centerX = 420, centerY = 300, b = 2.5;
-    const points = [{x: 0, y: 1}, {x: 1, y: b}, {x: -1, y: 0.4}];
-    let activePoint = null;
+    <script>
+      const canvas = document.getElementById("graphCanvas");
+      const ctx = canvas.getContext("2d");
+      const calcBox = document.getElementById("calcBox");
+      const mathContent = document.getElementById("mathContent");
+      
+      const gridSpacing = 60; 
+      const centerX = 200;
+      const centerY = 520;
+      
+      const points = [
+        { x: 0, y: 1 }, { x: 1, y: 2 }, { x: 2, y: 4 }, 
+        { x: 3, y: 8 }, { x: 4, y: 16 }
+      ];
+      let activePoint = null;
 
-    function draw() {
+      function toPx(val) { return (val / 2) * gridSpacing; }
+
+      function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Draw Grid
-        ctx.strokeStyle = '#1e232d';
-        for(let i=0; i<=canvas.width; i+=scale) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke(); }
-        for(let i=0; i<=canvas.height; i+=scale) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); ctx.stroke(); }
-        
-        // Draw Axes & Ticks
-        ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2;
+
+        // Grid
+        ctx.strokeStyle = "#1f2937";
+        for (let i = 0; i <= 20; i++) { ctx.beginPath(); ctx.moveTo(centerX + i * gridSpacing, 0); ctx.lineTo(centerX + i * gridSpacing, canvas.height); ctx.stroke(); }
+        for (let i = 0; i <= 10; i++) { ctx.beginPath(); ctx.moveTo(0, centerY - i * gridSpacing); ctx.lineTo(canvas.width, centerY - i * gridSpacing); ctx.stroke(); }
+
+        // Axes and Labels
+        ctx.strokeStyle = "#9ca3af"; ctx.fillStyle = "#9ca3af";
+        ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(0, centerY); ctx.lineTo(canvas.width, centerY);
-        for(let i=0; i<=canvas.width; i+=scale) { ctx.moveTo(i, centerY-5); ctx.lineTo(i, centerY+5); }
         ctx.moveTo(centerX, 0); ctx.lineTo(centerX, canvas.height);
-        for(let i=0; i<=canvas.height; i+=scale) { ctx.moveTo(centerX-5, i); ctx.lineTo(centerX+5, i); }
         ctx.stroke();
 
-        // Labels
-        ctx.fillStyle = '#ffffff'; ctx.font = 'bold 20px Arial';
-        ctx.fillText('x', canvas.width - 25, centerY - 15);
-        ctx.fillText('y', centerX + 15, 25);
+        ctx.font = "14px Arial";
+        ctx.textAlign = "center";
+        for (let i = 0; i <= 16; i++) { ctx.fillText(i * 2, centerX + i * gridSpacing, centerY + 20); }
+        ctx.textAlign = "right";
+        for (let i = 0; i <= 10; i++) { ctx.fillText(i * 2, centerX - 10, centerY - i * gridSpacing + 5); }
 
         // Curves
         ctx.lineWidth = 4;
-        ctx.strokeStyle = '#ff9800';
+        ctx.strokeStyle = "#60a5fa";
         ctx.beginPath();
-        for (let x = -4; x <= 2; x += 0.05) ctx.lineTo(centerX + x * scale, centerY - Math.pow(b, x) * scale);
+        for (let x = -2; x <= 4; x += 0.05) ctx.lineTo(centerX + toPx(x), centerY - toPx(Math.pow(2, x)));
         ctx.stroke();
 
-        ctx.strokeStyle = '#ab47bc';
+        ctx.strokeStyle = "#fb7185";
         ctx.beginPath();
-        for (let x = 0.05; x <= 6; x += 0.05) ctx.lineTo(centerX + x * scale, centerY - (Math.log(x) / Math.log(b)) * scale);
+        for (let x = 0.05; x <= 16; x += 0.05) ctx.lineTo(centerX + toPx(x), centerY - toPx(Math.log2(x)));
         ctx.stroke();
 
-        // Interactive Points
-        points.forEach(p => {
-            ctx.fillStyle = '#ff9800';
-            ctx.beginPath(); ctx.arc(centerX + p.x * scale, centerY - p.y * scale, 8, 0, Math.PI*2); ctx.fill();
-            ctx.fillStyle = '#ab47bc';
-            ctx.beginPath(); ctx.arc(centerX + p.y * scale, centerY - p.x * scale, 8, 0, Math.PI*2); ctx.fill();
+        // Points
+        points.forEach((p) => {
+          ctx.fillStyle = "#60a5fa";
+          ctx.beginPath(); ctx.arc(centerX + toPx(p.x), centerY - toPx(p.y), 8, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = "#fb7185";
+          ctx.beginPath(); ctx.arc(centerX + toPx(p.y), centerY - toPx(p.x), 8, 0, Math.PI * 2); ctx.fill();
 
-            if (activePoint === p) {
-                ctx.fillStyle = '#fff'; ctx.font = 'bold 22px Arial';
-                ctx.fillText(`(${p.x}, ${p.y.toFixed(1)})`, centerX + p.x * scale + 12, centerY - p.y * scale - 12);
-                ctx.fillText(`(${p.y.toFixed(1)}, ${p.x})`, centerX + p.y * scale + 12, centerY - p.x * scale - 12);
-            }
+          if (activePoint === p) {
+            ctx.fillStyle = "#fff";
+            ctx.font = "bold 22px Arial";
+            ctx.textAlign = "right";
+            ctx.fillText(`(${p.x}, ${p.y})`, centerX + toPx(p.x) - 12, centerY - toPx(p.y) + 6);
+            ctx.textAlign = "left";
+            ctx.fillText(`(${p.y}, ${p.x})`, centerX + toPx(p.y) + 12, centerY - toPx(p.x) + 6);
+          }
         });
-    }
+      }
 
-    canvas.addEventListener('click', (e) => {
+      canvas.addEventListener("click", (e) => {
         const rect = canvas.getBoundingClientRect();
         const mx = e.clientX - rect.left, my = e.clientY - rect.top;
         activePoint = null;
-        points.forEach(p => {
-            if (Math.hypot((centerX + p.x * scale) - mx, (centerY - p.y * scale) - my) < 20 ||
-                Math.hypot((centerX + p.y * scale) - mx, (centerY - p.x * scale) - my) < 20) {
-                activePoint = p;
-            }
+        points.forEach((p) => {
+          if (Math.hypot(centerX + toPx(p.x) - mx, centerY - toPx(p.y) - my) < 20 ||
+              Math.hypot(centerX + toPx(p.y) - mx, centerY - toPx(p.x) - my) < 20) {
+            activePoint = p;
+          }
         });
-        draw();
-    });
 
-    draw();
-</script>
-</body>
+        if (activePoint) {
+          calcBox.style.opacity = "1";
+          mathContent.innerHTML = `
+            <div class="math-text" style="color: #60a5fa">2<sup>${activePoint.x}</sup> = ${activePoint.y}</div>
+            <div class="math-text" style="color: #fb7185">log<sub>2</sub>(${activePoint.y}) = ${activePoint.x}</div>
+          `;
+        } else {
+          calcBox.style.opacity = "0";
+        }
+        draw();
+      });
+
+      draw();
+    </script>
+  </body>
 </html>
