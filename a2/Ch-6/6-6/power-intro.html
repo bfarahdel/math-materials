@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Property Step-by-Step</title>
+    <style>
+        body {
+            margin: 0;
+            background: #0d0d0d;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .slide {
+            width: 900px;
+            background: #1a1a1a;
+            padding: 50px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .formula {
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 40px;
+            background: #000;
+            padding: 20px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .example-area { 
+            font-size: 3rem;
+            text-align: center; 
+            margin-bottom: 50px;
+            padding: 40px;
+            background: #222;
+            border-radius: 8px;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            white-space: nowrap;
+        }
+        .base { color: #00d4ff; }
+        .exponent { color: #ff0077; }
+        
+        .btn-container { display: flex; justify-content: flex-end; }
+        .next-btn {
+            background: #004d60;
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .next-btn:hover { background: #003644; }
+        .hidden { visibility: hidden; }
+    </style>
+</head>
+<body>
+
+<div class="slide">
+    <div class="formula">
+        log<span class="base"><sub>b</sub></span>(a<span class="exponent"><sup>n</sup></span>) = <span class="exponent">n</span> · log<span class="base"><sub>b</sub></span>a
+    </div>
+
+    <div class="example-area">
+        <span>log<span class="base"><sub>2</sub></span>(4<span class="exponent"><sup>3</sup></span>)</span>
+        <span id="step-1" class="hidden"> = <span class="exponent">3</span> · log<span class="base"><sub>2</sub></span>4</span>
+        <span id="step-2" class="hidden"> = <span class="exponent">3</span> · 2</span>
+        <span id="step-3" class="hidden"> = 6</span>
+    </div>
+
+    <div class="btn-container">
+        <button class="next-btn" id="next-btn" onclick="nextStep()">Next Step</button>
+    </div>
+</div>
+
+<script>
+    let stage = 0;
+    function nextStep() {
+        if (stage === 0) {
+            document.getElementById('step-1').classList.remove('hidden');
+            stage = 1;
+        } else if (stage === 1) {
+            document.getElementById('step-2').classList.remove('hidden');
+            stage = 2;
+        } else if (stage === 2) {
+            document.getElementById('step-3').classList.remove('hidden');
+            document.getElementById('next-btn').innerText = "Reset";
+            stage = 3;
+        } else {
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('step-2').classList.add('hidden');
+            document.getElementById('step-3').classList.add('hidden');
+            document.getElementById('next-btn').innerText = "Next Step";
+            stage = 0;
+        }
+    }
+</script>
+
+</body>
+</html>
