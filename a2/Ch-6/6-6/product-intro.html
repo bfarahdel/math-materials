@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Property Step-by-Step</title>
+    <style>
+        body {
+            margin: 0;
+            background: #0d0d0d;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .slide {
+            width: 900px;
+            background: #1a1a1a;
+            padding: 50px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .formula {
+            font-size: 2.8rem;
+            text-align: center;
+            margin-bottom: 60px;
+            background: #000;
+            padding: 30px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .example-area { 
+            font-size: 3.5rem;
+            text-align: center; 
+            margin-bottom: 50px;
+            padding: 40px;
+            background: #222;
+            border-radius: 8px;
+            font-weight: bold;
+            min-height: 140px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .base { color: #00d4ff; }
+        .factor-a { color: #00ff88; }
+        .factor-b { color: #ff0077; }
+        
+        .btn-container { 
+            display: flex; 
+            justify-content: flex-end; 
+        }
+        .next-btn {
+            background: #004d60;
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .next-btn:hover { background: #003644; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="slide">
+    <div class="formula">
+        log<span class="base"><sub>x</sub></span>(<span class="factor-a">a</span> &sdot; <span class="factor-b">b</span>) = log<span class="base"><sub>x</sub></span><span class="factor-a">a</span> + log<span class="base"><sub>x</sub></span><span class="factor-b">b</span>
+    </div>
+
+    <div class="example-area">
+        <span id="step-0">log<span class="base"><sub>2</sub></span>(<span class="factor-a">4</span> &sdot; <span class="factor-b">8</span>)</span>
+        <span id="step-1" class="hidden">log<span class="base"><sub>2</sub></span>(<span class="factor-a">4</span> &sdot; <span class="factor-b">8</span>) = log<span class="base"><sub>2</sub></span><span class="factor-a">4</span></span>
+        <span id="step-2" class="hidden"> + log<span class="base"><sub>2</sub></span><span class="factor-b">8</span></span>
+        <span id="step-3" class="hidden"> = 2 + 3 = 5</span>
+    </div>
+
+    <div class="btn-container">
+        <button class="next-btn" id="next-btn" onclick="nextStep()">Next Step</button>
+    </div>
+</div>
+
+<script>
+    let stage = 0;
+    function nextStep() {
+        if (stage === 0) {
+            document.getElementById('step-0').classList.add('hidden');
+            document.getElementById('step-1').classList.remove('hidden');
+            stage = 1;
+        } else if (stage === 1) {
+            document.getElementById('step-2').classList.remove('hidden');
+            stage = 2;
+        } else if (stage === 2) {
+            document.getElementById('step-3').classList.remove('hidden');
+            document.getElementById('next-btn').innerText = "Reset";
+            stage = 3;
+        } else {
+            document.getElementById('step-0').classList.remove('hidden');
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('step-2').classList.add('hidden');
+            document.getElementById('step-3').classList.add('hidden');
+            document.getElementById('next-btn').innerText = "Next Step";
+            stage = 0;
+        }
+    }
+</script>
+
+</body>
+</html>
