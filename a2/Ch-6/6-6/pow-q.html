@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Property</title>
+    <title>Power Property</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         window.MathJax = {
@@ -18,12 +18,12 @@
     <main id="quiz-container" class="bg-slate-900 p-12 rounded-xl shadow-xl border border-slate-700 w-full max-w-2xl">
         
         <div id="question-box">
-            <p id="question-text" class="text-4xl font-semibold mb-10 leading-snug">Which is the correct expansion for $\log_3 (9 \times 27)$?</p>
+            <p id="question-text" class="text-4xl font-semibold mb-10 leading-snug">Which is the correct expansion for $\log_3 (9^2)$?</p>
             
             <div id="options" class="space-y-4">
-                <button onclick="checkExpansion(false)" class="option-btn w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">$\log_3 9 \times \log_3 27$</button>
-                <button onclick="checkExpansion(true)" class="option-btn w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">$\log_3 9 + \log_3 27$</button>
-                <button onclick="checkExpansion(false)" class="option-btn w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">$\log_3 9 - \log_3 27$</button>
+                <button onclick="checkExpansion(false)" class="option-btn w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">$2 + \log_3 9$</button>
+                <button onclick="checkExpansion(true)" class="option-btn w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">$2 \log_3 9$</button>
+                <button onclick="checkExpansion(false)" class="option-btn w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">$\log_3 2 \times \log_3 9$</button>
             </div>
         </div>
 
@@ -41,27 +41,27 @@
             feedback.classList.remove('hidden');
 
             if (isCorrect) {
-                feedback.innerHTML = "Correct! The product rule states $\\log_b(xy) = \\log_b x + \\log_b y$.";
+                feedback.innerHTML = "Correct! The power rule states $\\log_b(x^p) = p \\cdot \\log_b x$.";
                 feedback.className = "p-6 rounded-lg font-medium text-lg text-center mt-8 border bg-emerald-950 text-emerald-300 border-emerald-800";
                 nextBtn.classList.remove('hidden');
             } else {
-                feedback.innerHTML = "Not quite. Recall the product rule: $\\log_b(xy) = \\log_b x + \\log_b y$. Try again.";
+                feedback.innerHTML = "Not quite. Recall the power rule: $\\log_b(x^p) = p \\cdot \\log_b x$. Try again.";
                 feedback.className = "p-6 rounded-lg font-medium text-lg text-center mt-8 border bg-rose-950 text-rose-300 border-rose-800";
             }
             MathJax.typeset();
         }
 
         function showEvaluation() {
-            document.getElementById('question-text').innerHTML = "Now, evaluate $\\log_3 9 + \\log_3 27$:";
+            document.getElementById('question-text').innerHTML = "Now, evaluate $2 \\log_3 9$:";
             document.getElementById('feedback').classList.add('hidden');
             document.getElementById('next-btn').classList.add('hidden');
             
             const options = document.getElementById('options');
             options.classList.remove('pointer-events-none', 'opacity-50');
             options.innerHTML = `
+                <button onclick="finish(false)" class="w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">2</button>
                 <button onclick="finish(false)" class="w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">3</button>
-                <button onclick="finish(true)" class="w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">5</button>
-                <button onclick="finish(false)" class="w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">6</button>
+                <button onclick="finish(true)" class="w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">4</button>
             `;
             MathJax.typeset();
         }
@@ -70,10 +70,10 @@
             const feedback = document.getElementById('feedback');
             feedback.classList.remove('hidden');
             if (isCorrect) {
-                feedback.innerHTML = "Correct! $2 + 3 = 5$.";
+                feedback.innerHTML = "Correct! $2 \\cdot \\log_3 9 = 2 \\cdot 2 = 4$.";
                 feedback.className = "p-6 rounded-lg font-medium text-lg text-center mt-8 border bg-emerald-950 text-emerald-300 border-emerald-800";
             } else {
-                feedback.innerHTML = "Incorrect. Remember $\\log_3 9 = 2$ and $\\log_3 27 = 3$.";
+                feedback.innerHTML = "Incorrect. Remember $\\log_3 9 = 2$, so $2 \\cdot 2 = 4$.";
                 feedback.className = "p-6 rounded-lg font-medium text-lg text-center mt-8 border bg-rose-950 text-rose-300 border-rose-800";
             }
             MathJax.typeset();

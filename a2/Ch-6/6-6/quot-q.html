@@ -3,71 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mathematics Question</title>
+    <title>Quotient Property</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- MathJax for high-quality LaTeX rendering -->
     <script>
         window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']]
-            },
+            tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
             svg: { fontCache: 'global' }
         };
     </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
-<body class="bg-slate-100 min-h-screen flex items-center justify-center p-6 font-sans text-slate-900">
+<body class="bg-slate-950 min-h-screen flex items-center justify-center p-6 text-slate-100">
 
-    <main id="quiz-container" class="bg-white p-12 rounded-xl shadow-sm border border-slate-200 w-full max-w-2xl">
+    <main id="quiz-container" class="bg-slate-900 p-12 rounded-xl shadow-xl border border-slate-700 w-full max-w-2xl">
         
         <div id="question-box">
-            <p class="text-3xl font-medium text-slate-800 mb-10 leading-snug">Which expression is equivalent to $\log_3 (7 \times 8)$?</p>
+            <p id="question-text" class="text-4xl font-semibold mb-10 leading-snug">Which is the correct expansion for $\log_3 \left(\frac{27}{9}\right)$?</p>
             
             <div id="options" class="space-y-4">
-                <button onclick="checkAnswer(false)" class="w-full p-6 text-2xl text-left border border-slate-300 rounded-lg hover:border-slate-500 hover:bg-slate-50 transition duration-150">
-                    $\log_3 7 \times \log_3 8$
-                </button>
-                <button onclick="checkAnswer(true)" class="w-full p-6 text-2xl text-left border border-slate-300 rounded-lg hover:border-slate-500 hover:bg-slate-50 transition duration-150">
-                    $\log_3 7 + \log_3 8$
-                </button>
-                <button onclick="checkAnswer(false)" class="w-full p-6 text-2xl text-left border border-slate-300 rounded-lg hover:border-slate-500 hover:bg-slate-50 transition duration-150">
-                    $\log_3 56$
-                </button>
-                <button onclick="checkAnswer(false)" class="w-full p-6 text-2xl text-left border border-slate-300 rounded-lg hover:border-slate-500 hover:bg-slate-50 transition duration-150">
-                    $\log_3 7 - \log_3 8$
-                </button>
+                <button onclick="checkExpansion(false)" class="option-btn w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">$\log_3 27 \times \log_3 9$</button>
+                <button onclick="checkExpansion(false)" class="option-btn w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">$\log_3 27 + \log_3 9$</button>
+                <button onclick="checkExpansion(true)" class="option-btn w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">$\log_3 27 - \log_3 9$</button>
             </div>
         </div>
 
         <div id="feedback" class="hidden p-6 rounded-lg font-medium text-lg text-center mt-8 border"></div>
-        
-        <button id="restart" onclick="location.reload()" class="hidden w-full mt-8 bg-slate-900 text-white py-4 text-lg font-semibold rounded-lg hover:bg-slate-800 transition shadow-sm">
-            Reset
-        </button>
+        <button id="next-btn" onclick="showEvaluation()" class="hidden w-full mt-8 bg-blue-600 text-white py-4 text-xl font-semibold rounded-lg hover:bg-blue-500 transition">Next: Evaluate Expression</button>
     </main>
 
     <script>
-        function checkAnswer(isCorrect) {
+        function checkExpansion(isCorrect) {
             const feedback = document.getElementById('feedback');
             const options = document.getElementById('options');
-            const restart = document.getElementById('restart');
+            const nextBtn = document.getElementById('next-btn');
             
-            options.classList.add('pointer-events-none', 'opacity-70');
+            options.classList.add('pointer-events-none', 'opacity-50');
             feedback.classList.remove('hidden');
 
             if (isCorrect) {
-                feedback.innerHTML = "Correct.";
-                feedback.classList.add('bg-emerald-50', 'text-emerald-800', 'border-emerald-200');
+                feedback.innerHTML = "Correct! The quotient rule states $\\log_b\\left(\\frac{x}{y}\\right) = \\log_b x - \\log_b y$.";
+                feedback.className = "p-6 rounded-lg font-medium text-lg text-center mt-8 border bg-emerald-950 text-emerald-300 border-emerald-800";
+                nextBtn.classList.remove('hidden');
             } else {
-                feedback.innerHTML = "Incorrect. Recall the identity: $\\log_x (ab) = \\log_x a + \\log_x b$";
-                feedback.classList.add('bg-rose-50', 'text-rose-800', 'border-rose-200');
+                feedback.innerHTML = "Not quite. Recall the quotient rule: $\\log_b\\left(\\frac{x}{y}\\right) = \\log_b x - \\log_b y$. Try again.";
+                feedback.className = "p-6 rounded-lg font-medium text-lg text-center mt-8 border bg-rose-950 text-rose-300 border-rose-800";
             }
-            restart.classList.remove('hidden');
+            MathJax.typeset();
+        }
+
+        function showEvaluation() {
+            document.getElementById('question-text').innerHTML = "Now, evaluate $\\log_3 27 - \\log_3 9$:";
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
             
-            if (window.MathJax) {
-                MathJax.typesetPromise([feedback]);
+            const options = document.getElementById('options');
+            options.classList.remove('pointer-events-none', 'opacity-50');
+            options.innerHTML = `
+                <button onclick="finish(true)" class="w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">1</button>
+                <button onclick="finish(false)" class="w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">2</button>
+                <button onclick="finish(false)" class="w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">3</button>
+            `;
+            MathJax.typeset();
+        }
+
+        function finish(isCorrect) {
+            const feedback = document.getElementById('feedback');
+            feedback.classList.remove('hidden');
+            if (isCorrect) {
+                feedback.innerHTML = "Correct! $3 - 2 = 1$.";
+                feedback.className = "p-6 rounded-lg font-medium text-lg text-center mt-8 border bg-emerald-950 text-emerald-300 border-emerald-800";
+            } else {
+                feedback.innerHTML = "Incorrect. Remember $\\log_3 27 = 3$ and $\\log_3 9 = 2$.";
+                feedback.className = "p-6 rounded-lg font-medium text-lg text-center mt-8 border bg-rose-950 text-rose-300 border-rose-800";
             }
+            MathJax.typeset();
         }
     </script>
 </body>
