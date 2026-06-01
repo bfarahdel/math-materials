@@ -21,9 +21,18 @@
             <p id="question-text" class="text-4xl font-semibold mb-10 leading-snug">Which is the correct expansion for $\log_3 (9^2)$?</p>
             
             <div id="options" class="space-y-4">
-                <button onclick="checkExpansion(false)" class="option-btn w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">$2 + \log_3 9$</button>
-                <button onclick="checkExpansion(true)" class="option-btn w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">$2 \log_3 9$</button>
-                <button onclick="checkExpansion(false)" class="option-btn w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">$\log_3 2 \times \log_3 9$</button>
+                <button onclick="checkExpansion(false)" class="option-btn w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition flex items-center">
+                    <span class="font-bold mr-4 text-slate-400">A.</span>
+                    <span>$2 + \log_3 9$</span>
+                </button>
+                <button onclick="checkExpansion(true)" class="option-btn w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition flex items-center">
+                    <span class="font-bold mr-4 text-slate-400">B.</span>
+                    <span>$2 \log_3 9$</span>
+                </button>
+                <button onclick="checkExpansion(false)" class="option-btn w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition flex items-center">
+                    <span class="font-bold mr-4 text-slate-400">C.</span>
+                    <span>$\log_3 2 \times \log_3 9$</span>
+                </button>
             </div>
         </div>
 
@@ -59,9 +68,18 @@
             const options = document.getElementById('options');
             options.classList.remove('pointer-events-none', 'opacity-50');
             options.innerHTML = `
-                <button onclick="finish(false)" class="w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">2</button>
-                <button onclick="finish(false)" class="w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">3</button>
-                <button onclick="finish(true)" class="w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition">4</button>
+                <button onclick="finish(false)" class="w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition flex items-center">
+                    <span class="font-bold mr-4 text-slate-400">A.</span>
+                    <span>2</span>
+                </button>
+                <button onclick="finish(false)" class="w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition flex items-center">
+                    <span class="font-bold mr-4 text-slate-400">B.</span>
+                    <span>3</span>
+                </button>
+                <button onclick="finish(true)" class="w-full p-6 text-2xl text-left border border-slate-700 rounded-lg hover:bg-slate-800 transition flex items-center">
+                    <span class="font-bold mr-4 text-slate-400">C.</span>
+                    <span>4</span>
+                </button>
             `;
             MathJax.typeset();
         }
