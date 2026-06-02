@@ -22,6 +22,8 @@
         margin: 0;
         padding: 20px;
         min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
       }
       #arena {
         position: relative;
@@ -44,6 +46,12 @@
         display: inline-block;
         font-size: 0.9em;
         margin-bottom: 5px;
+      }
+      .boss-tag {
+        background: #560303 !important;
+        color: #ff3333 !important;
+        border: 2px solid #ff3333 !important;
+        box-shadow: 0 0 10px #ff0000;
       }
       #question-area {
         background-color: #000000;
@@ -100,6 +108,13 @@
         transition: transform 0.4s ease-out;
         z-index: 5;
       }
+      #opp-canvas {
+        transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      .boss-sprite {
+        transform: scale(1.5);
+        transform-origin: center bottom;
+      }
       @keyframes jiggle {
         0%, 100% { transform: translate(0, 0); }
         25% { transform: translate(-15px, 0); }
@@ -109,15 +124,70 @@
       .jiggle-effect {
         animation: jiggle 0.1s linear 6;
       }
+      #boss-splash {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.85);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease;
+      }
+      #boss-splash.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .boss-title {
+        font-family: 'Impact', 'Arial Black', sans-serif;
+        font-size: 3.5rem;
+        color: #ff1111;
+        text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+        letter-spacing: 4px;
+        margin: 0;
+        text-transform: uppercase;
+        animation: pulse 1s infinite alternate;
+      }
+      .boss-subtitle {
+        font-size: 1.2rem;
+        color: #ffffff;
+        margin-top: 10px;
+      }
+      @keyframes pulse {
+        from { transform: scale(0.95); text-shadow: 0 0 10px #ff0000; }
+        to { transform: scale(1.05); text-shadow: 0 0 25px #ff0000, 0 0 40px #ff0000; }
+      }
+
+      /* Celebration Jumping Layout Styles */
+      .party-pokemon {
+        position: fixed;
+        width: 120px;
+        height: 120px;
+        z-index: 1;
+        animation: jump 0.6s infinite alternate cubic-bezier(0.25, 1, 0.5, 1);
+      }
+      @keyframes jump {
+        from { transform: translateY(0); }
+        to { transform: translateY(-35px); }
+      }
     </style>
   </head>
   <body>
     <div id="arena">
-      <div id="opp-container" style="position: absolute; top: 20px; right: 50px; z-index: 2">
-        <div id="opp-name" class="name-tag">???</div>
-        <br />
-        <canvas id="opp-canvas" width="180" height="180" title="Opponent Pokemon"></canvas>
+      <div id="boss-splash">
+        <h1 class="boss-title">Boss Fight</h1>
+        <div id="boss-splash-text" class="boss-subtitle">A wild ??? appeared!</div>
       </div>
+
+      <div id="opp-container" style="position: absolute; top: 20px; right: 50px; z-index: 2">
+        <canvas id="opp-canvas" width="180" height="180" title="Opponent Pokemon"></canvas>
+        <br />
+        <div id="opp-name" class="name-tag">???</div>
+      </div>
+
       <div id="user-container" style="position: absolute; bottom: 40px; left: 50px; z-index: 3">
         <div id="sprite-wrapper">
           <img id="user-sprite" src="" width="180" height="180" alt="Player's Pokemon" />
@@ -140,8 +210,15 @@
 
     <script>
       let userHp = 100, qIndex = 0;
+      let regularStreak = 0; 
+      let bossHits = 0;
+      let isBossMode = false;
+      let currentBossName = "";
+
       const playerPokemon = "marill";
       const horde = [25, 1, 4, 7, 10, 16, 19, 23, 52, 92];
+      const bosses = [149, 150, 248, 384, 487]; 
+      
       const questionBank = [
         { type: "Evaluate", q: "\\(\\log_{10}(1000)\\)", opts: ["1", "2", "3", "30"], correct: 2 },
         { type: "Evaluate", q: "\\(\\log_{2}(8)\\)", opts: ["2", "3", "4", "8"], correct: 1 },
@@ -192,9 +269,25 @@
 
       async function updateOpponent() {
         const canvas = document.getElementById("opp-canvas"), ctx = canvas.getContext("2d");
+        const oppNameTag = document.getElementById("opp-name");
+        
         try {
-          const data = await getPokemonData(horde[Math.floor(Math.random() * horde.length)]);
-          document.getElementById("opp-name").innerText = data.name;
+          let pokemonId;
+          if (isBossMode) {
+            pokemonId = bosses[Math.floor(Math.random() * bosses.length)];
+            canvas.classList.add("boss-sprite");
+            oppNameTag.classList.add("boss-tag");
+          } else {
+            pokemonId = horde[Math.floor(Math.random() * horde.length)];
+            canvas.classList.remove("boss-sprite");
+            oppNameTag.classList.remove("boss-tag");
+          }
+
+          const data = await getPokemonData(pokemonId);
+          currentBossName = data.name;
+          oppNameTag.innerText = isBossMode ? `BOSS ${data.name}` : data.name;
+          oppNameTag.style.visibility = "visible";
+          
           const img = new Image();
           img.crossOrigin = "Anonymous";
           img.src = data.sprites.front_default;
@@ -203,18 +296,33 @@
             ctx.drawImage(img, 20, 20, 140, 140);
             ctx.globalCompositeOperation = "multiply";
             ctx.beginPath();
-            for (let i = 0; i < 12; i++) {
-              const angle = (i / 12) * Math.PI * 2;
+            
+            let count = isBossMode ? 16 : 12;
+            for (let i = 0; i < count; i++) {
+              const angle = (i / count) * Math.PI * 2;
               const dist = 50 + Math.random() * 40;
               const x = 90 + Math.cos(angle) * dist, y = 90 + Math.sin(angle) * dist;
               i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
             }
             ctx.closePath();
-            ctx.fillStyle = "rgba(100, 180, 100, 0.8)";
+            ctx.fillStyle = isBossMode ? "rgba(180, 50, 50, 0.85)" : "rgba(100, 180, 100, 0.8)";
             ctx.fill();
             ctx.globalCompositeOperation = "source-over";
+
+            if (isBossMode && bossHits === 0) {
+              triggerBossSplash();
+            }
           };
         } catch (e) { console.error("Could not load opponent", e); }
+      }
+
+      function triggerBossSplash() {
+        const splash = document.getElementById("boss-splash");
+        document.getElementById("boss-splash-text").innerText = `A wild BOSS ${currentBossName.toUpperCase()} appeared!`;
+        splash.classList.add("active");
+        setTimeout(() => {
+          splash.classList.remove("active");
+        }, 2500);
       }
 
       function nextQuestion() {
@@ -223,6 +331,7 @@
         document.getElementById("feedback").innerText = "";
         document.getElementById("next-btn").style.display = "none";
         document.getElementById("q-text").innerHTML = `${currentQ.type}: ${currentQ.q}`;
+        
         const optDiv = document.getElementById("options");
         optDiv.innerHTML = "";
         currentQ.opts.forEach((o, i) => {
@@ -238,27 +347,111 @@
       function checkAnswer(isCorrect, correctText) {
         document.querySelectorAll(".option-btn").forEach(b => (b.disabled = true));
         const spriteWrapper = document.getElementById("sprite-wrapper"), oppContainer = document.getElementById("opp-container"), userContainer = document.getElementById("user-container"), feedback = document.getElementById("feedback");
+        
         if (isCorrect) {
           const userRect = spriteWrapper.getBoundingClientRect(), oppRect = oppContainer.getBoundingClientRect();
           spriteWrapper.style.transform = `translate(${oppRect.left - userRect.left}px, ${oppRect.top - userRect.top}px)`;
+          
           setTimeout(() => {
             oppContainer.classList.add("jiggle-effect");
             spriteWrapper.style.transform = `translate(0, 0)`;
-            setTimeout(() => { oppContainer.classList.remove("jiggle-effect"); updateOpponent(); }, 600);
+            
+            setTimeout(() => { 
+              oppContainer.classList.remove("jiggle-effect"); 
+              
+              if (!isBossMode) {
+                regularStreak++;
+                if (regularStreak >= 5) {
+                  isBossMode = true;
+                  bossHits = 0;
+                  updateOpponent();
+                } else {
+                  updateOpponent();
+                }
+              } else {
+                bossHits++;
+                if (bossHits >= 5) {
+                  triggerVictory();
+                  return;
+                }
+              }
+            }, 600);
           }, 400);
-          feedback.style.color = "#a5d6a7"; feedback.innerHTML = "Correct!"; document.getElementById("next-btn").style.display = "inline-block";
+          
+          feedback.style.color = "#a5d6a7"; 
+          feedback.innerHTML = isBossMode ? `Critical Hit! Boss HP Lowered (${bossHits + 1}/5)` : "Correct!"; 
+          
+          if (bossHits < 5) {
+            document.getElementById("next-btn").style.display = "inline-block";
+          }
         } else {
           const oppRect = oppContainer.getBoundingClientRect(), userRect = userContainer.getBoundingClientRect();
           oppContainer.style.transform = `translate(${userRect.left - oppRect.left}px, ${userRect.top - oppRect.top}px)`;
+          
           setTimeout(() => {
             userContainer.classList.add("jiggle-effect");
             oppContainer.style.transform = `translate(0, 0)`;
             setTimeout(() => userContainer.classList.remove("jiggle-effect"), 600);
           }, 400);
-          feedback.style.color = "#ef9a9a"; feedback.innerHTML = "Incorrect! " + correctText; userHp = Math.max(0, userHp - 20); document.getElementById("user-hp").style.width = userHp + "%";
+          
+          feedback.style.color = "#ef9a9a"; 
+          feedback.innerHTML = "Incorrect! " + correctText; 
+          
+          let damage = isBossMode ? 40 : 20;
+          userHp = Math.max(0, userHp - damage); 
+          document.getElementById("user-hp").style.width = userHp + "%";
+          
           if (userHp <= 0) triggerGameOver(); else document.getElementById("next-btn").style.display = "inline-block";
         }
         if (window.MathJax) MathJax.typesetPromise();
+      }
+
+      function triggerVictory() {
+        // Clear and hide defeated Boss
+        const canvas = document.getElementById("opp-canvas");
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        document.getElementById("opp-name").style.visibility = "hidden";
+
+        // Display updated victory message
+        document.getElementById("feedback").style.color = "#ffd700";
+        document.getElementById("feedback").innerHTML = "<span style='font-size:2.2em; font-family:Impact,sans-serif; letter-spacing:2px; color:#ffeb3b;'>VICTORY!</span><br><br><button class='btn btn-large yellow darken-3' onclick='location.reload()'>Play Again</button>";
+        document.getElementById("next-btn").style.display = "none";
+        document.getElementById("options").innerHTML = "";
+        document.getElementById("q-text").innerText = "";
+
+        // Spawn cheering Pokémon on left and right side of screen
+        spawnCelebrationParty();
+      }
+
+      async function spawnCelebrationParty() {
+        // Choose a few random IDs from your horde list to join the party
+        const partyIds = [...horde];
+        shuffle(partyIds);
+        const selectedParty = partyIds.slice(0, 6); // Grab 6 random ones
+
+        selectedParty.forEach(async (id, index) => {
+          try {
+            const data = await getPokemonData(id);
+            const img = document.createElement("img");
+            img.src = data.sprites.front_default;
+            img.className = "party-pokemon";
+            
+            // Alternates positioning between left flank and right flank
+            if (index % 2 === 0) {
+              img.style.left = `${20 + (index * 25)}px`;
+            } else {
+              img.style.right = `${20 + ((index - 1) * 25)}px`;
+            }
+            
+            // Randomly staggers heights and jumping speeds to make the bouncing look natural
+            img.style.top = `${100 + Math.random() * 150}px`;
+            img.style.animationDelay = `${Math.random() * 0.5}s`;
+            img.style.animationDuration = `${0.4 + Math.random() * 0.4}s`;
+            
+            document.body.appendChild(img);
+          } catch(e) { console.error(e); }
+        });
       }
 
       function triggerGameOver() {
