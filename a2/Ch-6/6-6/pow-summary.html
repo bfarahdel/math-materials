@@ -21,9 +21,18 @@
             <p id="question-text" class="text-3xl font-semibold mb-8">Which expression represents the Power Property?</p>
             
             <div id="options" class="space-y-4">
-                <button onclick="check(false)" class="w-full p-6 text-xl border border-slate-700 rounded-lg hover:bg-slate-800 transition">$\log_x(a / b) = \log_x a - \log_x b$</button>
-                <button onclick="check(false)" class="w-full p-6 text-xl border border-slate-700 rounded-lg hover:bg-slate-800 transition">$\log_x(a \cdot b) = \log_x a + \log_x b$</button>
-                <button onclick="check(true)" class="w-full p-6 text-xl border border-slate-700 rounded-lg hover:bg-slate-800 transition">$\log_b(a^n) = n \cdot \log_b a$</button>
+                <button onclick="check(false)" class="w-full p-6 text-xl border border-slate-700 rounded-lg hover:bg-slate-800 transition text-left flex items-center gap-4">
+                    <span class="font-bold text-slate-400">A.</span>
+                    <span>$\log_x(a / b) = \log_x a - \log_x b$</span>
+                </button>
+                <button onclick="check(false)" class="w-full p-6 text-xl border border-slate-700 rounded-lg hover:bg-slate-800 transition text-left flex items-center gap-4">
+                    <span class="font-bold text-slate-400">B.</span>
+                    <span>$\log_x(a \cdot b) = \log_x a + \log_x b$</span>
+                </button>
+                <button onclick="check(true)" class="w-full p-6 text-xl border border-slate-700 rounded-lg hover:bg-slate-800 transition text-left flex items-center gap-4">
+                    <span class="font-bold text-slate-400">C.</span>
+                    <span>$\log_b(a^n) = n \cdot \log_b a$</span>
+                </button>
             </div>
         </div>
 
