@@ -36,7 +36,11 @@
     <div id="game-screen" class="hidden bg-gray-800 p-6 rounded-2xl shadow-xl w-full max-w-2xl flex flex-col items-center">
       <h2 class="text-2xl font-bold text-red-500 mb-2">Pikachu Population Decay</h2>
       <p class="mb-4 text-gray-400 text-sm text-center">Click the red points to see the remaining free pikachu.</p>
-      <canvas id="graphCanvas" class="w-full h-80 bg-gray-700 rounded-lg border-b-2 border-l-2 border-gray-500 mb-4 cursor-pointer"></canvas>
+      
+      <div class="w-full h-80 bg-gray-700 rounded-lg border-b-2 border-l-2 border-gray-500 mb-4 cursor-pointer overflow-hidden">
+        <canvas id="graphCanvas" width="600" height="320" class="w-full h-full"></canvas>
+      </div>
+
       <p id="info-text" class="text-xl font-bold text-red-500 mb-4 min-h-[30px]"></p>
       <div id="population-count" class="flex flex-wrap justify-center gap-2 mt-4 min-h-[64px]"></div>
       <button id="collect-btn" onclick="startQuiz()" class="hidden mt-6 bg-green-600 hover:bg-green-700 px-6 py-2 rounded-full font-bold">
@@ -70,13 +74,11 @@
       const popContainer = document.getElementById("population-count");
       const collectBtn = document.getElementById("collect-btn");
       
-      // Asset parameters and API paths
       const POKE_URL = "https://pokeapi.co/api/v2/pokemon/25";
-      let pikachuSpriteUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"; // Dynamic safety fallback
+      let pikachuSpriteUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"; 
       let collectedCount = 0;
       let currentIdx = 0;
 
-      // Robust initialization with Fetch API and XHR fallback
       function init() {
         if (window.fetch) {
           fetch(POKE_URL)
@@ -96,7 +98,6 @@
         }
       }
 
-      // Fallback function using XMLHttpRequest
       function fallbackXHR(url) {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url, true);
@@ -113,7 +114,6 @@
         xhr.send();
       }
 
-      // Initialize API asset call immediately on load
       init();
 
       const points = [
@@ -124,26 +124,19 @@
       ];
 
       let questions = [
-        // --- EVALUATING LOGARITHMS ---
         { q: "Evaluate \\(\\log_2(8)\\)", a: ["3", "4", "2"], c: "3", cat: "Evaluating Logarithms", exp: "Because \\(2^3 = 8\\), \\(\\log_2(8) = 3\\)." },
         { q: "Evaluate \\(\\log_5(25)\\)", a: ["2", "5", "1"], c: "2", cat: "Evaluating Logarithms", exp: "Because \\(5^2 = 25\\), \\(\\log_5(25) = 2\\)." },
         { q: "Evaluate \\(\\log_3(9)\\)", a: ["2", "3", "6"], c: "2", cat: "Evaluating Logarithms", exp: "Because \\(3^2 = 9\\), \\(\\log_3(9) = 2\\)." },
         { q: "Evaluate \\(\\log_{10}(100)\\)", a: ["2", "10", "20"], c: "2", cat: "Evaluating Logarithms", exp: "Because \\(10^2 = 100\\), \\(\\log_{10}(100) = 2\\)." },
         { q: "Evaluate \\(\\log_4(64)\\)", a: ["3", "4", "16"], c: "3", cat: "Evaluating Logarithms", exp: "Because \\(4^3 = 64\\), \\(\\log_4(64) = 3\\)." },
         { q: "Evaluate \\(\\log_2(16)\\)", a: ["4", "8", "2"], c: "4", cat: "Evaluating Logarithms", exp: "Because \\(2^4 = 16\\), \\(\\log_2(16) = 4\\)." },
-
-        // --- PRODUCT PROPERTY ---
         { q: "Expand the product: \\(\\log_3(4 \\cdot 7)\\)", a: ["\\(\\log_3(4) + \\log_3(7)\\)", "\\(\\log_3(4) - \\log_3(7)\\)", "\\(\\log_3(4) \\cdot \\log_3(7)\\)"], c: "\\(\\log_3(4) + \\log_3(7)\\)", cat: "Product Property", exp: "The Product Property states that a product inside splits into addition: \\(\\log_3(4 \\cdot 7) = \\log_3(4) + \\log_3(7)\\)." },
         { q: "Expand the product: \\(\\log_2(5 \\cdot 9)\\)", a: ["\\(\\log_2(5) + \\log_2(9)\\)", "\\(\\log_2(45)\\)", "\\(\\log_2(5) - \\log_2(9)\\)"], c: "\\(\\log_2(5) + \\log_2(9)\\)", cat: "Product Property", exp: "The Product Property changes multiplication into addition: \\(\\log_2(5 \\cdot 9) = \\log_2(5) + \\log_2(9)\\)." },
-        { q: "Expand the product: \\(\\log_{10}(2 \\cdot 3)\\)", a: ["\\(\\log_{10}(2) + \\log_{10}(3)\\)", "\\(\\log_{10}(2) \\cdot \\log_{10}(3)\\)", "\\(\\log_{10}(5)\\)"], c: "\\(\\log_{10}(2) + \\log_{10}(3)\\)", cat: "Product Property", exp: "Splitting multiplied items transforms them into added items: \\(\\log_{10}(2 \\cdot 3) = \\log_{10}(2) + \\log_{10}(3)\\)." },
-
-        // --- QUOTIENT PROPERTY ---
-        { q: "Expand the quotient: \\(\\log_4(9/2)\\)", a: ["\\(\\log_4(9) - \\log_4(2)\\)", "\\(\\log_4(9) + \\log_4(2)\\)", "\\(\\frac{\\log_4(9)}{\\log_4(2)}\\)"], c: "\\(\\log_4(9) - \\log_4(2)\\)", cat: "Quotient Property", exp: "The Quotient Property splits division inside a log into subtraction: \\(\\log_4(9/2) = \\log_4(9) - \\log_4(2)\\)." },
+        { q: "Expand the product: \\(\\log_{10}(2 \\cdot 3)\\)", a: ["\\(\\log_{10}(2) + \\log_{10}(3)\\)", "\\(\\log_{10}(2) \\cdot \\log_{10}(3)\\)", "\\(\\log_{10}(5)\\)"], c: "\\(\\log_{10}(2) + \\log_{10}(3)\\", cat: "Product Property", exp: "Splitting multiplied items transforms them into added items: \\(\\log_{10}(2 \\cdot 3) = \\log_{10}(2) + \\log_{10}(3)\\)." },
+        { q: "Expand the quotient: \\(\\log_4(9/2)\\)", a: ["\\(\\log_4(9) - \\log_4(2)\\)", "\\(\\log_4(9) + \\log_4(2)\\)", "\\(\\frac{\\log_4(9)}{\\log_4(2)}\\)"], c: "\\(\\log_4(9) - \\log_4(2)\\)", cat: "White Quotient Property", exp: "The Quotient Property splits division inside a log into subtraction: \\(\\log_4(9/2) = \\log_4(9) - \\log_4(2)\\)." },
         { q: "Expand the quotient: \\(\\log_5(7/3)\\)", a: ["\\(\\log_5(7) - \\log_5(3)\\)", "\\(\\log_5(7) + \\log_5(3)\\)", "\\(\\log_5(4)\\)"], c: "\\(\\log_5(7) - \\log_5(3)\\)", cat: "Quotient Property", exp: "Division inside the log converts into subtraction: \\(\\log_5(7/3) = \\log_5(7) - \\log_5(3)\\)." },
-        { q: "Expand the quotient: \\(\\log_2(5/7)\\)", a: ["\\(\\log_2(5) - \\log_2(7)\\)", "\\(\\log_2(7) - \\log_2(5)\\)", "\\(\\log_2(5) + \\log_2(7)\\)"], c: "\\(\\log_2(5) - \\log_2(7)\\)", cat: "Quotient Property", exp: "Numerator log minus denominator log: \\(\\log_2(5/7) = \\log_2(5) - \\log_2(7)\\)." },
+        { q: "Expand the quotient: \\(\\log_2(5/7)\\)", a: ["\\(\\log_2(5) - \\log_2(7)\\)", "\\(\\log_2(7) - \\log_2(5)\\)", "\\(\\log_2(5) + \\log_2(7)\\)"], c: "\\(\\log_2(5) - \\log_2(7)\\", cat: "Quotient Property", exp: "Numerator log minus denominator log: \\(\\log_2(5/7) = \\log_2(5) - \\log_2(7)\\)." },
         { q: "Expand the quotient: \\(\\log_b(5/3)\\)", a: ["\\(\\log_b(5) - \\log_b(3)\\)", "\\(\\log_b(5) + \\log_b(3)\\)", "\\(\\frac{\\log_b(5)}{\\log_b(3)}\\)"], c: "\\(\\log_b(5) - \\log_b(3)\\)", cat: "Quotient Property", exp: "The division fraction expands into simple subtraction: \\(\\log_b(5/3) = \\log_b(5) - \\log_b(3)\\)." },
-
-        // --- POWER PROPERTY ---
         { q: "Expand the power: \\(\\log_{10}(3^4)\\)", a: ["\\(4 \\cdot \\log_{10}(3)\\)", "\\(\\log_{10}(12)\\)", "\\(\\log_{10}(3) + 4\\)"], c: "\\(4 \\cdot \\log_{10}(3)\\)", cat: "Power Property", exp: "The Power Property pulls the exponent to the front as a multiplier: \\(\\log_{10}(3^4) = 4 \\cdot \\log_{10}(3)\\)." },
         { q: "Expand the power: \\(\\log_3(2^5)\\)", a: ["\\(5 \\cdot \\log_3(2)\\)", "\\(2 \\cdot \\log_3(5)\\)", "\\(\\log_3(10)\\)"], c: "\\(5 \\cdot \\log_3(2)\\)", cat: "Power Property", exp: "The exponent 5 steps down to become a multiplier: \\(\\log_3(2^5) = 5 \\cdot \\log_3(2)\\)." },
         { q: "Expand the power: \\(\\log_5(7^2)\\)", a: ["\\(2 \\cdot \\log_5(7)\\)", "\\(\\log_5(14)\\)", "\\(\\log_5(7) + 2\\)"], c: "\\(2 \\cdot \\log_5(7)\\)", cat: "Power Property", exp: "The power rule shifts the exponent out front: \\(\\log_5(7^2) = 2 \\cdot \\log_5(7)\\)." }
@@ -195,9 +188,11 @@
         });
       }
 
-      canvas.onclick = (e) => {
+      // Replaced old element listener assignment with explicit event registration for stable performance in WebKit
+      canvas.addEventListener("click", function(e) {
         const rect = canvas.getBoundingClientRect();
-        const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
         points.forEach((pt) => {
           let px = 60 + (pt.x / 3) * (canvas.width - 120);
           let py = canvas.height - 60 - (pt.y / 8) * (canvas.height - 120);
@@ -207,7 +202,7 @@
             collectBtn.classList.remove("hidden");
           }
         });
-      };
+      });
 
       function renderPikachus(count) {
         popContainer.innerHTML = "";
