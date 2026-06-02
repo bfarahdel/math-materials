@@ -116,18 +116,30 @@
         transform-origin: center bottom;
       }
       @keyframes jiggle {
-        0%, 100% { transform: translate(0, 0); }
-        25% { transform: translate(-15px, 0); }
-        50% { transform: translate(15px, 0); }
-        75% { transform: translate(-15px, 0); }
+        0%,
+        100% {
+          transform: translate(0, 0);
+        }
+        25% {
+          transform: translate(-15px, 0);
+        }
+        50% {
+          transform: translate(15px, 0);
+        }
+        75% {
+          transform: translate(-15px, 0);
+        }
       }
       .jiggle-effect {
         animation: jiggle 0.1s linear 6;
       }
       #boss-splash {
         position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.85);
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -142,10 +154,12 @@
         pointer-events: auto;
       }
       .boss-title {
-        font-family: 'Impact', 'Arial Black', sans-serif;
+        font-family: "Impact", "Arial Black", sans-serif;
         font-size: 3.5rem;
         color: #ff1111;
-        text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+        text-shadow:
+          0 0 10px #ff0000,
+          0 0 20px #ff0000;
         letter-spacing: 4px;
         margin: 0;
         text-transform: uppercase;
@@ -157,8 +171,16 @@
         margin-top: 10px;
       }
       @keyframes pulse {
-        from { transform: scale(0.95); text-shadow: 0 0 10px #ff0000; }
-        to { transform: scale(1.05); text-shadow: 0 0 25px #ff0000, 0 0 40px #ff0000; }
+        from {
+          transform: scale(0.95);
+          text-shadow: 0 0 10px #ff0000;
+        }
+        to {
+          transform: scale(1.05);
+          text-shadow:
+            0 0 25px #ff0000,
+            0 0 40px #ff0000;
+        }
       }
 
       /* Celebration Jumping Layout Styles */
@@ -170,8 +192,12 @@
         animation: jump 0.6s infinite alternate cubic-bezier(0.25, 1, 0.5, 1);
       }
       @keyframes jump {
-        from { transform: translateY(0); }
-        to { transform: translateY(-35px); }
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(-35px);
+        }
       }
     </style>
   </head>
@@ -179,23 +205,50 @@
     <div id="arena">
       <div id="boss-splash">
         <h1 class="boss-title">Boss Fight</h1>
-        <div id="boss-splash-text" class="boss-subtitle">A wild ??? appeared!</div>
+        <div id="boss-splash-text" class="boss-subtitle">
+          A wild ??? appeared!
+        </div>
       </div>
 
-      <div id="opp-container" style="position: absolute; top: 20px; right: 50px; z-index: 2">
-        <canvas id="opp-canvas" width="180" height="180" title="Opponent Pokemon"></canvas>
+      <div
+        id="opp-container"
+        style="position: absolute; top: 20px; right: 50px; z-index: 2"
+      >
+        <canvas
+          id="opp-canvas"
+          width="180"
+          height="180"
+          title="Opponent Pokemon"
+        ></canvas>
         <br />
         <div id="opp-name" class="name-tag">???</div>
       </div>
 
-      <div id="user-container" style="position: absolute; bottom: 40px; left: 50px; z-index: 3">
+      <div
+        id="user-container"
+        style="position: absolute; bottom: 40px; left: 50px; z-index: 3"
+      >
         <div id="sprite-wrapper">
-          <img id="user-sprite" src="" width="180" height="180" alt="Player's Pokemon" />
+          <img
+            id="user-sprite"
+            src=""
+            width="180"
+            height="180"
+            alt="Player's Pokemon"
+          />
         </div>
         <div style="text-align: left; margin-top: 5px">
           <div id="user-name" class="name-tag"></div>
           <div style="width: 150px; height: 15px; background-color: #121212">
-            <div id="user-hp" style="height: 100%; background: #1b5e20; width: 100%; transition: width 0.5s;"></div>
+            <div
+              id="user-hp"
+              style="
+                height: 100%;
+                background: #1b5e20;
+                width: 100%;
+                transition: width 0.5s;
+              "
+            ></div>
           </div>
         </div>
       </div>
@@ -205,30 +258,127 @@
       <h2 id="q-text">Loading...</h2>
       <div id="options"></div>
       <div id="feedback"></div>
-      <button id="next-btn" class="btn btn-large" onclick="nextQuestion()">Next Question</button>
+      <button id="next-btn" class="btn btn-large" onclick="nextQuestion()">
+        Next Question
+      </button>
     </div>
 
     <script>
-      let userHp = 100, qIndex = 0;
-      let regularStreak = 0; 
+      let userHp = 100,
+        qIndex = 0;
+      let regularStreak = 0;
       let bossHits = 0;
       let isBossMode = false;
       let currentBossName = "";
 
       const playerPokemon = "marill";
       const horde = [25, 1, 4, 7, 10, 16, 19, 23, 52, 92];
-      const bosses = [149, 150, 248, 384, 487]; 
-      
-      const questionBank = [
-        { type: "Evaluate", q: "\\(\\log_{10}(1000)\\)", opts: ["1", "2", "3", "30"], correct: 2 },
-        { type: "Evaluate", q: "\\(\\log_{2}(8)\\)", opts: ["2", "3", "4", "8"], correct: 1 },
-        { type: "Evaluate", q: "\\(\\log_{5}(25)\\)", opts: ["2", "5", "10", "25"], correct: 0 },
-        { type: "Evaluate", q: "\\(\\log_{3}(81)\\)", opts: ["3", "4", "9", "27"], correct: 1 },
-        { type: "Evaluate", q: "\\(\\log_{7}(49)\\)", opts: ["1", "2", "7", "14"], correct: 1 },
-        { type: "Expand", q: "\\(\\log(10 \\cdot 100)\\)", opts: ["\\(\\log(10) \\cdot \\log(100)\\)", "\\(\\log(10) + \\log(100)\\)", "\\(\\log(10) - \\log(100)\\)", "\\(\\log(10) / \\log(100)\\)"], correct: 1 },
-        { type: "Expand", q: "\\(\\log\\left(\\frac{1000}{10}\\right)\\)", opts: ["\\(\\log(1000) \\cdot \\log(10)\\)", "\\(\\log(1000) + \\log(10)\\)", "\\(\\log(1000) - \\log(10)\\)", "\\(\\frac{\\log(1000)}{\\log(10)}\\)"], correct: 2 },
-        { type: "Expand", q: "\\(\\log(10^5)\\)", opts: ["\\(5 \\log(10)\\)", "\\(\\log(5) + \\log(10)\\)", "\\(10 \\log(5)\\)", "\\(\\log(5) \\cdot \\log(10)\\)"], correct: 0 },
-        { type: "Expand", q: "\\(\\log\\left(\\frac{100}{10^2}\\right)\\)", opts: ["\\(\\log(100) + 2\\log(10)\\)", "\\(\\log(100) - 2\\log(10)\\)", "\\(2\\log(100) - \\log(10)\\)", "\\(\\log(100) / \\log(2)\\)"], correct: 1 }
+      const bosses = [149, 150, 248, 384, 487];
+
+      // Question bank pool for normal battles
+      const regularQuestions = [
+        {
+          type: "Evaluate",
+          q: "\\(\\log_{10}(1000)\\)",
+          opts: ["1", "2", "3", "30"],
+          correct: 2,
+        },
+        {
+          type: "Evaluate",
+          q: "\\(\\log_{2}(8)\\)",
+          opts: ["2", "3", "4", "8"],
+          correct: 1,
+        },
+        {
+          type: "Evaluate",
+          q: "\\(\\log_{5}(25)\\)",
+          opts: ["2", "5", "10", "25"],
+          correct: 0,
+        },
+        {
+          type: "Evaluate",
+          q: "\\(\\log_{3}(81)\\)",
+          opts: ["3", "4", "9", "27"],
+          correct: 1,
+        },
+        {
+          type: "Evaluate",
+          q: "\\(\\log_{7}(49)\\)",
+          opts: ["1", "2", "7", "14"],
+          correct: 1,
+        },
+      ];
+
+      // Boss-exclusive properties question pool (strictly numeric expand or evaluate questions)
+      const bossQuestions = [
+        {
+          type: "Expand",
+          q: "\\(\\log_{2}(4 \\cdot 8)\\)",
+          opts: [
+            "\\(\\log_{2}(4) \\cdot \\log_{2}(8)\\)",
+            "\\(\\log_{2}(4) + \\log_{2}(8)\\)",
+            "\\(\\log_{2}(4) - \\log_{2}(8)\\)",
+            "\\(\\frac{\\log_{2}(4)}{\\log_{2}(8)}\\)",
+          ],
+          correct: 1,
+        },
+        {
+          type: "Expand",
+          q: "\\(\\log_{5}\\left(\\frac{25}{5}\\right)\\)",
+          opts: [
+            "\\(\\log_{5}(25) \\cdot \\log_{5}(5)\\)",
+            "\\(\\log_{5}(25) + \\log_{5}(5)\\)",
+            "\\(\\log_{5}(25) - \\log_{5}(5)\\)",
+            "\\(\\log_{5}(5) - \\log_{5}(25)\\)",
+          ],
+          correct: 2,
+        },
+        {
+          type: "Expand",
+          q: "\\(\\log_{3}(9^2)\\)",
+          opts: [
+            "\\(2 \\cdot \\log_{3}(9)\\)",
+            "\\(\\log_{3}(9) + 2\\)",
+            "\\(\\log_{3}(2) \\cdot 9\\)",
+            "\\(\\frac{1}{2}\\log_{3}(9)\\)",
+          ],
+          correct: 0,
+        },
+        {
+          type: "Evaluate",
+          q: "\\(\\log_{2}(2 \\cdot 4)\\)",
+          opts: ["2", "3", "4", "6"],
+          correct: 1,
+        },
+        {
+          type: "Evaluate",
+          q: "\\(\\log_{3}\\left(\\frac{27}{9}\\right)\\)",
+          opts: ["1", "2", "3", "9"],
+          correct: 0,
+        },
+        {
+          type: "Evaluate",
+          q: "\\(\\log_{5}(5^3)\\)",
+          opts: ["2", "3", "5", "15"],
+          correct: 1,
+        },
+        {
+          type: "Expand",
+          q: "\\(\\log_{10}(10 \\cdot 100)\\)",
+          opts: [
+            "\\(\\log_{10}(10) + \\log_{10}(100)\\)",
+            "\\(10 + \\log_{10}(100)\\)",
+            "\\(10\\log_{10}(100)\\)",
+            "\\(\\log_{10}(10) \\cdot \\log_{10}(100)\\)",
+          ],
+          correct: 0,
+        },
+        {
+          type: "Evaluate",
+          q: "\\(\\log_{2}\\left(\\frac{16}{2}\\right)\\)",
+          opts: ["1", "2", "3", "4"],
+          correct: 2,
+        },
       ];
 
       function shuffle(array) {
@@ -242,9 +392,15 @@
         return new Promise((resolve, reject) => {
           if (window.fetch) {
             fetch(url)
-              .then(res => { if (!res.ok) throw new Error("Network error"); return res.json(); })
+              .then((res) => {
+                if (!res.ok) throw new Error("Network error");
+                return res.json();
+              })
               .then(resolve)
-              .catch(err => { console.warn("Fetch failed, using XHR", err); fallbackXHR(url, resolve, reject); });
+              .catch((err) => {
+                console.warn("Fetch failed, using XHR", err);
+                fallbackXHR(url, resolve, reject);
+              });
           } else {
             fallbackXHR(url, resolve, reject);
           }
@@ -268,9 +424,10 @@
       }
 
       async function updateOpponent() {
-        const canvas = document.getElementById("opp-canvas"), ctx = canvas.getContext("2d");
+        const canvas = document.getElementById("opp-canvas"),
+          ctx = canvas.getContext("2d");
         const oppNameTag = document.getElementById("opp-name");
-        
+
         try {
           let pokemonId;
           if (isBossMode) {
@@ -287,7 +444,7 @@
           currentBossName = data.name;
           oppNameTag.innerText = isBossMode ? `BOSS ${data.name}` : data.name;
           oppNameTag.style.visibility = "visible";
-          
+
           const img = new Image();
           img.crossOrigin = "Anonymous";
           img.src = data.sprites.front_default;
@@ -296,16 +453,19 @@
             ctx.drawImage(img, 20, 20, 140, 140);
             ctx.globalCompositeOperation = "multiply";
             ctx.beginPath();
-            
+
             let count = isBossMode ? 16 : 12;
             for (let i = 0; i < count; i++) {
               const angle = (i / count) * Math.PI * 2;
               const dist = 50 + Math.random() * 40;
-              const x = 90 + Math.cos(angle) * dist, y = 90 + Math.sin(angle) * dist;
+              const x = 90 + Math.cos(angle) * dist,
+                y = 90 + Math.sin(angle) * dist;
               i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
             }
             ctx.closePath();
-            ctx.fillStyle = isBossMode ? "rgba(180, 50, 50, 0.85)" : "rgba(100, 180, 100, 0.8)";
+            ctx.fillStyle = isBossMode
+              ? "rgba(180, 50, 50, 0.85)"
+              : "rgba(100, 180, 100, 0.8)";
             ctx.fill();
             ctx.globalCompositeOperation = "source-over";
 
@@ -313,12 +473,15 @@
               triggerBossSplash();
             }
           };
-        } catch (e) { console.error("Could not load opponent", e); }
+        } catch (e) {
+          console.error("Could not load opponent", e);
+        }
       }
 
       function triggerBossSplash() {
         const splash = document.getElementById("boss-splash");
-        document.getElementById("boss-splash-text").innerText = `A wild BOSS ${currentBossName.toUpperCase()} appeared!`;
+        document.getElementById("boss-splash-text").innerText =
+          `A wild BOSS ${currentBossName.toUpperCase()} appeared!`;
         splash.classList.add("active");
         setTimeout(() => {
           splash.classList.remove("active");
@@ -326,44 +489,63 @@
       }
 
       function nextQuestion() {
-        if (qIndex >= questionBank.length) { shuffle(questionBank); qIndex = 0; }
-        const currentQ = questionBank[qIndex++];
+        const activeBank = isBossMode ? bossQuestions : regularQuestions;
+
+        if (qIndex >= activeBank.length) {
+          shuffle(activeBank);
+          qIndex = 0;
+        }
+
+        const currentQ = activeBank[qIndex++];
         document.getElementById("feedback").innerText = "";
         document.getElementById("next-btn").style.display = "none";
-        document.getElementById("q-text").innerHTML = `${currentQ.type}: ${currentQ.q}`;
-        
+        document.getElementById("q-text").innerHTML =
+          `${currentQ.type}: ${currentQ.q}`;
+
         const optDiv = document.getElementById("options");
         optDiv.innerHTML = "";
         currentQ.opts.forEach((o, i) => {
           const btn = document.createElement("button");
           btn.className = "option-btn";
           btn.innerHTML = `<span class="option-label">${["A", "B", "C", "D"][i]}</span><span>${o}</span>`;
-          btn.onclick = () => checkAnswer(i === currentQ.correct, currentQ.opts[currentQ.correct]);
+          btn.onclick = () =>
+            checkAnswer(
+              i === currentQ.correct,
+              currentQ.opts[currentQ.correct],
+            );
           optDiv.appendChild(btn);
         });
         if (window.MathJax) MathJax.typesetPromise();
       }
 
       function checkAnswer(isCorrect, correctText) {
-        document.querySelectorAll(".option-btn").forEach(b => (b.disabled = true));
-        const spriteWrapper = document.getElementById("sprite-wrapper"), oppContainer = document.getElementById("opp-container"), userContainer = document.getElementById("user-container"), feedback = document.getElementById("feedback");
-        
+        document
+          .querySelectorAll(".option-btn")
+          .forEach((b) => (b.disabled = true));
+        const spriteWrapper = document.getElementById("sprite-wrapper"),
+          oppContainer = document.getElementById("opp-container"),
+          userContainer = document.getElementById("user-container"),
+          feedback = document.getElementById("feedback");
+
         if (isCorrect) {
-          const userRect = spriteWrapper.getBoundingClientRect(), oppRect = oppContainer.getBoundingClientRect();
+          const userRect = spriteWrapper.getBoundingClientRect(),
+            oppRect = oppContainer.getBoundingClientRect();
           spriteWrapper.style.transform = `translate(${oppRect.left - userRect.left}px, ${oppRect.top - userRect.top}px)`;
-          
+
           setTimeout(() => {
             oppContainer.classList.add("jiggle-effect");
             spriteWrapper.style.transform = `translate(0, 0)`;
-            
-            setTimeout(() => { 
-              oppContainer.classList.remove("jiggle-effect"); 
-              
+
+            setTimeout(() => {
+              oppContainer.classList.remove("jiggle-effect");
+
               if (!isBossMode) {
                 regularStreak++;
                 if (regularStreak >= 5) {
                   isBossMode = true;
                   bossHits = 0;
+                  qIndex = 0; // Reset index to cleanly pull from the fresh boss question stack
+                  shuffle(bossQuestions);
                   updateOpponent();
                 } else {
                   updateOpponent();
@@ -377,58 +559,63 @@
               }
             }, 600);
           }, 400);
-          
-          feedback.style.color = "#a5d6a7"; 
-          feedback.innerHTML = isBossMode ? `Critical Hit! Boss HP Lowered (${bossHits + 1}/5)` : "Correct!"; 
-          
+
+          feedback.style.color = "#a5d6a7";
+          feedback.innerHTML = isBossMode
+            ? `Critical Hit! Boss HP Lowered (${bossHits + 1}/5)`
+            : "Correct!";
+
           if (bossHits < 5) {
             document.getElementById("next-btn").style.display = "inline-block";
           }
         } else {
-          const oppRect = oppContainer.getBoundingClientRect(), userRect = userContainer.getBoundingClientRect();
+          const oppRect = oppContainer.getBoundingClientRect(),
+            userRect = userContainer.getBoundingClientRect();
           oppContainer.style.transform = `translate(${userRect.left - oppRect.left}px, ${userRect.top - oppRect.top}px)`;
-          
+
           setTimeout(() => {
             userContainer.classList.add("jiggle-effect");
             oppContainer.style.transform = `translate(0, 0)`;
-            setTimeout(() => userContainer.classList.remove("jiggle-effect"), 600);
+            setTimeout(
+              () => userContainer.classList.remove("jiggle-effect"),
+              600,
+            );
           }, 400);
-          
-          feedback.style.color = "#ef9a9a"; 
-          feedback.innerHTML = "Incorrect! " + correctText; 
-          
+
+          feedback.style.color = "#ef9a9a";
+          feedback.innerHTML = "Incorrect! " + correctText;
+
           let damage = isBossMode ? 40 : 20;
-          userHp = Math.max(0, userHp - damage); 
+          userHp = Math.max(0, userHp - damage);
           document.getElementById("user-hp").style.width = userHp + "%";
-          
-          if (userHp <= 0) triggerGameOver(); else document.getElementById("next-btn").style.display = "inline-block";
+
+          if (userHp <= 0) triggerGameOver();
+          else
+            document.getElementById("next-btn").style.display = "inline-block";
         }
         if (window.MathJax) MathJax.typesetPromise();
       }
 
       function triggerVictory() {
-        // Clear and hide defeated Boss
         const canvas = document.getElementById("opp-canvas");
         const ctx = canvas.getContext("2d");
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         document.getElementById("opp-name").style.visibility = "hidden";
 
-        // Display updated victory message
         document.getElementById("feedback").style.color = "#ffd700";
-        document.getElementById("feedback").innerHTML = "<span style='font-size:2.2em; font-family:Impact,sans-serif; letter-spacing:2px; color:#ffeb3b;'>VICTORY!</span><br><br><button class='btn btn-large yellow darken-3' onclick='location.reload()'>Play Again</button>";
+        document.getElementById("feedback").innerHTML =
+          "<span style='font-size:2.2em; font-family:Impact,sans-serif; letter-spacing:2px; color:#ffeb3b;'>VICTORY!</span><br><br><button class='btn btn-large yellow darken-3' onclick='location.reload()'>Play Again</button>";
         document.getElementById("next-btn").style.display = "none";
         document.getElementById("options").innerHTML = "";
         document.getElementById("q-text").innerText = "";
 
-        // Spawn cheering Pokémon on left and right side of screen
         spawnCelebrationParty();
       }
 
       async function spawnCelebrationParty() {
-        // Choose a few random IDs from your horde list to join the party
         const partyIds = [...horde];
         shuffle(partyIds);
-        const selectedParty = partyIds.slice(0, 6); // Grab 6 random ones
+        const selectedParty = partyIds.slice(0, 6);
 
         selectedParty.forEach(async (id, index) => {
           try {
@@ -436,38 +623,43 @@
             const img = document.createElement("img");
             img.src = data.sprites.front_default;
             img.className = "party-pokemon";
-            
-            // Alternates positioning between left flank and right flank
+
             if (index % 2 === 0) {
-              img.style.left = `${20 + (index * 25)}px`;
+              img.style.left = `${20 + index * 25}px`;
             } else {
-              img.style.right = `${20 + ((index - 1) * 25)}px`;
+              img.style.right = `${20 + (index - 1) * 25}px`;
             }
-            
-            // Randomly staggers heights and jumping speeds to make the bouncing look natural
+
             img.style.top = `${100 + Math.random() * 150}px`;
             img.style.animationDelay = `${Math.random() * 0.5}s`;
             img.style.animationDuration = `${0.4 + Math.random() * 0.4}s`;
-            
+
             document.body.appendChild(img);
-          } catch(e) { console.error(e); }
+          } catch (e) {
+            console.error(e);
+          }
         });
       }
 
       function triggerGameOver() {
-        document.getElementById("feedback").innerHTML = "GAME OVER!<br><button class='btn' onclick='location.reload()'>Restart Game</button>";
+        document.getElementById("feedback").innerHTML =
+          "GAME OVER!<br><button class='btn' onclick='location.reload()'>Restart Game</button>";
         document.getElementById("next-btn").style.display = "none";
       }
 
       async function init() {
-        shuffle(questionBank);
+        shuffle(regularQuestions);
         try {
           const userData = await getPokemonData(playerPokemon);
-          document.getElementById("user-sprite").src = userData.sprites.front_default;
+          document.getElementById("user-sprite").src =
+            userData.sprites.front_default;
           document.getElementById("user-name").innerText = userData.name;
           await updateOpponent();
           nextQuestion();
-        } catch (e) { document.getElementById("q-text").innerText = "Error loading game data."; }
+        } catch (e) {
+          document.getElementById("q-text").innerText =
+            "Error loading game data.";
+        }
       }
       init();
     </script>
