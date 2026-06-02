@@ -37,14 +37,23 @@
         </div>
 
         <div id="feedback" class="hidden p-6 rounded-lg font-medium text-lg text-center mt-8 border"></div>
-        <button id="next-btn" onclick="showEvaluation()" class="hidden w-full mt-8 bg-blue-600 text-white py-4 text-xl font-semibold rounded-lg hover:bg-blue-500 transition">Next: Evaluate Expression</button>
+        
+        <div class="flex gap-4 mt-8">
+            <button id="reset-btn" onclick="resetQuiz()" class="hidden flex-1 bg-slate-800 text-slate-200 border border-slate-700 py-4 text-xl font-semibold rounded-lg hover:bg-slate-700 transition">Try Again</button>
+            <button id="next-btn" onclick="showEvaluation()" class="hidden flex-1 bg-blue-600 text-white py-4 text-xl font-semibold rounded-lg hover:bg-blue-500 transition">Next: Evaluate Expression</button>
+        </div>
     </main>
 
     <script>
+        const initialOptionsHTML = document.getElementById('options').innerHTML;
+        let currentStage = 1;
+
         function checkExpansion(isCorrect) {
+            currentStage = 1;
             const feedback = document.getElementById('feedback');
             const options = document.getElementById('options');
             const nextBtn = document.getElementById('next-btn');
+            const resetBtn = document.getElementById('reset-btn');
             
             options.classList.add('pointer-events-none', 'opacity-50');
             feedback.classList.remove('hidden');
@@ -53,17 +62,22 @@
                 feedback.innerHTML = "Correct! The power rule states $\\log_b(x^p) = p \\cdot \\log_b x$.";
                 feedback.className = "p-6 rounded-lg font-medium text-lg text-center mt-8 border bg-emerald-950 text-emerald-300 border-emerald-800";
                 nextBtn.classList.remove('hidden');
+                resetBtn.classList.add('hidden');
             } else {
                 feedback.innerHTML = "Not quite. Recall the power rule: $\\log_b(x^p) = p \\cdot \\log_b x$. Try again.";
                 feedback.className = "p-6 rounded-lg font-medium text-lg text-center mt-8 border bg-rose-950 text-rose-300 border-rose-800";
+                resetBtn.classList.remove('hidden');
+                nextBtn.classList.add('hidden');
             }
             MathJax.typeset();
         }
 
         function showEvaluation() {
+            currentStage = 2;
             document.getElementById('question-text').innerHTML = "Now, evaluate $2 \\log_3 9$:";
             document.getElementById('feedback').classList.add('hidden');
             document.getElementById('next-btn').classList.add('hidden');
+            document.getElementById('reset-btn').classList.add('hidden');
             
             const options = document.getElementById('options');
             options.classList.remove('pointer-events-none', 'opacity-50');
@@ -86,13 +100,40 @@
 
         function finish(isCorrect) {
             const feedback = document.getElementById('feedback');
+            const options = document.getElementById('options');
+            const resetBtn = document.getElementById('reset-btn');
+            
+            options.classList.add('pointer-events-none', 'opacity-50');
             feedback.classList.remove('hidden');
+            resetBtn.classList.remove('hidden');
+            
             if (isCorrect) {
                 feedback.innerHTML = "Correct! $2 \\cdot \\log_3 9 = 2 \\cdot 2 = 4$.";
                 feedback.className = "p-6 rounded-lg font-medium text-lg text-center mt-8 border bg-emerald-950 text-emerald-300 border-emerald-800";
             } else {
                 feedback.innerHTML = "Incorrect. Remember $\\log_3 9 = 2$, so $2 \\cdot 2 = 4$.";
                 feedback.className = "p-6 rounded-lg font-medium text-lg text-center mt-8 border bg-rose-950 text-rose-300 border-rose-800";
+            }
+            MathJax.typeset();
+        }
+
+        function resetQuiz() {
+            const options = document.getElementById('options');
+            const feedback = document.getElementById('feedback');
+            const resetBtn = document.getElementById('reset-btn');
+            const nextBtn = document.getElementById('next-btn');
+
+            feedback.classList.add('hidden');
+            resetBtn.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            options.classList.remove('pointer-events-none', 'opacity-50');
+
+            if (currentStage === 1) {
+                options.innerHTML = initialOptionsHTML;
+            } else {
+                document.getElementById('question-text').innerHTML = "Which is the correct expansion for $\\log_3 (9^2)$?";
+                options.innerHTML = initialOptionsHTML;
+                currentStage = 1;
             }
             MathJax.typeset();
         }
