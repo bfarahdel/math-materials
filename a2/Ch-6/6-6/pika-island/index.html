@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pika Island Survival</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['\\(', '\\)'], ['$', '$']]
+        },
+        options: {
+          skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+        }
+      };
+    </script>
     <script
       id="MathJax-script"
       async
@@ -34,15 +45,12 @@
     </div>
 
     <div id="quiz-screen" class="hidden bg-gray-800 p-10 rounded-2xl shadow-xl w-full max-w-2xl text-center">
-      <div class="mb-6 p-4 bg-gray-900 border border-yellow-500 rounded">
-        <span class="text-yellow-400 font-bold text-xl">Collected Pikachu: </span>
-        <span id="collected-indicator" class="text-3xl text-red-500 font-bold">0</span>
+      <div class="mb-6 p-4 bg-gray-900 border border-yellow-500 rounded max-w-xs mx-auto text-center">
+        <span class="text-yellow-400 font-bold text-sm block uppercase tracking-wider mb-1">Pikachus Saved</span>
+        <span id="collected-indicator" class="text-4xl text-green-500 font-bold">0</span>
+        <span class="text-gray-500 text-2xl"> / 8</span>
       </div>
-      <div class="mb-8 p-6 bg-gray-900 rounded-lg border border-yellow-600 text-lg">
-        <p>Product: \(\log_b(xy) = \log_b(x) + \log_b(y)\)</p>
-        <p>Quotient: \(\log_b(\frac{x}{y}) = \log_b(x) - \log_b(y)\)</p>
-        <p>Power: \(\log_b(x^n) = n \cdot \log_b(x)\)</p>
-      </div>
+      
       <h3 id="category-title" class="text-3xl font-bold text-blue-400 mb-4"></h3>
       <p id="question-text" class="text-2xl mb-8 font-bold"></p>
       <div id="options-area" class="grid grid-cols-1 gap-4"></div>
@@ -65,33 +73,51 @@
       let collectedCount = 0;
       let currentIdx = 0;
 
-      // Robust helper to support old and new browsers
       function fetchSprite() {
-        const url = "https://pokeapi.co/api/v2/pokemon/pikachu";
-        return new Promise((resolve, reject) => {
-          if (window.fetch) {
-            fetch(url).then(res => res.json()).then(data => resolve(data.sprites.front_default)).catch(reject);
-          } else {
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", url, true);
-            xhr.onload = () => resolve(JSON.parse(xhr.responseText).sprites.front_default);
-            xhr.onerror = reject;
-            xhr.send();
-          }
+        return new Promise((resolve) => {
+          resolve("https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png");
         });
       }
 
       const points = [
-        { x: 0, y: 16, l: "(0,16)" }, { x: 1, y: 8, l: "(1,8)" },
-        { x: 2, y: 4, l: "(2,4)" }, { x: 3, y: 2, l: "(3,2)" },
-        { x: 4, y: 1, l: "(4,1)" }
+        { x: 0, y: 8, l: "8 Pikachu" }, 
+        { x: 1, y: 4, l: "4 Pikachu" },
+        { x: 2, y: 2, l: "2 Pikachu" }, 
+        { x: 3, y: 1, l: "1 Pikachu" }
       ];
 
-      const questions = [
-        { q: "Simplify \\(\\log_3(9 \\cdot 27)\\)", a: ["5", "3", "6"], c: "5", cat: "Product Property", exp: "Using the product property: \\(\\log_3(9) + \\log_3(27) = 2 + 3 = 5\\)." },
-        { q: "Expand \\(\\log_2(5 \\cdot 8)\\)", a: ["\\(\\log_2 5 + \\log_2 8\\)", "\\(\\log_2 5 \\cdot \\log_2 8\\)", "\\(\\log_2 40\\)"], c: "\\(\\log_2 5 + \\log_2 8\\)", cat: "Product Property", exp: "The product property states \\(\\log_b(xy) = \\log_b x + \\log_b y\\)." }
-        // ... (remaining questions truncated for brevity)
+      let questions = [
+        // --- EVALUATING LOGARITHMS ---
+        { q: "Evaluate \\(\\log_2(8)\\)", a: ["3", "4", "2"], c: "3", cat: "Evaluating Logarithms", exp: "Because \\(2^3 = 8\\), \\(\\log_2(8) = 3\\)." },
+        { q: "Evaluate \\(\\log_5(25)\\)", a: ["2", "5", "1"], c: "2", cat: "Evaluating Logarithms", exp: "Because \\(5^2 = 25\\), \\(\\log_5(25) = 2\\)." },
+        { q: "Evaluate \\(\\log_3(9)\\)", a: ["2", "3", "6"], c: "2", cat: "Evaluating Logarithms", exp: "Because \\(3^2 = 9\\), \\(\\log_3(9) = 2\\)." },
+        { q: "Evaluate \\(\\log_{10}(100)\\)", a: ["2", "10", "20"], c: "2", cat: "Evaluating Logarithms", exp: "Because \\(10^2 = 100\\), \\(\\log_{10}(100) = 2\\)." },
+        { q: "Evaluate \\(\\log_4(64)\\)", a: ["3", "4", "16"], c: "3", cat: "Evaluating Logarithms", exp: "Because \\(4^3 = 64\\), \\(\\log_4(64) = 3\\)." },
+        { q: "Evaluate \\(\\log_2(16)\\)", a: ["4", "8", "2"], c: "4", cat: "Evaluating Logarithms", exp: "Because \\(2^4 = 16\\), \\(\\log_2(16) = 4\\)." },
+
+        // --- PRODUCT PROPERTY ---
+        { q: "Expand the product: \\(\\log_3(4 \\cdot 7)\\)", a: ["\\(\\log_3(4) + \\log_3(7)\\)", "\\(\\log_3(4) - \\log_3(7)\\)", "\\(\\log_3(4) \\cdot \\log_3(7)\\)"], c: "\\(\\log_3(4) + \\log_3(7)\\)", cat: "Product Property", exp: "The Product Property states that a product inside splits into addition: \\(\\log_3(4 \\cdot 7) = \\log_3(4) + \\log_3(7)\\)." },
+        { q: "Expand the product: \\(\\log_2(5 \\cdot 9)\\)", a: ["\\(\\log_2(5) + \\log_2(9)\\)", "\\(\\log_2(45)\\)", "\\(\\log_2(5) - \\log_2(9)\\)"], c: "\\(\\log_2(5) + \\log_2(9)\\)", cat: "Product Property", exp: "The Product Property changes multiplication into addition: \\(\\log_2(5 \\cdot 9) = \\log_2(5) + \\log_2(9)\\)." },
+        { q: "Expand the product: \\(\\log_{10}(2 \\cdot 3)\\)", a: ["\\(\\log_{10}(2) + \\log_{10}(3)\\)", "\\(\\log_{10}(2) \\cdot \\log_{10}(3)\\)", "\\(\\log_{10}(5)\\)"], c: "\\(\\log_{10}(2) + \\log_{10}(3)\\)", cat: "Product Property", exp: "Splitting multiplied items transforms them into added items: \\(\\log_{10}(2 \\cdot 3) = \\log_{10}(2) + \\log_{10}(3)\\)." },
+
+        // --- QUOTIENT PROPERTY ---
+        { q: "Expand the quotient: \\(\\log_4(9/2)\\)", a: ["\\(\\log_4(9) - \\log_4(2)\\)", "\\(\\log_4(9) + \\log_4(2)\\)", "\\(\\frac{\\log_4(9)}{\\log_4(2)}\\)"], c: "\\(\\log_4(9) - \\log_4(2)\\)", cat: "Quotient Property", exp: "The Quotient Property splits division inside a log into subtraction: \\(\\log_4(9/2) = \\log_4(9) - \\log_4(2)\\)." },
+        { q: "Expand the quotient: \\(\\log_5(7/3)\\)", a: ["\\(\\log_5(7) - \\log_5(3)\\)", "\\(\\log_5(7) + \\log_5(3)\\)", "\\(\\log_5(4)\\)"], c: "\\(\\log_5(7) - \\log_5(3)\\)", cat: "Quotient Property", exp: "Division inside the log converts into subtraction: \\(\\log_5(7/3) = \\log_5(7) - \\log_5(3)\\)." },
+        { q: "Expand the quotient: \\(\\log_2(5/7)\\)", a: ["\\(\\log_2(5) - \\log_2(7)\\)", "\\(\\log_2(7) - \\log_2(5)\\)", "\\(\\log_2(5) + \\log_2(7)\\)"], c: "\\(\\log_2(5) - \\log_2(7)\\)", cat: "Quotient Property", exp: "Numerator log minus denominator log: \\(\\log_2(5/7) = \\log_2(5) - \\log_2(7)\\)." },
+        { q: "Expand the quotient: \\(\\log_b(5/3)\\)", a: ["\\(\\log_b(5) - \\log_b(3)\\)", "\\(\\log_b(5) + \\log_b(3)\\)", "\\(\\frac{\\log_b(5)}{\\log_b(3)}\\)"], c: "\\(\\log_b(5) - \\log_b(3)\\)", cat: "Quotient Property", exp: "The division fraction expands into simple subtraction: \\(\\log_b(5/3) = \\log_b(5) - \\log_b(3)\\)." },
+
+        // --- POWER PROPERTY ---
+        { q: "Expand the power: \\(\\log_{10}(3^4)\\)", a: ["\\(4 \\cdot \\log_{10}(3)\\)", "\\(\\log_{10}(12)\\)", "\\(\\log_{10}(3) + 4\\)"], c: "\\(4 \\cdot \\log_{10}(3)\\)", cat: "Power Property", exp: "The Power Property pulls the exponent to the front as a multiplier: \\(\\log_{10}(3^4) = 4 \\cdot \\log_{10}(3)\\)." },
+        { q: "Expand the power: \\(\\log_3(2^5)\\)", a: ["\\(5 \\cdot \\log_3(2)\\)", "\\(2 \\cdot \\log_3(5)\\)", "\\(\\log_3(10)\\)"], c: "\\(5 \\cdot \\log_3(2)\\)", cat: "Power Property", exp: "The exponent 5 steps down to become a multiplier: \\(\\log_3(2^5) = 5 \\cdot \\log_3(2)\\)." },
+        { q: "Expand the power: \\(\\log_5(7^2)\\)", a: ["\\(2 \\cdot \\log_5(7)\\)", "\\(\\log_5(14)\\)", "\\(\\log_5(7) + 2\\)"], c: "\\(2 \\cdot \\log_5(7)\\)", cat: "Power Property", exp: "The power rule shifts the exponent out front: \\(\\log_5(7^2) = 2 \\cdot \\log_5(7)\\)." }
       ];
+
+      function shuffleQuestions() {
+        for (let i = questions.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [questions[i], questions[j]] = [questions[j], questions[i]];
+        }
+      }
 
       async function showGame() {
         document.getElementById("story-screen").classList.add("hidden");
@@ -99,6 +125,7 @@
         try {
           pikachuSpriteUrl = await fetchSprite();
           drawGraph();
+          shuffleQuestions();
         } catch (e) {
           infoText.innerText = "Error loading game assets.";
         }
@@ -116,21 +143,23 @@
         ctx.beginPath();
         ctx.strokeStyle = "#ef4444";
         ctx.lineWidth = 4;
-        for (let x = 0; x <= 4; x += 0.05) {
-          let px = p + (x / 4) * (w - 2 * p);
-          let py = h - p - ((16 * Math.pow(0.5, x)) / 16) * (h - 2 * p);
+        
+        for (let x = 0; x <= 3; x += 0.05) {
+          let px = p + (x / 3) * (w - 2 * p);
+          let py = h - p - ((8 * Math.pow(0.5, x)) / 8) * (h - 2 * p);
           x == 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
         }
         ctx.stroke();
+        
         points.forEach((pt) => {
-          let px = p + (pt.x / 4) * (w - 2 * p);
-          let py = h - p - (pt.y / 16) * (h - 2 * p);
+          let px = p + (pt.x / 3) * (w - 2 * p);
+          let py = h - p - (pt.y / 8) * (h - 2 * p);
           ctx.fillStyle = "#ef4444";
           ctx.beginPath();
           ctx.arc(px, py, 10, 0, 7);
           ctx.fill();
           ctx.fillStyle = "white";
-          ctx.fillText(pt.l, px - 20, py + 40);
+          ctx.fillText(pt.l, px - 25, py - 20);
         });
       }
 
@@ -138,8 +167,8 @@
         const rect = canvas.getBoundingClientRect();
         const mx = e.clientX - rect.left, my = e.clientY - rect.top;
         points.forEach((pt) => {
-          let px = 60 + (pt.x / 4) * (canvas.width - 120);
-          let py = canvas.height - 60 - (pt.y / 16) * (canvas.height - 120);
+          let px = 60 + (pt.x / 3) * (canvas.width - 120);
+          let py = canvas.height - 60 - (pt.y / 8) * (canvas.height - 120);
           if (Math.hypot(mx - px, my - py) < 30) {
             infoText.innerText = `Remaining Pikachu: ${pt.y}`;
             renderPikachus(pt.y);
@@ -172,17 +201,35 @@
         area.innerHTML = "";
         q.a.forEach((opt) => {
           let btn = document.createElement("button");
-          btn.className = "bg-gray-700 p-4 rounded-lg hover:bg-gray-600 transition text-lg w-full";
+          btn.className = "option-btn bg-gray-700 p-4 rounded-lg hover:bg-gray-600 transition text-lg w-full border-2 border-transparent";
           btn.innerHTML = opt;
-          btn.onclick = () => checkAnswer(opt, q.c);
+          btn.onclick = () => checkAnswer(btn, opt, q.c);
           area.appendChild(btn);
         });
-        if (window.MathJax) MathJax.typesetPromise();
+        
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          MathJax.typesetPromise();
+        }
       }
 
-      function checkAnswer(sel, cor) {
+      function checkAnswer(clickedBtn, sel, cor) {
+        // Immediately disable all buttons to completely freeze alternative guesses
+        const buttons = document.querySelectorAll(".option-btn");
+        buttons.forEach(btn => {
+          btn.disabled = true;
+          btn.classList.remove("hover:bg-gray-600");
+          btn.classList.add("opacity-60", "cursor-not-allowed");
+          
+          // Visually outline the actual correct answer on the screen
+          if (btn.innerHTML === cor) {
+            btn.classList.remove("opacity-60");
+            btn.classList.add("border-green-500", "bg-gray-800");
+          }
+        });
+
         document.getElementById("explanation-area").classList.remove("hidden");
         const feedback = document.getElementById("feedback");
+        
         if (sel === cor) {
           collectedCount++;
           feedback.innerText = "Correct!";
@@ -191,35 +238,55 @@
         } else {
           feedback.innerText = "Incorrect.";
           feedback.className = "mt-6 font-bold text-xl min-h-[30px] text-red-500";
+          clickedBtn.classList.add("border-red-500");
         }
+        
         document.getElementById("explanation-text").innerHTML = "Explanation: " + questions[currentIdx].exp;
         document.getElementById("next-btn").classList.remove("hidden");
-        if (window.MathJax) MathJax.typeset();
+        
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          MathJax.typesetPromise();
+        }
       }
 
       function nextQuestion() {
+        if (collectedCount >= 8) {
+          showFinal(true);
+          return;
+        }
+
         currentIdx++;
         if (currentIdx < questions.length) {
           document.getElementById("next-btn").classList.add("hidden");
           document.getElementById("explanation-area").classList.add("hidden");
+          document.getElementById("feedback").innerText = ""; 
           loadQuestion();
         } else {
-          showFinal();
+          showFinal(false);
         }
       }
 
-      function showFinal() {
-        document.getElementById("quiz-screen").innerHTML = `
-          <h2 class="text-4xl text-yellow-400 font-bold mb-6">Pikachu Saved: ${collectedCount}</h2>
-          <div id="result-sprites" class="flex flex-wrap justify-center my-8 gap-4"></div>
-          <button onclick="location.reload()" class="bg-yellow-500 text-gray-900 text-xl font-bold px-10 py-4 rounded-full">Play Again</button>
-        `;
-        let container = document.getElementById("result-sprites");
-        for (let i = 0; i < collectedCount; i++) {
-          let img = document.createElement("img");
-          img.src = pikachuSpriteUrl;
-          img.className = "w-20 h-20";
-          container.appendChild(img);
+      function showFinal(isWin) {
+        if (isWin) {
+          document.getElementById("quiz-screen").innerHTML = `
+            <h2 class="text-4xl text-green-400 font-bold mb-4">YOU WIN!</h2>
+            <p class="text-xl text-gray-300 mb-4">Awesome job! You successfully saved all 8 Pikachus!</p>
+            <div id="result-sprites" class="flex flex-wrap justify-center my-8 gap-4"></div>
+            <button onclick="location.reload()" class="bg-yellow-500 text-gray-900 text-xl font-bold px-10 py-4 rounded-full">Play Again</button>
+          `;
+          let container = document.getElementById("result-sprites");
+          for (let i = 0; i < 8; i++) {
+            let img = document.createElement("img");
+            img.src = pikachuSpriteUrl;
+            img.className = "w-20 h-20";
+            container.appendChild(img);
+          }
+        } else {
+          document.getElementById("quiz-screen").innerHTML = `
+            <h2 class="text-4xl text-red-500 font-bold mb-4">GAME OVER</h2>
+            <p class="text-xl text-gray-300 mb-6">You ran out of questions and only saved ${collectedCount} Pikachu. You need 8 correct answers to win!</p>
+            <button onclick="location.reload()" class="bg-red-600 hover:bg-red-700 text-white text-xl font-bold px-10 py-4 rounded-full">Try Again</button>
+          `;
         }
       }
     </script>
