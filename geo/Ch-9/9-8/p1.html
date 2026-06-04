@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadratic Geometry Slide Recreation - Problem 1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* CORE SETUP: Slide Dimensions with Scrollability */
+        * { 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'DM Sans', sans-serif;
+            color: #1e293b;
+        }
+
+        .slide-container {
+            width: 1280px;
+            max-width: 100%;
+            height: 720px;
+            background-color: #ffffff;
+            
+            /* Enable vertical scrolling for overflowing content */
+            overflow-y: auto; 
+            overflow-x: hidden;
+            
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 40px;
+            padding: 60px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        /* Custom Scrollbar Styling */
+        .slide-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .slide-container::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .slide-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .slide-container::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* TYPOGRAPHY & HEADERS */
+        h3 { 
+            font-family: 'DM Sans', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            margin: 0 0 20px 0;
+            color: #11caa0; /* Vibrant teal accent */
+        }
+
+        p { 
+            font-size: 22px; 
+            line-height: 1.6; 
+            color: #334155;
+            margin: 0 0 15px 0;
+        }
+
+        strong {
+            color: #0f172a;
+        }
+
+        .example-header { 
+            background: #005088; /* Deep Academic Blue */
+            color: white; 
+            padding: 8px 20px; 
+            display: inline-block; 
+            border-radius: 4px; 
+            font-weight: bold; 
+            font-size: 18px;
+            margin-bottom: 25px; 
+        }
+
+        /* LAYOUT SPLIT */
+        .main-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+            gap: 40px;
+        }
+        
+        .left-column {
+            flex: 1;
+        }
+        
+        .right-column {
+            width: 420px;
+            flex-shrink: 0;
+        }
+
+        /* MATHEMATICAL ALIGNMENT */
+        .math-text {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .math-variables {
+            font-family: "Times New Roman", serif;
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        .system-solvers { 
+            display: flex; 
+            gap: 80px; 
+            margin: 25px 0; 
+            border-left: 3px solid #cbd5e1; 
+            padding-left: 25px;
+            font-family: 'Times New Roman', serif; 
+            font-style: italic; 
+            font-size: 24px;
+            line-height: 1.8;
+            color: #0f172a;
+        }
+
+        /* BOTTOM CALLOUT BLOCK */
+        .substitution-block { 
+            background: #fffbeb; 
+            border: 1px solid #fef3c7; 
+            border-left: 6px solid #d97706;
+            padding: 25px 35px; 
+            border-radius: 4px; 
+            margin-top: auto;
+            flex-shrink: 0;
+        }
+
+        .sub-grid {
+            display: flex; 
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            gap: 20px;
+        }
+
+        .steps-equation {
+            font-family: 'Times New Roman', serif; 
+            font-style: italic; 
+            font-size: 26px; 
+            line-height: 1.6;
+            color: #0f172a;
+            white-space: nowrap;
+        }
+
+        .final-answer {
+            font-size: 24px; 
+            font-weight: 700; 
+            color: #005088;
+            text-align: right;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        /* RESPONSIVE RESPONSIVENESS */
+        @media (max-width: 1024px) {
+            .sub-grid {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .final-answer {
+                text-align: left;
+                white-space: normal;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            .right-column {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="slide-container">
+    
+    <div class="main-content">
+        <div class="left-column">
+            <div class="example-header">Problem 1</div>
+            <h3>Write the Equation of a Parabola</h3>
+            
+            <p><strong>Write an equation for each parabola.</strong></p>
+            <p><strong>1. focus (0, 6), directrix <span class="math-variables">y</span> = &minus;6</strong></p>
+            
+            <p class="math-text">The directrix is horizontal, so the axis of symmetry is vertical. The equation is of the form <span class="math-variables">(x &minus; h)<sup>2</sup> = 4p(y &minus; k)</span>.</p>
+            
+            <p class="math-text">Use the focus and directrix to find the values of <span class="math-variables">h</span>, <span class="math-variables">k</span>, and <span class="math-variables">p</span>.</p>
+            <p class="math-text">The focus is <span class="math-variables">(h, k + p)</span> = (0, 6), so <span class="math-variables">h</span> = 0 and <span class="math-variables">k + p</span> = 6.</p>
+            
+            <p class="math-text">The directrix is <span class="math-variables">y = k &minus; p</span>, so <span class="math-variables">k &minus; p</span> = &minus;6. Solve the system to find <span class="math-variables">k</span> and <span class="math-variables">p</span>.</p>
+
+            <div class="system-solvers">
+                <div>
+                    k + p = 6<br>
+                    <u>k &minus; p = &minus;6</u><br>
+                    2k = 0<br>
+                    k = 0
+                </div>
+                <div>
+                    k + p = 6<br>
+                    0 + p = 6<br>
+                    p = 6
+                </div>
+            </div>
+        </div>
+        
+        <div class="right-column"></div>
+    </div>
+
+    <div class="substitution-block">
+        <p style="margin-bottom: 12px;"><strong>Substitute to find the equation.</strong></p>
+        <div class="sub-grid">
+            <div class="steps-equation">
+                (x &minus; h)<sup>2</sup> = 4p(y &minus; k)<br>
+                (x &minus; 0)<sup>2</sup> = 4(6)(y &minus; 0)<br>
+                x<sup>2</sup> = 24y
+            </div>
+            <div>
+                <p class="final-answer">The equation is x<sup>2</sup> = 24y or y = <sup>1</sup>&frasl;<sub>24</sub>x<sup>2</sup>.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
