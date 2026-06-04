@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 6-5: Common Logarithms</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght=600;700&family=Lato:wght=400;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body { background-color: #cbd5e1; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; font-family: 'Lato', sans-serif; padding: 40px; }
+        
+        .slide-container {
+            width: 100%; max-width: 1000px; min-height: 600px; background: white; padding: 60px;
+            margin-bottom: 40px; border-top: 15px solid #003366; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: none; flex-direction: column; position: relative;
+        }
+        .slide-container.active { display: flex; }
+
+        h2 { color: #003366; font-size: 36px; margin-bottom: 25px; border-left: 8px solid #D4AF37; padding-left: 20px; font-family: 'Poppins', sans-serif; }
+        p { font-size: 24px; color: #1e293b; margin: 12px 0; }
+        
+        .hidden-step { display: none; margin-top: 20px; padding: 15px; background: #f8fafc; border-left: 5px solid #003366; }
+        .reveal-btn { cursor: pointer; background: #003366; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 20px; font-weight: bold; margin-top: 15px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 15px; text-align: left; border: 1px solid #e2e8f0; font-size: 20px; }
+        th { background-color: #003366; color: #fff; }
+
+        .key { background: #e2e8f0; border: 2px solid #cbd5e1; border-radius: 6px; padding: 2px 10px; font-family: monospace; font-size: 22px; font-weight: bold; box-shadow: 1px 2px 0 #94a3b8; }
+        .highlight-box { background: #fef08a; padding: 4px 10px; border-radius: 4px; font-weight: bold; }
+
+        .nav-wrapper { margin-top: auto; padding-top: 40px; display: flex; justify-content: center; gap: 20px; }
+        .nav-btn { cursor: pointer; background: #003366; color: white; padding: 12px 30px; border: none; border-radius: 6px; font-size: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="slide-container active" id="s0">
+    <h2>Common Logarithons</h2>
+    <p>Base 10 logarithms are called <span class="highlight-box">common logarithms</span>.</p>
+    <p>Common logarithms are usually written without the subscript 10:</p>
+    <p style="font-weight: bold; font-size: 32px; text-align: center; margin: 30px 0;">log<sub>10</sub> x = log x, x &gt; 0</p>
+    <p>Most scientific calculators have a <span class="key">LOG</span> key for evaluating common logarithms.</p>
+    
+    <div class="nav-wrapper">
+        <button class="nav-btn" onclick="prevSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+</div>
+
+<div class="slide-container" id="s1">
+    <h2>Example 1: Find Common Logarithms</h2>
+    <p>Use a calculator to evaluate each expression to the nearest ten-thousandth:</p>
+    
+    <div style="margin-top: 20px;">
+        <p><strong>a. log 5</strong></p>
+        <p style="font-size: 20px; color: #64748b;">KEYSTROKES: <span class="key">LOG</span> 5 <span class="key">ENTER</span></p>
+        <p>Display: 0.6989700043 &rarr; <span class="highlight-box">log 5 &approx; 0.6990</span></p>
+    </div>
+
+    <div style="margin-top: 30px;">
+        <p><strong>b. log 0.3</strong></p>
+        <p style="font-size: 20px; color: #64748b;">KEYSTROKES: <span class="key">LOG</span> 0.3 <span class="key">ENTER</span></p>
+        <p>Display: -0.5228787453 &rarr; <span class="highlight-box">log 0.3 &approx; -0.5229</span></p>
+    </div>
+
+    <div class="nav-wrapper">
+        <button class="nav-btn" onclick="prevSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+</div>
+
+<div class="slide-container" id="s2">
+    <h2>Example 3: Solve Exponential Equations</h2>
+    <p>Solve <strong>4<sup>x</sup> = 19</strong>. Round to the nearest ten-thousandth.</p>
+    
+    <p><strong>Step 1:</strong> Take the common logarithm of each side.</p>
+    <p style="padding-left: 20px; font-family: monospace;">log 4<sup>x</sup> = log 19</p>
+    
+    <button class="reveal-btn" id="btn-s2-1" onclick="document.getElementById('step2-2').style.display='block'; this.style.display='none';">Show Property Application</button>
+    
+    <div id="step2-2" class="hidden-step">
+        <p><strong>Step 2:</strong> Use the Power Property of Logarithms.</p>
+        <p style="padding-left: 20px; font-family: monospace;">x log 4 = log 19</p>
+        <button class="reveal-btn" id="btn-s2-2" onclick="document.getElementById('step2-3').style.display='block'; this.style.display='none';">Show Final Solution</button>
+    </div>
+    
+    <div id="step2-3" class="hidden-step">
+        <p><strong>Step 3:</strong> Divide each side by log 4 and use a calculator.</p>
+        <p style="padding-left: 20px; font-family: monospace;">x = log 19 / log 4</p>
+        <p style="font-weight: bold; font-size: 28px; color: #003366;">x &approx; 2.1240</p>
+    </div>
+
+    <div class="nav-wrapper">
+        <button class="nav-btn" onclick="prevSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+</div>
+
+<div class="slide-container" id="s3">
+    <h2>Example 4: Solve Exponential Inequalities</h2>
+    <p>Solve <strong>3<sup>5y</sup> &lt; 7<sup>y &minus; 2</sup></strong>. Round to the nearest ten-thousandth.</p>
+    
+    <p><strong>Step 1a:</strong> Take the common logarithm of each side.</p>
+    <p style="padding-left: 20px; font-family: monospace;">log 3<sup>5y</sup> &lt; log 7<sup>y &minus; 2</sup></p>
+    
+    <button class="reveal-btn" id="btn-s3-1a" onclick="document.getElementById('step3-1b').style.display='block'; this.style.display='none';">Show Power Property</button>
+    
+    <div id="step3-1b" class="hidden-step">
+        <p><strong>Step 1b:</strong> Apply the Power Property of Logarithms to move the exponents forward.</p>
+        <p style="padding-left: 20px; font-family: monospace;">5y log 3 &lt; (y &minus; 2) log 7</p>
+        <button class="reveal-btn" id="btn-s3-1" onclick="document.getElementById('step3-2').style.display='block'; this.style.display='none';">Show Distributive Steps</button>
+    </div>
+    
+    <div id="step3-2" class="hidden-step">
+        <p><strong>Step 2:</strong> Distribute log 7 and isolate the variable terms on the left.</p>
+        <p style="padding-left: 20px; font-family: monospace;">5y log 3 &lt; y log 7 &minus; 2 log 7</p>
+        <p style="padding-left: 20px; font-family: monospace;">5y log 3 &minus; y log 7 &lt; &minus;2 log 7</p>
+        <button class="reveal-btn" id="btn-s3-2" onclick="document.getElementById('step3-3').style.display='block'; this.style.display='none';">Show Evaluation</button>
+    </div>
+    
+    <div id="step3-3" class="hidden-step">
+        <p><strong>Step 3:</strong> Factor out y and divide to solve.</p>
+        <p style="padding-left: 20px; font-family: monospace;">y(5 log 3 &minus; log 7) &lt; &minus;2 log 7</p>
+        <p style="padding-left: 20px; font-family: monospace;">y &lt; &minus;2 log 7 / (5 log 3 &minus; log 7)</p>
+        <p style="font-weight: bold; font-size: 28px; color: #003366;">{y | y &lt; &minus;1.0972}</p>
+    </div>
+
+    <div class="nav-wrapper">
+        <button class="nav-btn" onclick="prevSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+</div>
+
+<div class="slide-container" id="s4">
+    <h2>Key Concept: Change of Base Formula</h2>
+    <p>For all positive numbers <i>a</i>, <i>b</i>, and <i>n</i>, where a &ne; 1 and b &ne; 1:</p>
+    
+    <p style="font-weight: bold; font-size: 32px; text-align: center; margin: 40px 0; background: #f8fafc; padding: 20px; border: 2px dashed #003366;">
+        log<sub>a</sub> n = log<sub>b</sub> n / log<sub>b</sub> a
+    </p>
+    
+    <p><strong>Example:</strong> Changing base to 10</p>
+    <p style="font-size: 28px; text-align: center;">log<sub>3</sub> 11 = log<sub>10</sub> 11 / log<sub>10</sub> 3</p>
+
+    <div class="nav-wrapper">
+        <button class="nav-btn" onclick="prevSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+</div>
+
+<div class="slide-container" id="s5">
+    <h2>Example 5: Change of Base Formula</h2>
+    <p>Express <strong>log<sub>3</sub> 20</strong> in terms of common logarithms. Then round to the nearest ten-thousandth.</p>
+    
+    <p><strong>Step 1:</strong> Apply the Change of Base Formula (using base 10).</p>
+    <p style="padding-left: 20px; font-size: 28px; font-family: monospace;">log<sub>3</sub> 20 = log<sub>10</sub> 20 / log<sub>10</sub> 3</p>
+    
+    <button class="reveal-btn" id="btn-s5-1" onclick="document.getElementById('step5-2').style.display='block'; this.style.display='none';">Evaluate expression</button>
+    
+    <div id="step5-2" class="hidden-step">
+        <p><strong>Step 2:</strong> Use a calculator to compute the value.</p>
+        <p style="font-weight: bold; font-size: 32px; color: #003366;">&approx; 2.7268</p>
+    </div>
+
+    <div class="nav-wrapper">
+        <button class="nav-btn" onclick="prevSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+</div>
+
+<script>
+    let current = 0;
+    const slides = document.querySelectorAll('.slide-container');
+    
+    function nextSlide() {
+        slides[current].classList.remove('active');
+        current = (current + 1) % slides.length;
+        slides[current].classList.add('active');
+    }
+    
+    function prevSlide() {
+        slides[current].classList.remove('active');
+        current = (current - 1 + slides.length) % slides.length;
+        slides[current].classList.add('active');
+    }
+</script>
+
+</body>
+</html>

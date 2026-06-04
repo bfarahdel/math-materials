@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 6-6: Natural Logarithms</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght=600;700&family=Lato:wght=400;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body { background-color: #cbd5e1; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; font-family: 'Lato', sans-serif; padding: 40px; }
+        
+        .slide-container {
+            width: 100%; max-width: 1000px; min-height: 600px; background: white; padding: 60px;
+            margin-bottom: 40px; border-top: 15px solid #003366; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: none; flex-direction: column; position: relative;
+        }
+        .slide-container.active { display: flex; }
+
+        h2 { color: #003366; font-size: 36px; margin-bottom: 25px; border-left: 8px solid #D4AF37; padding-left: 20px; font-family: 'Poppins', sans-serif; }
+        p { font-size: 24px; color: #1e293b; margin: 12px 0; }
+        
+        .hidden-step { display: none; margin-top: 20px; padding: 15px; background: #f8fafc; border-left: 5px solid #003366; }
+        .reveal-btn { cursor: pointer; background: #003366; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 20px; font-weight: bold; margin-top: 15px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 15px; text-align: left; border: 1px solid #e2e8f0; font-size: 20px; }
+        th { background-color: #003366; color: #fff; }
+
+        .key { background: #e2e8f0; border: 2px solid #cbd5e1; border-radius: 6px; padding: 2px 10px; font-family: monospace; font-size: 22px; font-weight: bold; box-shadow: 1px 2px 0 #94a3b8; }
+        .highlight-box { background: #fef08a; padding: 4px 10px; border-radius: 4px; font-weight: bold; }
+
+        .nav-wrapper { margin-top: auto; padding-top: 40px; display: flex; justify-content: center; gap: 20px; }
+        .nav-btn { cursor: pointer; background: #003366; color: white; padding: 12px 30px; border: none; border-radius: 6px; font-size: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="slide-container active" id="s0">
+    <h2>Base e and Natural Logarithms</h2>
+    <p>The number <span class="highlight-box">e</span> is an irrational number roughly equal to 2.71828...</p>
+    <p>An exponential function with base <i>e</i> is called a <strong>natural base exponential function</strong>.</p>
+    <p>The inverse of this function is the <span class="highlight-box">natural logarithm</span>, written as <strong>ln x</strong>:</p>
+    <p style="font-weight: bold; font-size: 32px; text-align: center; margin: 30px 0;">log<sub>e</sub> x = ln x, x &gt; 0</p>
+    <p>Most calculators have an <span class="key">LN</span> key to find natural logarithms.</p>
+    
+    <div class="nav-wrapper">
+        <button class="nav-btn" onclick="prevSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+</div>
+
+<div class="slide-container" id="s1">
+    <h2>Example 1: Write Exponential Equations in Logarithmic Form</h2>
+    <p>Convert each exponential equation into its equivalent natural logarithmic form:</p>
+    
+    <div style="margin-top: 20px;">
+        <p><strong>a. e<sup>x</sup> = 8</strong></p>
+        <p style="padding-left: 20px; font-family: monospace; font-size: 26px; color: #003366;">&rarr; log<sub>e</sub> 8 = x &rarr; <span class="highlight-box">ln 8 = x</span></p>
+    </div>
+
+    <div style="margin-top: 30px;">
+        <p><strong>b. e<sup>5</sup> = x</strong></p>
+        <p style="padding-left: 20px; font-family: monospace; font-size: 26px; color: #003366;">&rarr; log<sub>e</sub> x = 5 &rarr; <span class="highlight-box">ln x = 5</span></p>
+    </div>
+
+    <div class="nav-wrapper">
+        <button class="nav-btn" onclick="prevSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+</div>
+
+<div class="slide-container" id="s2">
+    <h2>Example 2: Write Logarithmic Equations in Exponential Form</h2>
+    <p>Convert each natural logarithmic equation into its equivalent exponential form:</p>
+    
+    <div style="margin-top: 20px;">
+        <p><strong>a. ln x &approx; 0.7741</strong></p>
+        <p style="padding-left: 20px; font-family: monospace; font-size: 26px; color: #003366;">&rarr; log<sub>e</sub> x &approx; 0.7741 &rarr; <span class="highlight-box">x &approx; e<sup>0.7741</sup></span></p>
+    </div>
+
+    <div style="margin-top: 30px;">
+        <p><strong>b. ln 10 = x</strong></p>
+        <p style="padding-left: 20px; font-family: monospace; font-size: 26px; color: #003366;">&rarr; log<sub>e</sub> 10 = x &rarr; <span class="highlight-box">10 = e<sup>x</sup></span></p>
+    </div>
+
+    <div class="nav-wrapper">
+        <button class="nav-btn" onclick="prevSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+</div>
+
+<div class="slide-container" id="s3">
+    <h2>Example 3: Simplify Expressions with e and ln</h2>
+    <p>Write <strong>3 ln 10 &minus; ln 8</strong> as a single logarithm.</p>
+    
+    <p><strong>Step 1:</strong> Apply the Power Property of Logarithms.</p>
+    <p style="padding-left: 20px; font-family: monospace;">= ln 10<sup>3</sup> &minus; ln 8</p>
+    
+    <button class="reveal-btn" id="btn-s3-1" onclick="document.getElementById('step3-2').style.display='block'; this.style.display='none';">Apply Quotient Property</button>
+    
+    <div id="step3-2" class="hidden-step">
+        <p><strong>Step 2:</strong> Use the Quotient Property of Logarithms.</p>
+        <p style="padding-left: 20px; font-family: monospace;">= ln(10<sup>3</sup> / 8)</p>
+        <button class="reveal-btn" id="btn-s3-2" onclick="document.getElementById('step3-3').style.display='block'; this.style.display='none';">Simplify Completely</button>
+    </div>
+    
+    <div id="step3-3" class="hidden-step">
+        <p><strong>Step 3:</strong> Evaluate the fraction and simplify.</p>
+        <p style="padding-left: 20px; font-family: monospace;">= ln 125</p>
+        <p style="padding-left: 20px; font-family: monospace;">= ln 5<sup>3</sup></p>
+        <p style="font-weight: bold; font-size: 28px; color: #003366;">= 3 ln 5</p>
+    </div>
+
+    <div class="nav-wrapper">
+        <button class="nav-btn" onclick="prevSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+</div>
+
+<div class="slide-container" id="s4">
+    <h2>Example 4: Solve Base e Equations</h2>
+    <p>Solve <strong>4e<sup>&minus;2x</sup> &minus; 5 = 3</strong>. Round to the nearest ten-thousandth.</p>
+    
+    <p><strong>Step 1:</strong> Isolate the exponential term.</p>
+    <p style="padding-left: 20px; font-family: monospace;">4e<sup>&minus;2x</sup> = 8</p>
+    <p style="padding-left: 20px; font-family: monospace;">e<sup>&minus;2x</sup> = 2</p>
+    
+    <button class="reveal-btn" id="btn-s4-1" onclick="document.getElementById('step4-2').style.display='block'; this.style.display='none';">Take Natural Logarithm</button>
+    
+    <div id="step4-2" class="hidden-step">
+        <p><strong>Step 2:</strong> Take the natural logarithm of each side and use the property ln e<sup>x</sup> = x.</p>
+        <p style="padding-left: 20px; font-family: monospace;">ln e<sup>&minus;2x</sup> = ln 2</p>
+        <p style="padding-left: 20px; font-family: monospace;">&minus;2x = ln 2</p>
+        <button class="reveal-btn" id="btn-s4-2" onclick="document.getElementById('step4-3').style.display='block'; this.style.display='none';">Calculate Solution</button>
+    </div>
+    
+    <div id="step4-3" class="hidden-step">
+        <p><strong>Step 3:</strong> Divide by &minus;2 and evaluate with a calculator.</p>
+        <p style="padding-left: 20px; font-family: monospace;">x = ln 2 / &minus;2</p>
+        <p style="font-weight: bold; font-size: 28px; color: #003366;">x &approx; &minus;0.3466</p>
+    </div>
+
+    <div class="nav-wrapper">
+        <button class="nav-btn" onclick="prevSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+</div>
+
+<div class="slide-container" id="s5">
+    <h2>Example 5: Solve Natural Log Equations</h2>
+    <p>Solve <strong>3 ln 4x = 24</strong>. Round to the nearest ten-thousandth.</p>
+    
+    <p><strong>Step 1:</strong> Isolate the logarithmic term.</p>
+    <p style="padding-left: 20px; font-family: monospace;">ln 4x = 8</p>
+    
+    <button class="reveal-btn" id="btn-s5-1" onclick="document.getElementById('step5-2').style.display='block'; this.style.display='none';">Exponentiate Each Side</button>
+    
+    <div id="step5-2" class="hidden-step">
+        <p><strong>Step 2:</strong> Write in exponential form (or raise each side to base e).</p>
+        <p style="padding-left: 20px; font-family: monospace;">e<sup>ln 4x</sup> = e<sup>8</sup></p>
+        <p style="padding-left: 20px; font-family: monospace;">4x = e<sup>8</sup></p>
+        <button class="reveal-btn" id="btn-s5-2" onclick="document.getElementById('step5-3').style.display='block'; this.style.display='none';">Solve for x</button>
+    </div>
+    
+    <div id="step5-3" class="hidden-step">
+        <p><strong>Step 3:</strong> Divide each side by 4 and calculate.</p>
+        <p style="padding-left: 20px; font-family: monospace;">x = e<sup>8</sup> / 4</p>
+        <p style="font-weight: bold; font-size: 28px; color: #003366;">x &approx; 745.2395</p>
+    </div>
+
+    <div class="nav-wrapper">
+        <button class="nav-btn" onclick="prevSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+</div>
+
+<div class="slide-container" id="s6">
+    <h2>Key Concept: Continuously Compounded Interest</h2>
+    <p>Formula configurations:</p>
+    <table style="margin-bottom: 30px;">
+        <tr>
+            <th>Exponential Form</th>
+            <th>Logarithmic Form</th>
+        </tr>
+        <tr>
+            <td style="font-family: monospace; font-size: 24px;">A = Pe<sup>rt</sup></td>
+            <td style="font-family: monospace; font-size: 24px;">ln(A / P) = rt</td>
+        </tr>
+    </table>
+    
+    <p><strong>Real-World Application:</strong> $3000 is deposited into an account paying 4% interest compounded continuously. Find the balance after 10 years.</p>
+    
+    <button class="reveal-btn" id="btn-s6-1" onclick="document.getElementById('step6-2').style.display='block'; this.style.display='none';">Calculate Balance</button>
+    
+    <div id="step6-2" class="hidden-step">
+        <p style="font-family: monospace;">A = 3000 &bull; e<sup>(0.04)(10)</sup></p>
+        <p style="font-family: monospace;">A = 3000 &bull; e<sup>0.4</sup></p>
+        <p style="font-weight: bold; font-size: 28px; color: #003366;">Balance &approx; $4475.47</p>
+    </div>
+
+    <div class="nav-wrapper">
+        <button class="nav-btn" onclick="prevSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+</div>
+
+<script>
+    let current = 0;
+    const slides = document.querySelectorAll('.slide-container');
+    
+    function nextSlide() {
+        slides[current].classList.remove('active');
+        current = (current + 1) % slides.length;
+        slides[current].classList.add('active');
+    }
+    
+    function prevSlide() {
+        slides[current].classList.remove('active');
+        current = (current - 1 + slides.length) % slides.length;
+        slides[current].classList.add('active');
+    }
+</script>
+
+</body>
+</html>
