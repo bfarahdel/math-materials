@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadratic Functions - Complete Precision D3.js Deck</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: #0b0f19;
+            color: #f1f5f9;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 1280px;
+            height: 720px;
+            background-color: #111827;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            border: 1px solid #1f2937;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 40px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 2;
+        }
+
+        .section-tag { font-size: 14px; color: #10b981; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
+        .problem-title { font-size: 26px; font-weight: 600; color: #f8fafc; margin-bottom: 15px; }
+        .problem-title span { color: #60a5fa; font-family: 'Roboto Mono', monospace; }
+        
+        .math-display {
+            font-family: 'Roboto Mono', monospace;
+            background-color: #030712;
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: #f43f5e;
+            font-size: 26px;
+            display: inline-block;
+            margin-bottom: 15px;
+            border-left: 5px solid #f43f5e;
+            width: fit-content;
+            font-weight: 700;
+        }
+
+        .split-layout {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 40px;
+            width: 100%;
+            align-items: start;
+        }
+
+        .graph-container {
+            background-color: #030712;
+            border: 2px solid #374151;
+            border-radius: 12px;
+            width: 400px;
+            height: 400px;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .iframe-container {
+            width: 100%;
+            height: 480px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #374151;
+            background-color: #ffffff;
+        }
+
+        .d3-axis-line { stroke: #4b5563; stroke-width: 2px; }
+        .d3-grid-line { stroke: #1f2937; stroke-width: 1px; }
+        .d3-tick-text { font-family: 'Roboto Mono', monospace; font-size: 10px; fill: #94a3b8; }
+        .d3-aos-line { stroke: #3b82f6; stroke-width: 2px; stroke-dasharray: 6,4; }
+        .d3-label-text { font-family: 'Roboto Mono', monospace; font-size: 11px; font-weight: 700; }
+
+        .qa-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .qa-row {
+            display: grid;
+            grid-template-columns: 220px 140px 1fr;
+            align-items: center;
+            background-color: #1f2937;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid #374151;
+            gap: 15px;
+        }
+
+        .qa-prompt { font-weight: 600; color: #f8fafc; font-size: 15px; }
+
+        .ans-placeholder {
+            font-family: 'Roboto Mono', monospace;
+            color: #10b981;
+            font-size: 17px;
+            font-weight: 700;
+            opacity: 0;
+            transition: opacity 0.15s ease-in-out;
+        }
+
+        .ans-placeholder.revealed { opacity: 1; }
+
+        .btn {
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        
+        .btn-check { background-color: #3b82f6; padding: 6px 12px; font-size: 13px; }
+        .btn-check:hover { background-color: #2563eb; }
+        .btn-check.active { background-color: #ef4444; }
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+        .btn-nav { background-color: #2563eb; padding: 10px 20px; font-size: 16px; border-radius: 8px; }
+        .btn-nav:hover { background-color: #1d4ed8; }
+        
+        .slide-number {
+            position: absolute;
+            bottom: 25px;
+            left: 30px;
+            color: #4b5563;
+            font-size: 16px;
+            z-index: 10;
+        }
+
+        .slide-intro {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #1e293b 0%, #111827 100%);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        
+        <div class="slide active slide-intro">
+            <h1 style="font-size: 48px; font-weight: 700; color: #3b82f6; margin-bottom: 15px;">Quadratic Functions & Graphs</h1>
+            <p style="font-size: 20px; color: #94a3b8; margin-bottom: 40px;">Lesson's 9-1 and 9-2</p>
+        </div>
+
+        <div class="slide">
+            <div class="section-tag">Interactive Exploration</div>
+            <h3 class="problem-title">Visualizing Parabolic Transformations:</h3>
+            <div class="iframe-container">
+                <iframe src="https://www.geogebra.org/classic/NUak9X4F" width="100%" height="100%" style="border:0;" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-tag">Lesson 9-1: Characteristics of Parabolas</div>
+            <h3 class="problem-title"><span>Problem 01.</span> Solve properties algebraically, then check the labeled plot:</h3>
+            
+            <div class="split-layout">
+                <div class="graph-container" id="d3-graph-p1"></div>
+                <div class="workspace">
+                    <div class="math-display">f(x) = 2x² + 4x - 3</div>
+                    <div class="qa-container">
+                        <div class="qa-row">
+                            <div class="qa-prompt">Axis of Symmetry</div>
+                            <button class="btn btn-check" onclick="toggleRow(this)"><i class="fa-solid fa-eye"></i> Check</button>
+                            <div class="ans-placeholder">x = -1</div>
+                        </div>
+                        <div class="qa-row">
+                            <div class="qa-prompt">Vertex Coordinates</div>
+                            <button class="btn btn-check" onclick="toggleRow(this)"><i class="fa-solid fa-eye"></i> Check</button>
+                            <div class="ans-placeholder">(-1, -5)</div>
+                        </div>
+                        <div class="qa-row">
+                            <div class="qa-prompt">Y-Intercept</div>
+                            <button class="btn btn-check" onclick="toggleRow(this)"><i class="fa-solid fa-eye"></i> Check</button>
+                            <div class="ans-placeholder">(0, -3)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-tag">Lesson 9-1: Characteristics from Graph</div>
+            <h3 class="problem-title"><span>Problem 02.</span> Extract analytical values from the labeled visual components:</h3>
+            
+            <div class="split-layout">
+                <div class="graph-container" id="d3-graph-p2"></div>
+                <div class="workspace">
+                    <div class="qa-container">
+                        <div class="qa-row">
+                            <div class="qa-prompt">Vertex Location</div>
+                            <button class="btn btn-check" onclick="toggleRow(this)"><i class="fa-solid fa-eye"></i> Check</button>
+                            <div class="ans-placeholder">(0, -1)</div>
+                        </div>
+                        <div class="qa-row">
+                            <div class="qa-prompt">Axis of Symmetry</div>
+                            <button class="btn btn-check" onclick="toggleRow(this)"><i class="fa-solid fa-eye"></i> Check</button>
+                            <div class="ans-placeholder">x = 0</div>
+                        </div>
+                        <div class="qa-row">
+                            <div class="qa-prompt">Range Constraint</div>
+                            <button class="btn btn-check" onclick="toggleRow(this)"><i class="fa-solid fa-eye"></i> Check</button>
+                            <div class="ans-placeholder">y &ge; -1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-tag">Lesson 9-2: Transformation Shifts</div>
+            <h3 class="problem-title"><span>Problem 03.</span> Evaluate vertical translations from parent <span style="font-family:'Roboto Mono'; color:#f43f5e;">f(x) = x²</span>:</h3>
+            
+            <div class="split-layout">
+                <div class="graph-container" id="d3-graph-p3"></div>
+                <div class="workspace">
+                    <div class="math-display">g(x) = x² - 11</div>
+                    <div class="qa-container">
+                        <div class="qa-row">
+                            <div class="qa-prompt">Translation Vector</div>
+                            <button class="btn btn-check" onclick="toggleRow(this)"><i class="fa-solid fa-eye"></i> Check</button>
+                            <div class="ans-placeholder">Down 11 units</div>
+                        </div>
+                        <div class="qa-row">
+                            <div class="qa-prompt">New Vertex Location</div>
+                            <button class="btn btn-check" onclick="toggleRow(this)"><i class="fa-solid fa-eye"></i> Check</button>
+                            <div class="ans-placeholder">(0, -11)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-tag">Lesson 9-2: Compressions & Shifts</div>
+            <h3 class="problem-title"><span>Problem 04.</span> Track dilation factors along horizontal shifts:</h3>
+            
+            <div class="split-layout">
+                <div class="graph-container" id="d3-graph-p4"></div>
+                <div class="workspace">
+                    <div class="math-display">h(x) = ½(x - 2)²</div>
+                    <div class="qa-container">
+                        <div class="qa-row">
+                            <div class="qa-prompt">Horizontal Shift</div>
+                            <button class="btn btn-check" onclick="toggleRow(this)"><i class="fa-solid fa-eye"></i> Check</button>
+                            <div class="ans-placeholder">Right 2 units</div>
+                        </div>
+                        <div class="qa-row">
+                            <div class="qa-prompt">Dilation Behavior</div>
+                            <button class="btn btn-check" onclick="toggleRow(this)"><i class="fa-solid fa-eye"></i> Check</button>
+                            <div class="ans-placeholder">Compressed by ½</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="section-tag">Lesson 9-2: Reflection Architecture</div>
+            <h3 class="problem-title"><span>Problem 05.</span> Observe vertical changes with x-axis inversions:</h3>
+            
+            <div class="split-layout">
+                <div class="graph-container" id="d3-graph-p5"></div>
+                <div class="workspace">
+                    <div class="math-display">k(x) = -x² + 8</div>
+                    <div class="qa-container">
+                        <div class="qa-row">
+                            <div class="qa-prompt">Inversion Reflection</div>
+                            <button class="btn btn-check" onclick="toggleRow(this)"><i class="fa-solid fa-eye"></i> Check</button>
+                            <div class="ans-placeholder">Reflected over X-axis</div>
+                        </div>
+                        <div class="qa-row">
+                            <div class="qa-prompt">Transformed Vertex</div>
+                            <button class="btn btn-check" onclick="toggleRow(this)"><i class="fa-solid fa-eye"></i> Check</button>
+                            <div class="ans-placeholder">(0, 8)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide slide-intro">
+            <h1 style="color:#10b981; font-size: 40px; margin-bottom: 20px;"><i class="fa-solid fa-circle-check"></i> Completed!</h1>
+            <button class="btn btn-nav" onclick="goToSlide(0)"><i class="fa-solid fa-rotate-left"></i> Return to Slide 1</button>
+        </div>
+
+        <div class="slide-number"><span id="current-slide-index">1</span> / 8</div>
+        <div class="controls">
+            <button class="btn btn-nav" onclick="changeSlide(-1)"><i class="fa-solid fa-chevron-left"></i> Previous</button>
+            <button class="btn btn-nav" onclick="changeSlide(1)">Next <i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const slideIndexDisplay = document.getElementById('current-slide-index');
+
+        function updateSlides() {
+            slides.forEach((slide, idx) => {
+                if(idx === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                    slide.querySelectorAll('.ans-placeholder').forEach(el => el.classList.remove('revealed'));
+                    slide.querySelectorAll('.btn-check').forEach(btn => {
+                        btn.classList.remove('active');
+                        btn.innerHTML = '<i class="fa-solid fa-eye"></i> Check';
+                    });
+                }
+            });
+            slideIndexDisplay.textContent = currentSlide + 1;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide >= slides.length) currentSlide = 0;
+            if (currentSlide < 0) currentSlide = slides.length - 1;
+            updateSlides();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlides();
+        }
+
+        function toggleRow(buttonElement) {
+            const parentRow = buttonElement.parentElement;
+            const textPlaceholder = parentRow.querySelector('.ans-placeholder');
+            
+            if (textPlaceholder.classList.contains('revealed')) {
+                textPlaceholder.classList.remove('revealed');
+                buttonElement.classList.remove('active');
+                buttonElement.innerHTML = '<i class="fa-solid fa-eye"></i> Check';
+            } else {
+                textPlaceholder.classList.add('revealed');
+                buttonElement.classList.add('active');
+                buttonElement.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Hide';
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+        });
+
+        // --- D3.js PARABOLA GENERATOR ENGINE ---
+        function renderD3Parabola(containerId, config) {
+            const width = 400;
+            const height = 400;
+            const padding = 30;
+
+            const xScale = d3.scaleLinear()
+                .domain([config.xMin, config.xMax])
+                .range([padding, width - padding]);
+
+            const yScale = d3.scaleLinear()
+                .domain([config.yMin, config.yMax])
+                .range([height - padding, padding]);
+
+            const svg = d3.select(containerId)
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            const xTicks = d3.range(config.xMin, config.xMax + 1, config.stepSize || 1);
+            const yTicks = d3.range(config.yMin, config.yMax + 1, config.stepSize || 1);
+
+            svg.selectAll(".v-grid")
+                .data(xTicks).enter().append("line")
+                .attr("class", "d3-grid-line")
+                .attr("x1", d => xScale(d)).attr("x2", d => xScale(d))
+                .attr("y1", padding).attr("y2", height - padding);
+
+            svg.selectAll(".h-grid")
+                .data(yTicks).enter().append("line")
+                .attr("class", "d3-grid-line")
+                .attr("x1", padding).attr("x2", width - padding)
+                .attr("y1", d => yScale(d)).attr("y2", d => yScale(d));
+
+            if (config.yMin <= 0 && 0 <= config.yMax) {
+                svg.append("line")
+                    .attr("class", "d3-axis-line")
+                    .attr("x1", padding).attr("x2", width - padding)
+                    .attr("y1", yScale(0)).attr("y2", yScale(0));
+            }
+            if (config.xMin <= 0 && 0 <= config.xMax) {
+                svg.append("line")
+                    .attr("class", "d3-axis-line")
+                    .attr("x1", xScale(0)).attr("x2", xScale(0))
+                    .attr("y1", padding).attr("y2", height - padding);
+            }
+
+            svg.selectAll(".x-tick-label")
+                .data(xTicks.filter(t => t !== 0)).enter().append("text")
+                .attr("class", "d3-tick-text")
+                .attr("x", d => xScale(d)).attr("y", yScale(0) + 14)
+                .attr("text-anchor", "middle")
+                .text(d => d);
+
+            svg.selectAll(".y-tick-label")
+                .data(yTicks.filter(t => t !== 0)).enter().append("text")
+                .attr("class", "d3-tick-text")
+                .attr("x", xScale(0) - 8).attr("y", d => yScale(d) + 4)
+                .attr("text-anchor", "end")
+                .text(d => d);
+
+            svg.append("text").attr("class", "d3-tick-text").attr("x", width - 15).attr("y", yScale(0) - 6).text("x");
+            svg.append("text").attr("class", "d3-tick-text").attr("x", xScale(0) + 8).attr("y", 15).text("y");
+
+            if (config.aos !== null) {
+                svg.append("line")
+                    .attr("class", "d3-aos-line")
+                    .attr("x1", xScale(config.aos)).attr("x2", xScale(config.aos))
+                    .attr("y1", padding).attr("y2", height - padding);
+
+                svg.append("text")
+                    .attr("font-family", "Poppins")
+                    .attr("font-size", "10px")
+                    .attr("font-weight", "600")
+                    .attr("fill", "#3b82f6")
+                    .attr("x", xScale(config.aos) + 6)
+                    .attr("y", padding + 10)
+                    .text(`AoS: x = ${config.aos}`);
+            }
+
+            const pointResolution = 250;
+            const step = (config.xMax - config.xMin) / pointResolution;
+            const curvePoints = [];
+            for (let i = 0; i <= pointResolution; i++) {
+                let currentX = config.xMin + (i * step);
+                let currentY = config.formula(currentX);
+                if (currentY >= config.yMin - 4 && currentY <= config.yMax + 4) {
+                    curvePoints.push({x: currentX, y: currentY});
+                }
+            }
+
+            const lineGenerator = d3.line()
+                .x(d => xScale(d.x))
+                .y(d => yScale(d.y));
+
+            svg.append("path")
+                .datum(curvePoints)
+                .attr("fill", "none")
+                .attr("stroke", config.curveColor)
+                .attr("stroke-width", 3)
+                .attr("d", lineGenerator);
+
+            svg.selectAll(".target-node")
+                .data(config.labeledPoints).enter().append("circle")
+                .attr("cx", d => xScale(d.x))
+                .attr("cy", d => yScale(d.y))
+                .attr("r", d => d.isVertex ? 6 : 4.5)
+                .attr("fill", d => d.color);
+
+            svg.selectAll(".node-label")
+                .data(config.labeledPoints).enter().append("text")
+                .attr("class", "d3-label-text")
+                .attr("x", d => xScale(d.x) + (d.labelOffset?.x || 8))
+                .attr("y", d => yScale(d.y) + (d.labelOffset?.y || 4))
+                .attr("fill", d => d.color)
+                .text(d => d.label);
+        }
+
+        // Problem 01
+        renderD3Parabola("#d3-graph-p1", {
+            formula: (x) => 2 * (x * x) + (4 * x) - 3,
+            xMin: -4, xMax: 2, yMin: -6, yMax: 2, aos: -1,
+            curveColor: "#2563eb",
+            labeledPoints: [
+                { x: -1, y: -5, label: "(-1, -5) V", color: "#ef4444", isVertex: true, labelOffset: { x: 10, y: 4 } },
+                { x: 0, y: -3, label: "(0, -3)", color: "#10b981", labelOffset: { x: 8, y: 4 } },
+                { x: -2, y: -3, label: "(-2, -3)", color: "#10b981", labelOffset: { x: -54, y: 4 } }
+            ]
+        });
+
+        // Problem 02
+        renderD3Parabola("#d3-graph-p2", {
+            formula: (x) => (x * x) - 1,
+            xMin: -4, xMax: 4, yMin: -2, yMax: 6, aos: 0,
+            curveColor: "#a855f7",
+            labeledPoints: [
+                { x: 0, y: -1, label: "(0, -1) V", color: "#ef4444", isVertex: true, labelOffset: { x: 10, y: 4 } },
+                { x: 1, y: 0, label: "(1, 0)", color: "#10b981", labelOffset: { x: 8, y: -6 } },
+                { x: -1, y: 0, label: "(-1, 0)", color: "#10b981", labelOffset: { x: -48, y: -6 } },
+                { x: 2, y: 3, label: "(2, 3)", color: "#60a5fa", labelOffset: { x: 8, y: 4 } },
+                { x: -2, y: 3, label: "(-2, 3)", color: "#60a5fa", labelOffset: { x: -48, y: 4 } }
+            ]
+        });
+
+        // Problem 03
+        renderD3Parabola("#d3-graph-p3", {
+            formula: (x) => (x * x) - 11,
+            xMin: -5, xMax: 5, yMin: -13, yMax: 3, aos: 0, stepSize: 2,
+            curveColor: "#3b82f6",
+            labeledPoints: [
+                { x: 0, y: -11, label: "(0, -11) V", color: "#ef4444", isVertex: true, labelOffset: { x: 10, y: 4 } }
+            ]
+        });
+
+        // Problem 04
+        renderD3Parabola("#d3-graph-p4", {
+            formula: (x) => 0.5 * Math.pow(x - 2, 2),
+            xMin: -2, xMax: 6, yMin: -1, yMax: 5, aos: 2,
+            curveColor: "#10b981",
+            labeledPoints: [
+                { x: 2, y: 0, label: "(2, 0) V", color: "#ef4444", isVertex: true, labelOffset: { x: -22, y: -12 } },
+                { x: 0, y: 2, label: "(0, 2)", color: "#60a5fa", labelOffset: { x: -44, y: -4 } },
+                { x: 4, y: 2, label: "(4, 2)", color: "#60a5fa", labelOffset: { x: 10, y: 4 } }
+            ]
+        });
+
+        // Problem 05
+        renderD3Parabola("#d3-graph-p5", {
+            formula: (x) => -(x * x) + 8,
+            xMin: -4, xMax: 4, yMin: -2, yMax: 10, aos: 0, stepSize: 2,
+            curveColor: "#f43f5e",
+            labeledPoints: [
+                { x: 0, y: 8, label: "(0, 8) V", color: "#ef4444", isVertex: true, labelOffset: { x: 10, y: 4 } }
+            ]
+        });
+    </script>
+</body>
+</html>
